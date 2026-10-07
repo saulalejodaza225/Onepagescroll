@@ -37,11 +37,11 @@
     var current = -1;
     var pos = 0;              // posición fraccionaria, lo que se dibuja (con inercia)
     var target = 0;           // posición hacia la que `pos` se acerca cada frame
-    var lastScroll = -Infinity;
     var hasScrolled = false;  // false hasta el primer scroll real del usuario
-    var parked = false;       // true mientras no hay scroll (reposo)
+    var parked = false;       // true mientras dura el reposo (vaivén en bucle)
     var idleAnchor = 0;       // frame alrededor del cual oscila el reposo
     var idleStart = 0;
+    var idleTimer = null;     // dispara el inicio del reposo una sola vez por parada
     var last = 0;
 
     function loadFrame(i) {
@@ -111,34 +111,42 @@
       next();
     }
 
+    // Entra en reposo una sola vez por parada: lo dispara el temporizador de
+    // onScroll, nunca el propio bucle, así que el ancla y la fase del vaivén
+    // no se reinician mientras el reposo sigue en curso.
+    function enterIdle() {
+      idleTimer = null;
+      if (parked || !idle) return;
+      idleAnchor = (!hasScrolled && idle.initialFrame != null)
+        ? Math.max(0, Math.min(total - 1, idle.initialFrame))
+        : pos;
+      idleStart = performance.now();
+      parked = true;
+    }
+
     function onScroll() {
-      lastScroll = performance.now();
       hasScrolled = true;
+      parked = false;
+      if (idleTimer) clearTimeout(idleTimer);
+      if (idle) idleTimer = setTimeout(enterIdle, 300);
     }
 
     // Bucle: con scroll activo, el objetivo sigue al progreso y `pos` se le
     // acerca con inercia (nunca salta). 0.3s después de que el scroll se
-    // detiene, el objetivo oscila entre unos pocos frames alrededor del
-    // punto donde se detuvo (o, la primera vez, alrededor de un frame
-    // elegido a mano), simulando una nave "estacionada" con un leve vaivén.
-    // Al reanudar el scroll, la posición sigue acercándose con la misma
-    // inercia, sin reiniciarse de golpe.
+    // detiene (una sola vez, vía el temporizador de onScroll), el objetivo
+    // empieza a oscilar entre unos pocos frames alrededor del punto donde se
+    // detuvo (o, la primera vez, alrededor de un frame elegido a mano),
+    // simulando una nave "estacionada"; esa oscilación sigue como un bucle
+    // continuo mientras dure el reposo, sin reiniciarse. Al reanudar el
+    // scroll, la posición sigue acercándose con la misma inercia desde el
+    // frame donde quedó el reposo, sin reiniciarse de golpe.
     function tick(now) {
       var dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
       last = now;
-      var scrolling = now - lastScroll < 300;
 
-      if (scrolling || !idle) {
-        parked = false;
+      if (!parked || !idle) {
         target = progress() * (total - 1);
       } else {
-        if (!parked) {
-          idleAnchor = (!hasScrolled && idle.initialFrame != null)
-            ? Math.max(0, Math.min(total - 1, idle.initialFrame))
-            : pos;
-          idleStart = now;
-          parked = true;
-        }
         // El vaivén no sale del rango de frames de la sección donde quedó
         // el ancla, para no mezclar imágenes de secciones distintas.
         var bounds = idle.zoneBounds ? idle.zoneBounds(idleAnchor) : [0, total - 1];
@@ -163,6 +171,9 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', resize);
     preload();
+    // Mismo retraso de 0.3s antes del primer reposo, aunque el usuario
+    // todavía no haya hecho scroll ninguna vez.
+    if (idle) idleTimer = setTimeout(enterIdle, 300);
     requestAnimationFrame(tick);
   }
 
