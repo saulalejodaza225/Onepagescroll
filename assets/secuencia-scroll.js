@@ -237,10 +237,11 @@
     var zoneEls = ['#inicio', '#guia .guia-head', '#guia .matrix', '#contacto']
       .map(function (sel) { return document.querySelector(sel); })
       .filter(Boolean);
-    // El inicio recorre casi el doble de frames que le tocarían solo por
-    // alto: el mismo scroll se siente más movido e impactante ahí, y llega
-    // más lejos en la secuencia (hasta más o menos el anillo de energía).
-    var zoneWeights = [1.8, 1, 0.75, 0.6];
+    // El inicio recorre varias veces los frames que le tocarían solo por
+    // alto: el mismo scroll se siente mucho más movido y dinámico ahí, y
+    // llega bastante más lejos en la secuencia (bien pasado el anillo de
+    // energía, hacia la zona de mayor transformación de la nave).
+    var zoneWeights = [3.2, 1, 0.75, 0.6];
     var computeZones = zoneEls.length === 4 ? makeZones(zoneEls, total, zoneWeights) : null;
     var zones = computeZones ? computeZones() : null;
 
