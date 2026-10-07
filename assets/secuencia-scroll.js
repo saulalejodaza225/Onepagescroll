@@ -22,10 +22,15 @@
 
   // Crea el controlador de un canvas. `progress()` devuelve un valor 0..1.
   // `size()` ajusta el tamaño del canvas al contenedor.
-  function createPlayer(canvas, pattern, total, progress, size) {
+  // `idleFps` reproduce la secuencia en ida y vuelta cuando no hay scroll (0 = desactivado).
+  function createPlayer(canvas, pattern, total, progress, size, idleFps) {
     var ctx = canvas.getContext('2d');
     var frames = new Array(total);
     var current = -1;
+    var pos = 0;          // posición fraccionaria dentro de la secuencia
+    var dir = 1;          // sentido de la reproducción en reposo
+    var lastScroll = -Infinity;
+    var last = 0;
 
     function loadFrame(i) {
       if (i < 0 || i >= total) return null;
@@ -57,7 +62,7 @@
     }
 
     function render() {
-      draw(Math.round(progress() * (total - 1)));
+      draw(Math.round(pos));
     }
 
     function resize() {
@@ -77,27 +82,39 @@
       next();
     }
 
-    var pending = false;
     function onScroll() {
-      if (pending) return;
-      pending = true;
-      requestAnimationFrame(function () {
-        pending = false;
-        render();
-      });
+      lastScroll = performance.now();
     }
 
+    // Bucle: con scroll activo, el frame sigue al progreso; en reposo avanza
+    // despacio desde el frame actual, en ida y vuelta.
+    function tick(now) {
+      var dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
+      last = now;
+      if (now - lastScroll < 250 || !(idleFps > 0)) {
+        pos = progress() * (total - 1);
+      } else {
+        pos += dir * idleFps * dt;
+        if (pos >= total - 1) { pos = total - 1; dir = -1; }
+        else if (pos <= 0) { pos = 0; dir = 1; }
+      }
+      draw(Math.round(pos));
+      requestAnimationFrame(tick);
+    }
+
+    pos = progress() * (total - 1);
     loadFrame(0).addEventListener('load', function () { render(); });
     resize();
 
     if (reduceMotion) {
-      draw(0, true);
+      draw(Math.round(pos), true);
       return;
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', resize);
     preload();
+    requestAnimationFrame(tick);
   }
 
   function initSeccion(section) {
@@ -118,7 +135,7 @@
       canvas.height = Math.round(rect.height * dpr);
     }
 
-    createPlayer(canvas, section.getAttribute('data-frames'), total, progress, size);
+    createPlayer(canvas, section.getAttribute('data-frames'), total, progress, size, 0);
   }
 
   function initFondo(canvas) {
@@ -135,7 +152,10 @@
       canvas.height = Math.round(window.innerHeight * dpr);
     }
 
-    createPlayer(canvas, canvas.getAttribute('data-frames'), total, progress, size);
+    var idleFps = parseFloat(canvas.getAttribute('data-idle-fps'));
+    if (isNaN(idleFps)) idleFps = 12;
+
+    createPlayer(canvas, canvas.getAttribute('data-frames'), total, progress, size, idleFps);
   }
 
   function boot() {
