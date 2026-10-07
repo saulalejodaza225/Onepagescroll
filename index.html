@@ -274,6 +274,47 @@
     .site-nav a:hover { color: var(--lino); }
     .site-footer a:hover { color: inherit; }
   }
+
+  /* Brillo radiante: una luz recorre cada frase de inicio a fin, en bucle.
+     El texto en sí queda intacto (mismo color, mismo grosor de letra, sin
+     perder nitidez): una capa aparte, del mismo tamaño y con el mismo
+     texto, se superpone y se mezcla por encima en modo "screen" (aditivo),
+     así que fuera del barrido no aporta nada y solo se ve un brillo blanco
+     pasando. JS marca los elementos con la clase .glow-sweep y copia su
+     texto a data-glow-text (ver assets/secuencia-scroll.js). Excluye los
+     botones dorados (su letra oscura necesita quedarse sólida para
+     contraste contra el propio fondo brillante del botón).
+  */
+  .glow-sweep { position: relative; }
+  .glow-sweep::after {
+    content: attr(data-glow-text);
+    position: absolute; inset: 0;
+    display: block;
+    font: inherit; letter-spacing: inherit; line-height: inherit; text-align: inherit;
+    white-space: pre-wrap;
+    pointer-events: none;
+    text-shadow: none;
+    background-image: linear-gradient(100deg,
+      transparent 0%, transparent 45%,
+      rgba(8,10,20,.45) 48%,
+      rgba(255,255,255,.95) 50%,
+      rgba(8,10,20,.45) 52%,
+      transparent 55%, transparent 100%);
+    background-size: 260% 100%;
+    background-repeat: no-repeat;
+    background-position: 130% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: textGlowSweep 3.8s ease-in-out infinite;
+  }
+  @keyframes textGlowSweep {
+    0% { background-position: 130% 0; }
+    100% { background-position: -130% 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .glow-sweep::after { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -284,7 +325,7 @@
       <span class="brand-icon" aria-hidden="true"><span class="brand-icon-3d">
         <span class="material-symbols-outlined face">pets</span>
         <span class="material-symbols-outlined rim">pets</span>
-      </span></span>NOCTURNE
+      </span></span><span class="brand-text">NOCTURNE</span>
     </a>
     <nav class="site-nav" aria-label="Principal">
       <a href="#guia">Guía</a>
@@ -509,6 +550,34 @@
       btn.addEventListener('click', function (e) {
         if (scrollToTarget(btn, target, hash)) e.preventDefault();
       });
+    });
+  })();
+</script>
+<script>
+  // Marca el texto de la página para el brillo radiante (ver el CSS de
+  // .glow-sweep): copia el texto de cada elemento a data-glow-text, que la
+  // capa ::after usa para dibujar encima el barrido de luz, sin tocar el
+  // texto real (mismo color, misma nitidez). Se deja fuera la letra de los
+  // botones dorados (necesita quedarse sólida y oscura por contraste) y los
+  // íconos.
+  (function () {
+    var selector = [
+      '.hero-content h1', '.hero-quote', '.eyebrow',
+      '.brand-text', '.site-nav a', '.btn-ghost',
+      '.guia-head h2', '.guia-head p',
+      '.card h3', '.card .label', '.card > div > p', '.checks li', '.delivery',
+      '.price strong', '.price s',
+      '.matrix h4', '.matrix table th', '.matrix table td', '.matrix-foot p', '.matrix-foot li',
+      '.closing h2', '.closing p',
+      '.site-footer h5', '.site-footer p', '.site-footer li', '.site-footer a', '.copy'
+    ].join(',');
+
+    document.querySelectorAll(selector).forEach(function (el) {
+      if (el.closest('.btn-gold') || el.closest('.brand-icon')) return;
+      var text = el.textContent.replace(/\s+/g, ' ').trim();
+      if (!text) return;
+      el.classList.add('glow-sweep');
+      el.setAttribute('data-glow-text', text);
     });
   })();
 </script>
