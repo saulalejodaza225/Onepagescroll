@@ -109,14 +109,6 @@
   .hero-content h1 em { color: var(--oro-real); font-weight: 400; }
   .hero-quote { margin-top: 1rem; font-family: Lora, serif; font-style: italic; font-size: 22px; line-height: 32px; color: rgba(220,226,245,.9); max-width: 36ch; }
   .hero-actions { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
-  .hero-progress {
-    position: fixed; right: var(--gutter); bottom: 12vh; z-index: 3;
-    font-family: Poppins, sans-serif; font-size: 12px; letter-spacing: .12em; color: var(--niebla);
-  }
-  .hero-progress span { color: var(--oro-real); }
-  @media (max-width: 1023px) {
-    .hero-progress { display: none; }
-  }
   @media (max-width: 767px) {
     .hero-content { padding: 0 var(--gutter) 10vh; }
     .hero-content h1 { font-size: 2.5rem; }
@@ -265,7 +257,6 @@
       <a class="btn-gold" href="#guia">¿No sabes qué página comprar? <span class="material-symbols-outlined" aria-hidden="true">south</span></a>
     </div>
   </div>
-  <div class="hero-progress" aria-hidden="true">Secuencia <span id="heroPct">00</span>%</div>
 </section>
 
 <div class="divider" role="presentation"><div class="star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z"/></svg></div></div>
@@ -408,19 +399,5 @@
 </div>
 
 <script src="assets/secuencia-scroll.js"></script>
-<script>
-  // Porcentaje de avance de la secuencia (toda la página).
-  (function () {
-    var out = document.getElementById('heroPct');
-    if (!out) return;
-    function update() {
-      var max = document.documentElement.scrollHeight - window.innerHeight;
-      var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-      out.textContent = String(Math.round(p * 100)).padStart(2, '0');
-    }
-    window.addEventListener('scroll', update, { passive: true });
-    update();
-  })();
-</script>
 </body>
 </html>
