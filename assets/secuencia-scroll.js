@@ -27,12 +27,14 @@
   function createPlayer(canvas, pattern, total, progress, size, idle) {
     var ctx = canvas.getContext('2d');
     var frames = new Array(total);
-    var lastDrawn = -1;       // última posición (redondeada a 0.01) ya pintada
-    var pos = 0;              // posición fraccionaria dentro de la secuencia
+    var current = -1;
+    var pos = 0;              // posición fraccionaria, lo que se dibuja (con inercia)
+    var target = 0;           // posición hacia la que `pos` se acerca cada frame
     var lastScroll = -Infinity;
     var wasScrolling = true;  // fuerza fijar el ancla la primera vez que entra en reposo
     var idleAnchor = 0;       // frame donde quedó "parqueada" la nave
     var idleStart = 0;
+    var last = 0;
 
     function loadFrame(i) {
       if (i < 0 || i >= total) return null;
@@ -47,45 +49,29 @@
       return frames[i];
     }
 
-    // Dibuja una imagen cubriendo el canvas (equivale a object-fit: cover).
-    function drawImageCover(img, alpha) {
+    // Cubre el canvas manteniendo proporción (equivale a object-fit: cover).
+    function draw(index, force) {
+      if (index < 0) return;
+      var img = loadFrame(index);
+      if (!img || !img.complete || !img.naturalWidth) return;
+      if (index === current && !force) return;
+      current = index;
       var cw = canvas.width;
       var ch = canvas.height;
       var scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
       var w = img.naturalWidth * scale;
       var h = img.naturalHeight * scale;
-      ctx.globalAlpha = alpha;
+      ctx.clearRect(0, 0, cw, ch);
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
-      ctx.globalAlpha = 1;
-    }
-
-    // Mezcla el frame inferior y el superior de `p` según su parte fraccionaria,
-    // para que el movimiento entre frames se vea continuo y no a saltos.
-    function draw(p, force) {
-      if (p < 0) return;
-      if (Math.abs(p - lastDrawn) < 0.004 && !force) return;
-      var i0 = Math.min(total - 1, Math.floor(p));
-      var t = p - i0;
-      var img0 = loadFrame(i0);
-      if (!img0 || !img0.complete || !img0.naturalWidth) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawImageCover(img0, 1);
-      if (t > 0.004 && i0 + 1 < total) {
-        var img1 = loadFrame(i0 + 1);
-        if (img1 && img1.complete && img1.naturalWidth) {
-          drawImageCover(img1, t);
-        }
-      }
-      lastDrawn = p;
     }
 
     function render() {
-      draw(pos);
+      draw(Math.round(pos));
     }
 
     function resize() {
       size();
-      lastDrawn = -1;
+      current = -1;
       render();
     }
 
@@ -104,13 +90,17 @@
       lastScroll = performance.now();
     }
 
-    // Bucle: con scroll activo, el frame sigue al progreso. En reposo la nave
-    // queda "parqueada" en ese frame y solo oscila unos pocos frames alrededor,
-    // como un leve balanceo, en vez de recorrer la secuencia completa.
+    // Bucle: con scroll activo, el objetivo sigue al progreso. En reposo la nave
+    // queda "parqueada" en ese frame y solo oscila unos pocos frames alrededor.
+    // `pos` nunca salta al objetivo: se acerca con inercia, así que al reanudar
+    // el scroll la animación continúa desde el frame donde quedó en reposo en
+    // vez de reiniciarse de golpe en la posición exacta del scroll.
     function tick(now) {
+      var dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
+      last = now;
       var scrolling = now - lastScroll < 250;
       if (scrolling || !idle) {
-        pos = progress() * (total - 1);
+        target = progress() * (total - 1);
         wasScrolling = true;
       } else {
         if (wasScrolling) {
@@ -119,18 +109,21 @@
           wasScrolling = false;
         }
         var wave = Math.sin((now - idleStart) / 1000 * (2 * Math.PI / idle.period));
-        pos = Math.min(total - 1, Math.max(0, idleAnchor + wave * idle.amplitude));
+        target = Math.min(total - 1, Math.max(0, idleAnchor + wave * idle.amplitude));
       }
-      draw(pos);
+      // Suaviza el acercamiento al objetivo (independiente de la tasa de frames).
+      var ease = 1 - Math.exp(-dt * 8);
+      pos += (target - pos) * ease;
+      draw(Math.round(pos));
       requestAnimationFrame(tick);
     }
 
-    pos = progress() * (total - 1);
+    pos = target = progress() * (total - 1);
     loadFrame(0).addEventListener('load', function () { render(); });
     resize();
 
     if (reduceMotion) {
-      draw(pos, true);
+      draw(Math.round(pos), true);
       return;
     }
 
@@ -176,8 +169,7 @@
     }
 
     // Amplitud en frames del balanceo en reposo, y duración de un ciclo completo.
-    // Con el crossfade entre frames, una amplitud mayor sigue viéndose como un
-    // balanceo suave y fluido, no como un salto.
+    // La inercia del bucle principal se encarga de que el movimiento se vea suave.
     var amplitude = parseFloat(canvas.getAttribute('data-idle-amplitude'));
     if (isNaN(amplitude)) amplitude = 18;
     var period = parseFloat(canvas.getAttribute('data-idle-period'));
