@@ -186,7 +186,11 @@
   // frames pensados para la matriz comparativa, por ejemplo. `els` es la
   // lista de elementos que marcan dónde empieza cada zona (la última va
   // hasta el final del scroll de la página).
-  function makeZones(els, total) {
+  // `weights` (opcional, uno por zona) multiplica lo que le toca a cada una
+  // más allá de su alto: una zona con peso 2 recorre el doble de frames que
+  // le tocarían solo por altura, así que el mismo scroll se siente más
+  // movido (más cambios de frame por píxel) en esa sección.
+  function makeZones(els, total, weights) {
     function docTop(el) {
       var r = el.getBoundingClientRect();
       return r.top + window.scrollY;
@@ -200,16 +204,18 @@
       for (var i = 0; i < els.length; i++) {
         heights.push(Math.max(1, starts[i + 1] - starts[i]));
       }
-      var totalH = heights.reduce(function (a, b) { return a + b; }, 0);
-      var frameCounts = heights.map(function (h) {
-        return Math.max(1, Math.round((h / totalH) * total));
+      var w = weights || els.map(function () { return 1; });
+      var weighted = heights.map(function (h, i) { return h * w[i]; });
+      var totalW = weighted.reduce(function (a, b) { return a + b; }, 0);
+      var frameCounts = weighted.map(function (wh) {
+        return Math.max(1, Math.round((wh / totalW) * total));
       });
       // El redondeo puede dejar la suma unos frames por encima o por debajo
-      // de `total`. El ajuste va a la zona más alta (la que menos se nota),
-      // nunca a la última al azar: una zona de scroll corta (p. ej. el
-      // cierre) seguiría recorriendo solo los frames que le tocan.
+      // de `total`. El ajuste va a la zona con más peso (la que menos se
+      // nota), nunca a la última al azar: una zona de scroll corta (p. ej.
+      // el cierre) seguiría recorriendo solo los frames que le tocan.
       var sum = frameCounts.reduce(function (a, b) { return a + b; }, 0);
-      var biggest = heights.indexOf(Math.max.apply(null, heights));
+      var biggest = weighted.indexOf(Math.max.apply(null, weighted));
       frameCounts[biggest] = Math.max(1, frameCounts[biggest] + (total - sum));
       var frameStart = 0;
       for (i = 0; i < els.length; i++) {
@@ -231,7 +237,11 @@
     var zoneEls = ['#inicio', '#guia .guia-head', '#guia .matrix', '#contacto']
       .map(function (sel) { return document.querySelector(sel); })
       .filter(Boolean);
-    var computeZones = zoneEls.length === 4 ? makeZones(zoneEls, total) : null;
+    // El inicio recorre casi el doble de frames que le tocarían solo por
+    // alto: el mismo scroll se siente más movido e impactante ahí, y llega
+    // más lejos en la secuencia (hasta más o menos el anillo de energía).
+    var zoneWeights = [1.8, 1, 0.75, 0.6];
+    var computeZones = zoneEls.length === 4 ? makeZones(zoneEls, total, zoneWeights) : null;
     var zones = computeZones ? computeZones() : null;
 
     function zoneAt(y) {
