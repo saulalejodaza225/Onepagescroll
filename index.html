@@ -455,13 +455,13 @@
 
 <script src="assets/secuencia-scroll.js"></script>
 <script>
-  // El botón "Hablemos" baja a #contacto a un ritmo controlado y constante
-  // (no el scroll-behavior:smooth del navegador, que es casi instantáneo),
-  // para que se alcance a ver el fondo animado avanzar de principio a fin.
+  // Cualquier botón que apunte a otra sección de la página (href="#id") baja
+  // a un ritmo controlado y constante, en vez del scroll-behavior:smooth del
+  // navegador (casi instantáneo), para que se alcance a ver el fondo
+  // animado avanzar de principio a fin.
   (function () {
-    var btn = document.querySelector('.btn-ghost[href="#contacto"]');
-    var target = document.getElementById('contacto');
-    if (!btn || !target) return;
+    var buttons = document.querySelectorAll('.btn-gold[href^="#"], .btn-ghost[href^="#"]');
+    if (!buttons.length) return;
 
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -469,17 +469,16 @@
       return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
 
-    btn.addEventListener('click', function (e) {
+    function scrollToTarget(btn, target, hash) {
       var startY = window.scrollY;
       var endY = target.getBoundingClientRect().top + startY;
       var distance = endY - startY;
-      if (Math.abs(distance) < 2) return;
-      e.preventDefault();
+      if (Math.abs(distance) < 2) return false;
 
       if (reduceMotion) {
         window.scrollTo(0, endY);
-        history.pushState(null, '', '#contacto');
-        return;
+        history.pushState(null, '', hash);
+        return true;
       }
 
       // Ritmo constante (~750px/s), con un mínimo y un máximo razonables.
@@ -496,10 +495,20 @@
           requestAnimationFrame(step);
         } else {
           document.documentElement.style.scrollBehavior = prevBehavior;
-          history.pushState(null, '', '#contacto');
+          history.pushState(null, '', hash);
         }
       }
       requestAnimationFrame(step);
+      return true;
+    }
+
+    buttons.forEach(function (btn) {
+      var hash = btn.getAttribute('href');
+      var target = document.querySelector(hash);
+      if (!target) return;
+      btn.addEventListener('click', function (e) {
+        if (scrollToTarget(btn, target, hash)) e.preventDefault();
+      });
     });
   })();
 </script>
