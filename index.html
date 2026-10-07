@@ -245,12 +245,25 @@
   .card:hover { transform: none; }
   .card .btn-gold { margin-top: 1.5rem; }
   .delivery { padding: 0; }
-  .matrix { margin-top: 3rem; }
+  /* Espacio claro entre "Guía" (termina en los botones Quiero esta) y
+     "Servicios" (la matriz comparativa), para que se lean como dos bloques
+     distintos en vez de uno encimado con el otro. */
+  .matrix { margin-top: 8rem; }
   tbody tr:hover { background: none; }
   th, td { border-top: 0; }
   /* Legibilidad sin cajas: sombra suave en el texto */
   body, .page { text-shadow: 0 0 3px rgba(7,14,27,.95), 0 1px 14px rgba(7,14,27,.95), 0 0 24px rgba(7,14,27,.7); }
   .btn-gold, .btn-ghost { text-shadow: none; }
+  /* El pie de página quedó sin ningún fondo al quitar las cajas, y ahí la
+     letra se lee mal: es el texto más chico de la página, justo al final
+     del scroll. Un degradado (no una caja sólida) le da un piso oscuro sin
+     tapar del todo la animación detrás. */
+  .site-footer {
+    background: linear-gradient(to bottom, rgba(7,14,27,.25), rgba(7,14,27,.88) 45%, rgba(7,14,27,.92)) !important;
+  }
+  .site-footer, .copy {
+    text-shadow: 0 0 3px rgba(7,14,27,1), 0 1px 10px rgba(7,14,27,1), 0 0 20px rgba(7,14,27,.85);
+  }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
