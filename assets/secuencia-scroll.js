@@ -83,12 +83,29 @@
       render();
     }
 
-    // Precarga el resto de frames en tiempo ocioso.
+    // Precarga el resto de frames en tiempo ocioso. En celulares o conexiones
+    // lentas/con ahorro de datos no se baja la secuencia completa (953
+    // imágenes pueden ser varias decenas de MB): se precarga solo 1 de cada
+    // `step` frames, de forma pareja a lo largo de toda la secuencia. Los
+    // frames que de verdad se muestran siempre se piden al vuelo desde
+    // `draw()`, así que el scroll sigue funcionando bien, solo que una
+    // imagen no precargada puede tardar un instante en aparecer.
+    function preloadStep() {
+      var narrow = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+      var conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
+      var slow = !!(conn && (conn.saveData || /^(slow-2g|2g|3g)$/.test(conn.effectiveType || '')));
+      if (slow) return 8;
+      if (narrow) return 4;
+      return 1;
+    }
+
     function preload() {
+      var step = preloadStep();
       var i = 0;
       function next() {
         if (i >= total) return;
-        loadFrame(i++);
+        loadFrame(i);
+        i += step;
         (window.requestIdleCallback || function (cb) { setTimeout(cb, 40); })(next);
       }
       next();

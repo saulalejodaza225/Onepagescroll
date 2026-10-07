@@ -29,7 +29,7 @@
     color-scheme: dark;
   }
   *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overscroll-behavior-y: none; }
   body {
     margin: 0;
     background: var(--medianoche);
@@ -38,6 +38,8 @@
     font-size: 16px;
     line-height: 24px;
     -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
   }
   img { max-width: 100%; display: block; }
   a { color: inherit; text-decoration: none; }
@@ -126,10 +128,12 @@
   }
   .page { position: relative; z-index: 2; }
 
-  /* Hero: primera pantalla sobre el fondo */
-  .hero { position: relative; min-height: 100vh; }
+  /* Hero: primera pantalla sobre el fondo. 100dvh evita el salto de alto en
+     móviles cuando la barra de direcciones aparece o desaparece al hacer
+     scroll (100vh por si el navegador no soporta dvh). */
+  .hero { position: relative; min-height: 100vh; min-height: 100dvh; }
   .hero-content {
-    position: relative; min-height: 100vh;
+    position: relative; min-height: 100vh; min-height: 100dvh;
     display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;
     padding: 0 var(--margin) 12vh; max-width: 1280px; margin: 0 auto;
   }
@@ -251,6 +255,24 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .card, .btn-gold { transition: none; }
+  }
+
+  /* En pantallas táctiles no hay mouse que "suelte" el :hover: sin esto, el
+     logo, los botones y los enlaces quedarían inclinados/elevados después
+     de tocarlos, hasta tocar otra parte de la pantalla. El :active sigue
+     dando retroalimentación al presionar. */
+  @media (hover: none) {
+    .brand:hover, .brand:focus-visible { transform: none; filter: drop-shadow(0 2px 5px rgba(7,14,27,.5)); }
+    .btn-gold:hover {
+      transform: none;
+      box-shadow: inset 0 1px 1px 0 rgba(255,255,255,.6), 0 4px 0 0 var(--oro-antiguo), 0 12px 20px 0 rgba(7,14,27,.5), 0 4px 14px 0 rgba(244,182,63,.3);
+    }
+    .btn-ghost:hover {
+      transform: none; border-color: rgba(244,182,63,.3); background: var(--azul-profundo);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 1px 0 rgba(7,14,27,.7), 0 6px 14px rgba(7,14,27,.4);
+    }
+    .site-nav a:hover { color: var(--lino); }
+    .site-footer a:hover { color: inherit; }
   }
 </style>
 </head>
