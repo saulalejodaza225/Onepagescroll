@@ -512,20 +512,31 @@
   // Cualquier botón que apunte a otra sección de la página (href="#id") baja
   // a un ritmo controlado y constante, en vez del scroll-behavior:smooth del
   // navegador (casi instantáneo), para que se alcance a ver el fondo
-  // animado avanzar de principio a fin.
+  // animado avanzar de principio a fin. Los enlaces a "Servicios" (menú y
+  // pie de página) además centran la matriz comparativa en la pantalla, en
+  // vez de pegarla arriba del todo contra el encabezado fijo.
   (function () {
-    var buttons = document.querySelectorAll('.btn-gold[href^="#"], .btn-ghost[href^="#"]');
-    if (!buttons.length) return;
-
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function easeInOutCubic(t) {
       return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
 
-    function scrollToTarget(btn, target, hash) {
+    // Cuánto bajar el punto de llegada para que `target` quede centrado en
+    // la pantalla. Si el bloque es más alto que la pantalla, no se puede
+    // centrar de verdad: se deja un respiro fijo arriba en vez de pegarlo
+    // al borde.
+    function centeredOffset(target) {
+      var vh = window.innerHeight;
+      var th = target.getBoundingClientRect().height;
+      if (th < vh) return Math.min(vh * 0.22, (vh - th) / 2);
+      return vh * 0.08;
+    }
+
+    function scrollToTarget(target, hash, centered) {
       var startY = window.scrollY;
-      var endY = target.getBoundingClientRect().top + startY;
+      var offset = centered ? centeredOffset(target) : 0;
+      var endY = target.getBoundingClientRect().top + startY - offset;
       var distance = endY - startY;
       if (Math.abs(distance) < 2) return false;
 
@@ -556,14 +567,19 @@
       return true;
     }
 
-    buttons.forEach(function (btn) {
-      var hash = btn.getAttribute('href');
-      var target = document.querySelector(hash);
-      if (!target) return;
-      btn.addEventListener('click', function (e) {
-        if (scrollToTarget(btn, target, hash)) e.preventDefault();
+    function wire(selector, centered) {
+      document.querySelectorAll(selector).forEach(function (btn) {
+        var hash = btn.getAttribute('href');
+        var target = document.querySelector(hash);
+        if (!target) return;
+        btn.addEventListener('click', function (e) {
+          if (scrollToTarget(target, hash, centered)) e.preventDefault();
+        });
       });
-    });
+    }
+
+    wire('.btn-gold[href^="#"], .btn-ghost[href^="#"]', false);
+    wire('a[href="#servicios"]', true);
   })();
 </script>
 <script>
