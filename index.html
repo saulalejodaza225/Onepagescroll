@@ -557,19 +557,16 @@
   // Marca el texto de la página para el brillo radiante (ver el CSS de
   // .glow-sweep): copia el texto de cada elemento a data-glow-text, que la
   // capa ::after usa para dibujar encima el barrido de luz, sin tocar el
-  // texto real (mismo color, misma nitidez). Se deja fuera la letra de los
-  // botones dorados (necesita quedarse sólida y oscura por contraste) y los
-  // íconos.
+  // texto real (mismo color, misma nitidez). Solo los títulos principales
+  // de cada sección (antes incluía también párrafos, precios, nav, footer,
+  // etc.): con tantos elementos animados a la vez la página se sentía
+  // lenta, sobre todo en celulares. Se deja fuera la letra de los botones
+  // dorados (necesita quedarse sólida y oscura por contraste) y los íconos.
   (function () {
     var selector = [
-      '.hero-content h1', '.hero-quote', '.eyebrow',
-      '.brand-text', '.site-nav a', '.btn-ghost',
-      '.guia-head h2', '.guia-head p',
-      '.card h3', '.card .label', '.card > div > p', '.checks li', '.delivery',
-      '.price strong', '.price s',
-      '.matrix h4', '.matrix table th', '.matrix table td', '.matrix-foot p', '.matrix-foot li',
-      '.closing h2', '.closing p',
-      '.site-footer h5', '.site-footer p', '.site-footer li', '.site-footer a', '.copy'
+      '.hero-content h1',
+      '.guia-head h2', '.card h3', '.matrix h4',
+      '.closing h2'
     ].join(',');
 
     document.querySelectorAll(selector).forEach(function (el) {
