@@ -96,15 +96,16 @@
     }
 
     // Bucle: con scroll activo, el objetivo sigue al progreso y `pos` se le
-    // acerca con inercia (nunca salta). En reposo, el objetivo oscila entre
-    // unos pocos frames alrededor del punto donde se detuvo el scroll (o, la
-    // primera vez, alrededor de un frame elegido a mano), simulando una nave
-    // "estacionada" con un leve vaivén. Al reanudar el scroll, la posición
-    // sigue acercándose con la misma inercia, sin reiniciarse de golpe.
+    // acerca con inercia (nunca salta). 1.5s después de que el scroll se
+    // detiene, el objetivo oscila entre unos pocos frames alrededor del
+    // punto donde se detuvo (o, la primera vez, alrededor de un frame
+    // elegido a mano), simulando una nave "estacionada" con un leve vaivén.
+    // Al reanudar el scroll, la posición sigue acercándose con la misma
+    // inercia, sin reiniciarse de golpe.
     function tick(now) {
       var dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
       last = now;
-      var scrolling = now - lastScroll < 250;
+      var scrolling = now - lastScroll < 1500;
 
       if (scrolling || !idle) {
         parked = false;
