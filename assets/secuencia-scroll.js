@@ -7,10 +7,14 @@
  *   </section>
  *
  * Modo fondo (data-secuencia-fondo): un canvas fijo que cubre el viewport y
- * avanza con el scroll de toda la página. Sin scroll, la nave queda
+ * avanza con el scroll de toda la página, dividida en 4 zonas (una por
+ * sección: #inicio, la guía "¿Cuál es tu página?", la matriz comparativa y
+ * #contacto). Cada zona tiene asignado un tramo de frames propio, en
+ * proporción a lo alto que es; el scroll dentro de una sección solo
+ * recorre los frames de esa sección. Sin scroll, la nave queda
  * "estacionada": oscila con inercia entre unos pocos frames cercanos al
- * punto donde se detuvo el scroll (o, antes del primer scroll, cercanos a
- * un frame elegido a mano por impacto visual), como un vaivén suave.
+ * punto donde se detuvo (sin salir del tramo de esa sección), o, antes del
+ * primer scroll, cercanos a un frame elegido a mano por impacto visual.
  *   <canvas data-secuencia-fondo data-frames="..." data-total="157"></canvas>
  */
 (function () {
@@ -96,7 +100,7 @@
     }
 
     // Bucle: con scroll activo, el objetivo sigue al progreso y `pos` se le
-    // acerca con inercia (nunca salta). 1.5s después de que el scroll se
+    // acerca con inercia (nunca salta). 0.6s después de que el scroll se
     // detiene, el objetivo oscila entre unos pocos frames alrededor del
     // punto donde se detuvo (o, la primera vez, alrededor de un frame
     // elegido a mano), simulando una nave "estacionada" con un leve vaivén.
@@ -105,7 +109,7 @@
     function tick(now) {
       var dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
       last = now;
-      var scrolling = now - lastScroll < 1500;
+      var scrolling = now - lastScroll < 600;
 
       if (scrolling || !idle) {
         parked = false;
@@ -118,8 +122,11 @@
           idleStart = now;
           parked = true;
         }
+        // El vaivén no sale del rango de frames de la sección donde quedó
+        // el ancla, para no mezclar imágenes de secciones distintas.
+        var bounds = idle.zoneBounds ? idle.zoneBounds(idleAnchor) : [0, total - 1];
         var wave = Math.sin((now - idleStart) / 1000 * (2 * Math.PI / idle.period));
-        target = Math.min(total - 1, Math.max(0, idleAnchor + wave * idle.amplitude));
+        target = Math.min(bounds[1], Math.max(bounds[0], idleAnchor + wave * idle.amplitude));
       }
 
       pos = idle ? pos + (target - pos) * (1 - Math.exp(-dt * 8)) : target;
@@ -173,21 +180,103 @@
     createPlayer(canvas, section.getAttribute('data-frames'), total, progress, size, null);
   }
 
+  // Divide la página en zonas (una por sección) y reparte los frames entre
+  // ellas, en proporción a lo alto que es cada una. Dentro de cada zona, el
+  // scroll recorre solo los frames que le tocaron: el inicio nunca muestra
+  // frames pensados para la matriz comparativa, por ejemplo. `els` es la
+  // lista de elementos que marcan dónde empieza cada zona (la última va
+  // hasta el final del scroll de la página).
+  function makeZones(els, total) {
+    function docTop(el) {
+      var r = el.getBoundingClientRect();
+      return r.top + window.scrollY;
+    }
+
+    return function compute() {
+      var max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      var starts = els.map(docTop).concat([max]);
+      var zones = [];
+      var heights = [];
+      for (var i = 0; i < els.length; i++) {
+        heights.push(Math.max(1, starts[i + 1] - starts[i]));
+      }
+      var totalH = heights.reduce(function (a, b) { return a + b; }, 0);
+      var frameCounts = heights.map(function (h) {
+        return Math.max(1, Math.round((h / totalH) * total));
+      });
+      // El redondeo puede dejar la suma unos frames por encima o por debajo
+      // de `total`. El ajuste va a la zona más alta (la que menos se nota),
+      // nunca a la última al azar: una zona de scroll corta (p. ej. el
+      // cierre) seguiría recorriendo solo los frames que le tocan.
+      var sum = frameCounts.reduce(function (a, b) { return a + b; }, 0);
+      var biggest = heights.indexOf(Math.max.apply(null, heights));
+      frameCounts[biggest] = Math.max(1, frameCounts[biggest] + (total - sum));
+      var frameStart = 0;
+      for (i = 0; i < els.length; i++) {
+        zones.push({
+          start: starts[i],
+          end: starts[i + 1],
+          frameStart: frameStart,
+          frameCount: frameCounts[i]
+        });
+        frameStart += frameCounts[i];
+      }
+      return zones;
+    };
+  }
+
   function initFondo(canvas) {
     var total = parseInt(canvas.getAttribute('data-total'), 10) || 1;
 
-    // Avance de toda la página: 0 al inicio, 1 al final.
+    var zoneEls = ['#inicio', '#guia .guia-head', '#guia .matrix', '#contacto']
+      .map(function (sel) { return document.querySelector(sel); })
+      .filter(Boolean);
+    var computeZones = zoneEls.length === 4 ? makeZones(zoneEls, total) : null;
+    var zones = computeZones ? computeZones() : null;
+
+    function zoneAt(y) {
+      for (var i = 0; i < zones.length; i++) {
+        if (y < zones[i].end || i === zones.length - 1) return zones[i];
+      }
+      return zones[zones.length - 1];
+    }
+
+    function zoneForFrame(frame) {
+      for (var i = 0; i < zones.length; i++) {
+        var last = zones[i].frameStart + zones[i].frameCount - 1;
+        if (frame <= last || i === zones.length - 1) return zones[i];
+      }
+      return zones[zones.length - 1];
+    }
+
+    // Avance dentro de la sección actual, mapeado a los frames que le
+    // tocaron a esa sección (si no hay 4 secciones detectadas, recorre toda
+    // la secuencia con el scroll de la página, como antes).
     function progress() {
-      var max = document.documentElement.scrollHeight - window.innerHeight;
-      return max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      if (!zones) {
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        return max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      }
+      var z = zoneAt(window.scrollY);
+      var span = Math.max(1, z.end - z.start);
+      var local = Math.min(1, Math.max(0, (window.scrollY - z.start) / span));
+      var frame = z.frameStart + local * (z.frameCount - 1);
+      return frame / (total - 1);
     }
 
     function size() {
       canvas.width = Math.round(window.innerWidth * dpr);
       canvas.height = Math.round(window.innerHeight * dpr);
+      if (computeZones) zones = computeZones();
     }
 
     var idle = canvas.getAttribute('data-idle') === 'off' ? null : defaultIdle();
+    if (idle && zones) {
+      idle.zoneBounds = function (frame) {
+        var z = zoneForFrame(Math.round(frame));
+        return [z.frameStart, z.frameStart + z.frameCount - 1];
+      };
+    }
 
     createPlayer(canvas, canvas.getAttribute('data-frames'), total, progress, size, idle);
   }
