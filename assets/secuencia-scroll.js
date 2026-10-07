@@ -8,8 +8,8 @@
  *
  * Modo fondo (data-secuencia-fondo): un canvas fijo que cubre el viewport y
  * avanza con el scroll de toda la página. Sin scroll, el frame se congela
- * en el último que se mostró y se decora con luces pulsantes y partículas
- * dibujadas aparte, en vez de seguir moviendo la secuencia.
+ * en el último que se mostró; se recorta en una cuadrícula y cada fragmento
+ * flota por su cuenta (antigravedad), con luces pulsantes encima.
  *   <canvas data-secuencia-fondo data-frames="..." data-total="157"></canvas>
  */
 (function () {
@@ -24,8 +24,8 @@
 
   // Crea el controlador de un canvas. `progress()` devuelve un valor 0..1.
   // `size()` ajusta el tamaño del canvas al contenedor.
-  // `idle` (o null) describe las luces/partículas que decoran el frame
-  // congelado cuando no hay scroll. Ver `defaultIdle()` para su forma.
+  // `idle` (o null) describe las luces y la cuadrícula de piezas flotantes
+  // que decoran el frame congelado cuando no hay scroll. Ver `defaultIdle()`.
   function createPlayer(canvas, pattern, total, progress, size, idle) {
     var ctx = canvas.getContext('2d');
     var frames = new Array(total);
@@ -35,8 +35,6 @@
     var lastScroll = -Infinity;
     var parked = false;       // true mientras el frame está congelado (reposo)
     var idleFrame = 0;        // frame en el que quedó congelada la secuencia
-    var particles = [];
-    var spawnAcc = 0;
     var last = 0;
 
     function loadFrame(i) {
@@ -68,56 +66,53 @@
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
     }
 
-    // Reparte nuevas partículas desde los puntos de luz, a un ritmo constante.
-    function spawnParticles(dt, cw, ch) {
-      spawnAcc += dt;
-      var rate = 9; // partículas por segundo, repartidas entre todas las luces
-      var n = Math.floor(spawnAcc * rate);
-      if (n <= 0) return;
-      spawnAcc -= n / rate;
-      for (var k = 0; k < n; k++) {
-        var L = idle.lights[(Math.random() * idle.lights.length) | 0];
-        var cx = L.x * cw;
-        var cy = L.y * ch;
-        var jitter = Math.min(cw, ch) * 0.015;
-        particles.push({
-          x: cx + (Math.random() - 0.5) * jitter * 2,
-          y: cy + (Math.random() - 0.5) * jitter * 2,
-          vx: (Math.random() - 0.5) * 0.02 * cw,
-          vy: -(0.03 + Math.random() * 0.04) * ch,
-          life: 0,
-          maxLife: 0.9 + Math.random() * 0.8,
-          size: (1.4 + Math.random() * 2.2) * (cw / 900),
-          rgb: L.rgb
-        });
-      }
-      if (particles.length > 160) particles.splice(0, particles.length - 160);
-    }
+    // Recorta el frame congelado en una cuadrícula y dibuja cada fragmento con
+    // su propio vaivén (fase y amplitud distintas), como si las piezas de la
+    // nave flotaran sueltas en gravedad cero. No hay piezas reales recortadas
+    // de la nave (los frames son imágenes planas), así que esto es una
+    // cuadrícula pareja sobre toda la imagen, no un recorte de cada pieza.
+    function drawFloatingPieces(img, now) {
+      var cw = canvas.width;
+      var ch = canvas.height;
+      var scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+      var dw = img.naturalWidth * scale;
+      var dh = img.naturalHeight * scale;
+      var ox = (cw - dw) / 2;
+      var oy = (ch - dh) / 2;
 
-    // Envejece y dibuja las partículas vivas (aditivo, como chispas luminosas).
-    function drawParticles(dt) {
-      for (var i = particles.length - 1; i >= 0; i--) {
-        var p = particles[i];
-        p.life += dt;
-        if (p.life >= p.maxLife) { particles.splice(i, 1); continue; }
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-        var t = p.life / p.maxLife;
-        var alpha = (1 - t) * 0.85;
-        var r = p.size * (1 - t * 0.3) * 2.4;
-        var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-        grad.addColorStop(0, 'rgba(' + p.rgb + ',' + alpha + ')');
-        grad.addColorStop(1, 'rgba(' + p.rgb + ',0)');
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-        ctx.fill();
+      var cols = idle.grid.cols;
+      var rows = idle.grid.rows;
+      var sw = img.naturalWidth / cols;
+      var sh = img.naturalHeight / rows;
+      var dTileW = dw / cols;
+      var dTileH = dh / rows;
+      var amp = idle.grid.amplitude * Math.min(cw, ch);
+      var t = now / 1000;
+
+      ctx.clearRect(0, 0, cw, ch);
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          // Fase y velocidad propias de cada pieza, fijas pero distintas entre sí.
+          var seed = (r * cols + c) * 12.9898;
+          var phase = ((Math.sin(seed) * 43758.5453) % 1) * Math.PI * 2;
+          var speed = 0.35 + (Math.abs(Math.sin(seed * 1.7)) * 0.5);
+          var offX = Math.sin(t * speed + phase) * amp * (0.5 + Math.abs(Math.sin(seed * 2.3)));
+          var offY = Math.cos(t * speed * 0.8 + phase * 1.3) * amp * (0.6 + Math.abs(Math.cos(seed * 1.3)));
+
+          var dx = ox + c * dTileW + offX;
+          var dy = oy + r * dTileH + offY;
+          ctx.drawImage(img, c * sw, r * sh, sw, sh, dx, dy, dTileW + 1, dTileH + 1);
+        }
       }
     }
 
-    // Dibuja el frame congelado y, encima, las luces pulsantes y las partículas.
-    function drawIdle(now, dt) {
-      draw(idleFrame, true);
+    // Dibuja el frame congelado, recortado en piezas que flotan por su cuenta,
+    // y encima las luces pulsantes.
+    function drawIdle(now) {
+      var img = loadFrame(idleFrame);
+      if (!img || !img.complete || !img.naturalWidth) return;
+      drawFloatingPieces(img, now);
+
       var cw = canvas.width;
       var ch = canvas.height;
       ctx.save();
@@ -136,8 +131,6 @@
         ctx.arc(cx, cy, r, 0, Math.PI * 2);
         ctx.fill();
       }
-      spawnParticles(dt, cw, ch);
-      drawParticles(dt);
       ctx.restore();
     }
 
@@ -177,7 +170,9 @@
       var scrolling = now - lastScroll < 250;
 
       if (scrolling || !idle) {
-        if (parked) { particles.length = 0; }
+        // Al salir del reposo, fuerza un redibujado limpio: el frame congelado
+        // pudo quedar pintado en piezas sueltas y con las luces encima.
+        if (parked) { current = -1; }
         parked = false;
         target = progress() * (total - 1);
         pos = idle ? pos + (target - pos) * (1 - Math.exp(-dt * 8)) : target;
@@ -187,7 +182,7 @@
           idleFrame = Math.round(pos);
           parked = true;
         }
-        drawIdle(now, dt);
+        drawIdle(now);
       }
       requestAnimationFrame(tick);
     }
@@ -207,15 +202,17 @@
     requestAnimationFrame(tick);
   }
 
-  // Luces y colores por defecto para el modo fondo: una cálida (dorada, a
-  // tono con la marca) y una fría (azulada, como un motor), con sus
-  // partículas. Las posiciones son fracciones del canvas (0..1).
+  // Configuración por defecto del modo fondo en reposo: luces pulsantes
+  // (una cálida, a tono con la marca, y una fría, como un motor; posiciones
+  // en fracciones del canvas) y la cuadrícula con la que se recorta el frame
+  // para el efecto de piezas flotando en antigravedad.
   function defaultIdle() {
     return {
       lights: [
         { x: 0.62, y: 0.47, r: 0.085, period: 2.1, rgb: '255,210,140' },
         { x: 0.78, y: 0.53, r: 0.07, period: 1.7, rgb: '190,225,255' }
-      ]
+      ],
+      grid: { cols: 10, rows: 6, amplitude: 0.006 }
     };
   }
 
