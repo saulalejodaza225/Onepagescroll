@@ -22,15 +22,17 @@
 
   // Crea el controlador de un canvas. `progress()` devuelve un valor 0..1.
   // `size()` ajusta el tamaño del canvas al contenedor.
-  // `idleFps` reproduce la secuencia en ida y vuelta cuando no hay scroll (0 = desactivado).
-  function createPlayer(canvas, pattern, total, progress, size, idleFps) {
+  // `idle` ({amplitude, period}) hace que, sin scroll, la secuencia quede "parqueada"
+  // en el frame donde se detuvo y oscile unos pocos frames alrededor (0 = desactivado).
+  function createPlayer(canvas, pattern, total, progress, size, idle) {
     var ctx = canvas.getContext('2d');
     var frames = new Array(total);
     var current = -1;
-    var pos = 0;          // posición fraccionaria dentro de la secuencia
-    var dir = 1;          // sentido de la reproducción en reposo
+    var pos = 0;              // posición fraccionaria dentro de la secuencia
     var lastScroll = -Infinity;
-    var last = 0;
+    var wasScrolling = true;  // fuerza fijar el ancla la primera vez que entra en reposo
+    var idleAnchor = 0;       // frame donde quedó "parqueada" la nave
+    var idleStart = 0;
 
     function loadFrame(i) {
       if (i < 0 || i >= total) return null;
@@ -86,17 +88,22 @@
       lastScroll = performance.now();
     }
 
-    // Bucle: con scroll activo, el frame sigue al progreso; en reposo avanza
-    // despacio desde el frame actual, en ida y vuelta.
+    // Bucle: con scroll activo, el frame sigue al progreso. En reposo la nave
+    // queda "parqueada" en ese frame y solo oscila unos pocos frames alrededor,
+    // como un leve balanceo, en vez de recorrer la secuencia completa.
     function tick(now) {
-      var dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
-      last = now;
-      if (now - lastScroll < 250 || !(idleFps > 0)) {
+      var scrolling = now - lastScroll < 250;
+      if (scrolling || !idle) {
         pos = progress() * (total - 1);
+        wasScrolling = true;
       } else {
-        pos += dir * idleFps * dt;
-        if (pos >= total - 1) { pos = total - 1; dir = -1; }
-        else if (pos <= 0) { pos = 0; dir = 1; }
+        if (wasScrolling) {
+          idleAnchor = pos;
+          idleStart = now;
+          wasScrolling = false;
+        }
+        var wave = Math.sin((now - idleStart) / 1000 * (2 * Math.PI / idle.period));
+        pos = Math.min(total - 1, Math.max(0, idleAnchor + wave * idle.amplitude));
       }
       draw(Math.round(pos));
       requestAnimationFrame(tick);
@@ -152,10 +159,14 @@
       canvas.height = Math.round(window.innerHeight * dpr);
     }
 
-    var idleFps = parseFloat(canvas.getAttribute('data-idle-fps'));
-    if (isNaN(idleFps)) idleFps = 12;
+    // Amplitud en frames del balanceo en reposo, y duración de un ciclo completo.
+    var amplitude = parseFloat(canvas.getAttribute('data-idle-amplitude'));
+    if (isNaN(amplitude)) amplitude = 2.5;
+    var period = parseFloat(canvas.getAttribute('data-idle-period'));
+    if (isNaN(period) || period <= 0) period = 6;
+    var idle = amplitude > 0 ? { amplitude: amplitude, period: period } : null;
 
-    createPlayer(canvas, canvas.getAttribute('data-frames'), total, progress, size, idleFps);
+    createPlayer(canvas, canvas.getAttribute('data-frames'), total, progress, size, idle);
   }
 
   function boot() {
