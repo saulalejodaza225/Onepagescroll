@@ -70,20 +70,36 @@
     transform: perspective(500px) rotateY(-24deg) translateZ(4px);
     filter: drop-shadow(0 10px 16px rgba(7,14,27,.6)) drop-shadow(0 0 12px rgba(244,182,63,.4));
   }
-  /* Pieza 3D independiente: el ícono de la pata gira sobre su eje Y todo el
-     tiempo. Dos caras superpuestas (dorada y, detrás, color "oro antiguo")
-     dan la sensación de espesor: al girar, una cara se oculta y aparece la
-     otra, en vez de aplanarse como un recorte sin volumen. */
-  .brand-icon { position: relative; display: inline-grid; place-items: center; width: 26px; height: 26px; perspective: 320px; flex: none; }
-  .brand-icon-3d { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: pawSpin 7s linear infinite; }
-  .brand-icon-3d .material-symbols-outlined {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    font-size: 22px; backface-visibility: hidden;
+  /* Pieza 3D independiente: una esfera dorada con sombreado de luz fijo
+     (como una bola de billar) y la pata grabada en la superficie. El relieve
+     se desliza por dentro sin parar, dando la sensación de que la esfera
+     gira sobre su eje, mientras la luz y la sombra se quedan fijas, como en
+     un globo real visto desde afuera. */
+  .brand-icon {
+    position: relative; width: 28px; height: 28px; border-radius: 50%; overflow: hidden; flex: none;
+    background: radial-gradient(circle at 34% 30%, #FFE9B8 0%, #F9CF7A 20%, #F4B63F 48%, #C98818 78%, #6b4700 100%);
+    box-shadow:
+      inset 0 -4px 5px rgba(7,14,27,.55),
+      inset 0 2px 3px rgba(255,255,255,.55),
+      0 3px 7px rgba(7,14,27,.6);
   }
-  .brand-icon-3d .face { color: var(--oro-real); transform: translateZ(2px); filter: drop-shadow(0 2px 4px rgba(7,14,27,.6)); }
-  .brand-icon-3d .rim { color: var(--oro-antiguo); transform: translateZ(-2px) rotateY(180deg); }
-  @keyframes pawSpin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-  @media (prefers-reduced-motion: reduce) { .brand-icon-3d { animation: none; } }
+  .brand-sphere-strip {
+    position: absolute; top: 50%; left: 0; display: flex;
+    transform: translateY(-50%);
+    animation: sphereSpin 3.4s linear infinite;
+  }
+  .brand-sphere-strip .material-symbols-outlined {
+    width: 28px; height: 28px; flex: none; display: flex; align-items: center; justify-content: center;
+    font-size: 15px; color: rgba(7,14,27,.78);
+  }
+  @keyframes sphereSpin { from { transform: translateY(-50%) translateX(0); } to { transform: translateY(-50%) translateX(-28px); } }
+  .brand-sphere-shade {
+    position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+    background:
+      radial-gradient(circle at 32% 26%, rgba(255,255,255,.9) 0%, rgba(255,255,255,.25) 18%, transparent 42%),
+      radial-gradient(circle at 70% 80%, rgba(7,14,27,.6) 0%, transparent 55%);
+  }
+  @media (prefers-reduced-motion: reduce) { .brand-sphere-strip { animation: none; } }
   .site-nav { display: none; gap: 2rem; }
   .site-nav a { font-family: Poppins, sans-serif; font-size: 14px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--lino); transition: color .2s; }
   .site-nav a:hover { color: var(--oro-real); }
@@ -259,10 +275,11 @@
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="#inicio" aria-label="Nocturne Studio, inicio">
-      <span class="brand-icon" aria-hidden="true"><span class="brand-icon-3d">
-        <span class="material-symbols-outlined face">pets</span>
-        <span class="material-symbols-outlined rim">pets</span>
-      </span></span>NOCTURNE
+      <span class="brand-icon" aria-hidden="true"><span class="brand-sphere-strip">
+        <span class="material-symbols-outlined">pets</span>
+        <span class="material-symbols-outlined">pets</span>
+        <span class="material-symbols-outlined">pets</span>
+      </span><span class="brand-sphere-shade"></span></span>NOCTURNE
     </a>
     <nav class="site-nav" aria-label="Principal">
       <a href="#guia">Guía</a>
