@@ -53,24 +53,38 @@
       return frames[i];
     }
 
-    // Cubre el canvas manteniendo proporción (equivale a object-fit: cover).
-    function draw(index, force) {
-      if (index < 0) return;
-      var img = loadFrame(index);
-      if (!img || !img.complete || !img.naturalWidth) return;
-      if (index === current && !force) return;
-      current = index;
+    // Dibuja una imagen cubriendo el canvas (equivale a object-fit: cover).
+    function drawCover(img, alpha) {
       var cw = canvas.width;
       var ch = canvas.height;
       var scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
       var w = img.naturalWidth * scale;
       var h = img.naturalHeight * scale;
-      ctx.clearRect(0, 0, cw, ch);
+      ctx.globalAlpha = alpha;
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+      ctx.globalAlpha = 1;
+    }
+
+    // Mezcla el frame inferior y el superior de `p` según su parte fraccionaria,
+    // para que el video se vea fluido en vez de saltar de frame en frame.
+    function draw(p, force) {
+      if (p < 0) return;
+      if (!force && Math.abs(p - current) < 0.004) return;
+      var i0 = Math.max(0, Math.min(total - 1, Math.floor(p)));
+      var t = p - i0;
+      var img0 = loadFrame(i0);
+      if (!img0 || !img0.complete || !img0.naturalWidth) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawCover(img0, 1);
+      if (t > 0.004 && i0 + 1 < total) {
+        var img1 = loadFrame(i0 + 1);
+        if (img1 && img1.complete && img1.naturalWidth) drawCover(img1, t);
+      }
+      current = p;
     }
 
     function render() {
-      draw(Math.round(pos));
+      draw(pos);
     }
 
     function resize() {
@@ -122,7 +136,7 @@
       }
 
       pos = idle ? pos + (target - pos) * (1 - Math.exp(-dt * 8)) : target;
-      draw(Math.round(pos));
+      draw(pos);
       requestAnimationFrame(tick);
     }
 
@@ -131,7 +145,7 @@
     resize();
 
     if (reduceMotion) {
-      draw(Math.round(pos), true);
+      draw(pos, true);
       return;
     }
 
