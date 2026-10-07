@@ -50,11 +50,12 @@
     var frames = new Array(total);
     var decoded = new Uint8Array(total);
     var current = -1;         // frame que de verdad está pintado en el canvas
-    var pos = 0;              // posición fraccionaria, lo que se dibuja (con inercia)
-    var target = 0;           // posición hacia la que `pos` se acerca cada frame
+    var pos = 0;              // posición fraccionaria, lo que se dibuja: track + off
+    var track = { p: 0, v: 0 }; // resorte que sigue al frame del scroll (posición y velocidad)
+    var off = { p: 0, v: 0 };   // desplazamiento del reposo (vaivén); vuelve a 0 al retomar el scroll
     var hasScrolled = false;  // false hasta el primer scroll real del usuario
     var parked = false;       // true mientras dura el reposo (vaivén en bucle)
-    var idleAnchor = 0;       // frame alrededor del cual oscila el reposo
+    var idleShift = 0;        // desplazamiento fijo de arranque (solo el primer reposo)
     var idleStart = 0;
     var idleTimer = null;     // dispara el inicio del reposo una sola vez por parada
     var last = 0;
@@ -181,15 +182,17 @@
 
     // Entra en reposo una sola vez por parada: lo dispara el temporizador de
     // onScroll, nunca el propio bucle, así que el ancla y la fase del vaivén
-    // no se reinician mientras el reposo sigue en curso. El ancla es el frame
-    // que corresponde exactamente a la posición del scroll (no el `pos`
-    // que aún podría ir rezagado), así reposo y scroll quedan alineados.
+    // no se reinician mientras el reposo sigue en curso. El vaivén se mide
+    // siempre respecto al frame que corresponde exactamente al scroll (no
+    // respecto a un `pos` que aún podría ir rezagado), así reposo y scroll
+    // quedan alineados. Solo la primera vez, antes de cualquier scroll, el
+    // reposo arranca desplazado hacia el frame elegido a mano.
     function enterIdle() {
       idleTimer = null;
       if (parked || !idle) return;
-      idleAnchor = (!hasScrolled && idle.initialFrame != null && window.scrollY < 4)
-        ? Math.max(0, Math.min(total - 1, idle.initialFrame))
-        : progress() * (total - 1);
+      idleShift = (!hasScrolled && idle.initialFrame != null && window.scrollY < 4)
+        ? Math.max(0, Math.min(total - 1, idle.initialFrame)) - progress() * (total - 1)
+        : 0;
       idleStart = performance.now();
       parked = true;
     }
@@ -201,48 +204,71 @@
       if (idle) idleTimer = setTimeout(enterIdle, 300);
     }
 
-    // Bucle: con scroll activo, el objetivo sigue al progreso y `pos` se le
-    // acerca con inercia (nunca salta). La inercia se adapta a la velocidad
-    // del scroll: suave si es lento, más ajustada si es rápido, para que el
-    // frame no se quede rezagado cuando hay mucho movimiento. 0.3s después
-    // de que el scroll se detiene (una sola vez, vía el temporizador de
-    // onScroll), el objetivo empieza a oscilar entre unos pocos frames
-    // alrededor del punto donde se detuvo (o, la primera vez, alrededor de
-    // un frame elegido a mano), simulando una nave "estacionada"; esa
-    // oscilación sigue como un bucle continuo mientras dure el reposo, sin
-    // reiniciarse. Al reanudar el scroll, la posición sigue acercándose
-    // desde el frame donde quedó el reposo, sin reiniciarse de golpe.
+    // Resorte críticamente amortiguado (solución exacta: estable con
+    // cualquier dt). A diferencia de un suavizado exponencial, conserva la
+    // velocidad: si el objetivo cambia de golpe, el movimiento acelera de
+    // forma gradual en vez de arrancar con un tirón.
+    function spring(s, to, omega, dt) {
+      var x = s.p - to;
+      var e = Math.exp(-omega * dt);
+      var t = (s.v + omega * x) * dt;
+      s.v = (s.v - omega * t) * e;
+      s.p = to + (x + t) * e;
+    }
+
+    // Bucle. Lo que se dibuja es la suma de dos movimientos independientes:
+    //  - `track`: un resorte que sigue al frame del scroll. Su rigidez crece
+    //    con la velocidad del scroll (suave si es lento, ajustado si es
+    //    rápido, para no quedar rezagado).
+    //  - `off`: el desplazamiento del reposo. 0.3s después de que el scroll
+    //    se detiene (una sola vez, vía el temporizador de onScroll) su
+    //    objetivo empieza a oscilar entre unos pocos frames alrededor del
+    //    punto donde se detuvo (o, la primera vez, del frame elegido a
+    //    mano), simulando una nave "estacionada"; sigue como un bucle
+    //    continuo sin reiniciarse. Al retomar el scroll su objetivo vuelve
+    //    a 0, y como es un resorte que conserva la velocidad, el
+    //    desplazamiento se disuelve con suavidad mientras el scroll ya
+    //    mueve el fondo: la animación continúa desde el frame donde quedó
+    //    el reposo, sin tirones ni "rebobinados" bruscos.
     function tick(now) {
       var dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
       last = now;
 
-      // Frame que corresponde al scroll, y qué tan rápido se mueve.
+      // Frame que corresponde al scroll, y qué tan rápido se mueve (sube
+      // rápido con el scroll y baja despacio al frenar).
       var pf = progress() * (total - 1);
       if (prevPf !== null && dt > 0) {
-        speed += (Math.abs(pf - prevPf) / dt - speed) * Math.min(1, dt * 12);
+        var inst = Math.abs(pf - prevPf) / dt;
+        speed += (inst - speed) * Math.min(1, dt * (inst > speed ? 30 : 5));
       }
       prevPf = pf;
 
-      var rate = 8;
-      if (!parked || !idle) {
-        target = pf;
-        rate = 8 + Math.min(32, speed * 0.06);
+      if (!idle) {
+        pos = pf;
       } else {
-        // El vaivén no sale del rango de frames de la sección donde quedó
-        // el ancla, para no mezclar imágenes de secciones distintas.
-        var bounds = idle.zoneBounds ? idle.zoneBounds(idleAnchor) : [0, total - 1];
-        var wave = Math.sin((now - idleStart) / 1000 * (2 * Math.PI / idle.period));
-        target = Math.min(bounds[1], Math.max(bounds[0], idleAnchor + wave * idle.amplitude));
+        spring(track, pf, 16 + Math.min(44, speed * 0.09), dt);
+
+        var offTarget = 0;
+        if (parked) {
+          // El vaivén no sale del rango de frames de la sección donde quedó,
+          // para no mezclar imágenes de secciones distintas.
+          var base = pf + idleShift;
+          var bounds = idle.zoneBounds ? idle.zoneBounds(base) : [0, total - 1];
+          var wave = Math.sin((now - idleStart) / 1000 * (2 * Math.PI / idle.period));
+          offTarget = Math.min(bounds[1], Math.max(bounds[0], base + wave * idle.amplitude)) - pf;
+        }
+        spring(off, offTarget, 6, dt);
+
+        pos = Math.min(total - 1, Math.max(0, track.p + off.p));
       }
 
-      pos = idle ? pos + (target - pos) * (1 - Math.exp(-dt * rate)) : target;
       var idx = Math.round(pos);
       draw(idx);
-      prefetch(idx, target - pos);
+      prefetch(idx, track.v + off.v);
       requestAnimationFrame(tick);
     }
 
-    pos = target = progress() * (total - 1);
+    pos = track.p = progress() * (total - 1);
     loadFrame(0);
     resize();
 
