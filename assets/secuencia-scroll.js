@@ -27,7 +27,7 @@
   function createPlayer(canvas, pattern, total, progress, size, idle) {
     var ctx = canvas.getContext('2d');
     var frames = new Array(total);
-    var current = -1;
+    var lastDrawn = -1;       // última posición (redondeada a 0.01) ya pintada
     var pos = 0;              // posición fraccionaria dentro de la secuencia
     var lastScroll = -Infinity;
     var wasScrolling = true;  // fuerza fijar el ancla la primera vez que entra en reposo
@@ -47,29 +47,45 @@
       return frames[i];
     }
 
-    // Cubre el canvas manteniendo proporción (equivale a object-fit: cover).
-    function draw(index, force) {
-      if (index < 0) return;
-      var img = loadFrame(index);
-      if (!img || !img.complete || !img.naturalWidth) return;
-      if (index === current && !force) return;
-      current = index;
+    // Dibuja una imagen cubriendo el canvas (equivale a object-fit: cover).
+    function drawImageCover(img, alpha) {
       var cw = canvas.width;
       var ch = canvas.height;
       var scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
       var w = img.naturalWidth * scale;
       var h = img.naturalHeight * scale;
-      ctx.clearRect(0, 0, cw, ch);
+      ctx.globalAlpha = alpha;
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+      ctx.globalAlpha = 1;
+    }
+
+    // Mezcla el frame inferior y el superior de `p` según su parte fraccionaria,
+    // para que el movimiento entre frames se vea continuo y no a saltos.
+    function draw(p, force) {
+      if (p < 0) return;
+      if (Math.abs(p - lastDrawn) < 0.004 && !force) return;
+      var i0 = Math.min(total - 1, Math.floor(p));
+      var t = p - i0;
+      var img0 = loadFrame(i0);
+      if (!img0 || !img0.complete || !img0.naturalWidth) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawImageCover(img0, 1);
+      if (t > 0.004 && i0 + 1 < total) {
+        var img1 = loadFrame(i0 + 1);
+        if (img1 && img1.complete && img1.naturalWidth) {
+          drawImageCover(img1, t);
+        }
+      }
+      lastDrawn = p;
     }
 
     function render() {
-      draw(Math.round(pos));
+      draw(pos);
     }
 
     function resize() {
       size();
-      current = -1;
+      lastDrawn = -1;
       render();
     }
 
@@ -105,7 +121,7 @@
         var wave = Math.sin((now - idleStart) / 1000 * (2 * Math.PI / idle.period));
         pos = Math.min(total - 1, Math.max(0, idleAnchor + wave * idle.amplitude));
       }
-      draw(Math.round(pos));
+      draw(pos);
       requestAnimationFrame(tick);
     }
 
@@ -114,7 +130,7 @@
     resize();
 
     if (reduceMotion) {
-      draw(Math.round(pos), true);
+      draw(pos, true);
       return;
     }
 
@@ -160,10 +176,12 @@
     }
 
     // Amplitud en frames del balanceo en reposo, y duración de un ciclo completo.
+    // Con el crossfade entre frames, una amplitud mayor sigue viéndose como un
+    // balanceo suave y fluido, no como un salto.
     var amplitude = parseFloat(canvas.getAttribute('data-idle-amplitude'));
-    if (isNaN(amplitude)) amplitude = 2.5;
+    if (isNaN(amplitude)) amplitude = 18;
     var period = parseFloat(canvas.getAttribute('data-idle-period'));
-    if (isNaN(period) || period <= 0) period = 6;
+    if (isNaN(period) || period <= 0) period = 14;
     var idle = amplitude > 0 ? { amplitude: amplitude, period: period } : null;
 
     createPlayer(canvas, canvas.getAttribute('data-frames'), total, progress, size, idle);
