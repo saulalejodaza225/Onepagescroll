@@ -114,9 +114,11 @@
     font-family: Poppins, sans-serif; font-size: 12px; letter-spacing: .12em; color: var(--niebla);
   }
   .hero-progress span { color: var(--oro-real); }
+  @media (max-width: 1023px) {
+    .hero-progress { display: none; }
+  }
   @media (max-width: 767px) {
     .hero-content { padding: 0 var(--gutter) 10vh; }
-    .hero-progress { display: none; }
     .hero-content h1 { font-size: 2.5rem; }
   }
 
@@ -210,7 +212,7 @@
     border: 0 !important;
     backdrop-filter: none !important;
   }
-  .site-header { box-shadow: none; }
+  .site-header { box-shadow: none; height: 88px; background: linear-gradient(to bottom, rgba(7,14,27,.9) 45%, rgba(7,14,27,0) 100%) !important; }
   .divider { display: none; }
   .card, .matrix, .matrix-foot { padding: 0; }
   .card { padding: 0 1rem; }
