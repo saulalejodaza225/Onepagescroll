@@ -53,38 +53,24 @@
       return frames[i];
     }
 
-    // Dibuja una imagen cubriendo el canvas (equivale a object-fit: cover).
-    function drawCover(img, alpha) {
+    // Cubre el canvas manteniendo proporción (equivale a object-fit: cover).
+    function draw(index, force) {
+      if (index < 0) return;
+      var img = loadFrame(index);
+      if (!img || !img.complete || !img.naturalWidth) return;
+      if (index === current && !force) return;
+      current = index;
       var cw = canvas.width;
       var ch = canvas.height;
       var scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
       var w = img.naturalWidth * scale;
       var h = img.naturalHeight * scale;
-      ctx.globalAlpha = alpha;
+      ctx.clearRect(0, 0, cw, ch);
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
-      ctx.globalAlpha = 1;
-    }
-
-    // Mezcla el frame inferior y el superior de `p` según su parte fraccionaria,
-    // para que el video se vea fluido en vez de saltar de frame en frame.
-    function draw(p, force) {
-      if (p < 0) return;
-      if (!force && Math.abs(p - current) < 0.004) return;
-      var i0 = Math.max(0, Math.min(total - 1, Math.floor(p)));
-      var t = p - i0;
-      var img0 = loadFrame(i0);
-      if (!img0 || !img0.complete || !img0.naturalWidth) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawCover(img0, 1);
-      if (t > 0.004 && i0 + 1 < total) {
-        var img1 = loadFrame(i0 + 1);
-        if (img1 && img1.complete && img1.naturalWidth) drawCover(img1, t);
-      }
-      current = p;
     }
 
     function render() {
-      draw(pos);
+      draw(Math.round(pos));
     }
 
     function resize() {
@@ -136,7 +122,7 @@
       }
 
       pos = idle ? pos + (target - pos) * (1 - Math.exp(-dt * 8)) : target;
-      draw(pos);
+      draw(Math.round(pos));
       requestAnimationFrame(tick);
     }
 
@@ -145,7 +131,7 @@
     resize();
 
     if (reduceMotion) {
-      draw(pos, true);
+      draw(Math.round(pos), true);
       return;
     }
 
@@ -157,10 +143,12 @@
 
   // Configuración por defecto del modo fondo en reposo: amplitud (en
   // frames) y periodo (en segundos) del vaivén, y el frame alrededor del
-  // cual oscila antes del primer scroll (índice 0-based; 29 = frame_030,
-  // la nave con el anillo de energía encendido).
+  // cual oscila antes del primer scroll (índice 0-based; 116 = frame_117,
+  // la nave con el anillo de energía encendido). Con los 953 frames
+  // interpolados (4x los 240 originales), estos valores siguen
+  // correspondiendo al mismo rango de movimiento y tiempo real de antes.
   function defaultIdle() {
-    return { amplitude: 18, period: 14, initialFrame: 29 };
+    return { amplitude: 72, period: 14, initialFrame: 116 };
   }
 
   function initSeccion(section) {
