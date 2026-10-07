@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&family=Poppins:wght@500;600;700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
 <link rel="preload" as="image" href="assets/video/frame_001.jpg" type="image/jpeg">
+<link rel="preload" as="image" href="assets/video/frame_117.jpg" type="image/jpeg" fetchpriority="low">
 <style>
   /* Tokens de DESIGN.md (Bogotá Nocturne) */
   :root {
@@ -91,42 +92,133 @@
   .site-nav a:hover { color: var(--oro-real); }
   @media (min-width: 1024px) { .site-nav { display: flex; } }
 
-  /* Botones 3D dorados */
-  .btn-gold {
+  /* Botones 3D. Cuerpo biselado con grosor real (la cara se hunde al
+     presionar), inclinación hacia el mouse, brillo que sigue al cursor,
+     destello que cruza cada cierto tiempo y un aro de pulso que invita al
+     clic. Los efectos de atención solo corren mientras el botón está en
+     pantalla (JS marca data-off al salir) y se apagan con
+     prefers-reduced-motion. El estado :hover solo existe con mouse real. */
+  .btn-gold, .btn-ghost {
+    --rx: 0deg; --ry: 0deg; --ty: 0px; --mx: 50%; --my: 50%; --depth: 5px; --glow: .3;
     position: relative; display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-    padding: 1rem 2.5rem; border-radius: 12px; border: 0; cursor: pointer;
+    cursor: pointer; -webkit-user-select: none; user-select: none; touch-action: manipulation;
+    transform: perspective(700px) translateY(var(--ty)) rotateX(var(--rx)) rotateY(var(--ry));
+    transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .25s ease, filter .25s ease;
+  }
+  .btn-gold {
+    padding: 1rem 2.5rem; border-radius: 12px; border: 0;
     font-family: Poppins, sans-serif; font-size: 14px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
     color: var(--medianoche);
-    background: linear-gradient(180deg, #F9CF7A 0%, #F4B63F 45%, #C98818 100%);
-    box-shadow: inset 0 1px 1px 0 rgba(255,255,255,.6), 0 4px 0 0 var(--oro-antiguo), 0 12px 20px 0 rgba(7,14,27,.5), 0 4px 14px 0 rgba(244,182,63,.3);
-    transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+    text-shadow: 0 1px 0 rgba(255,240,205,.7), 0 -1px 0 rgba(120,76,8,.2);
+    background: linear-gradient(180deg, #FBDB93 0%, #F4B63F 42%, #DDA024 78%, #C98818 100%);
+    box-shadow:
+      inset 0 1px 1px 0 rgba(255,255,255,.75),
+      inset 0 -3px 5px 0 rgba(138,98,18,.35),
+      0 var(--depth) 0 0 var(--oro-antiguo),
+      0 calc(var(--depth) + 8px) 18px 0 rgba(7,14,27,.55),
+      0 4px 16px 0 rgba(244,182,63,var(--glow));
   }
-  .btn-gold:hover { transform: translateY(-1px); box-shadow: inset 0 1px 1px 0 rgba(255,255,255,.6), 0 4px 0 0 var(--oro-antiguo), 0 16px 28px 0 rgba(7,14,27,.5), 0 6px 22px 0 rgba(244,182,63,.45); }
-  .btn-gold:active { transform: translateY(3px); box-shadow: inset 0 1px 1px 0 rgba(255,255,255,.6), 0 1px 0 0 var(--oro-antiguo), 0 4px 10px 0 rgba(7,14,27,.4); }
-  .btn-gold:focus-visible, .btn-ghost:focus-visible, .site-nav a:focus-visible { outline: 2px solid var(--oro-real); outline-offset: 3px; }
   .btn-ghost {
-    display: inline-flex; align-items: center; justify-content: center; padding: .75rem 1.25rem; border-radius: 8px;
-    font-family: Poppins, sans-serif; font-size: 14px; font-weight: 500; color: var(--marfil); cursor: pointer;
-    background: var(--azul-profundo); border: 1px solid rgba(244,182,63,.3);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 1px 0 rgba(7,14,27,.7), 0 6px 14px rgba(7,14,27,.4);
-    transition: border-color .2s, background .2s, transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+    --depth: 3px; --glow: .1;
+    padding: .75rem 1.25rem; border-radius: 8px; border: 1px solid rgba(244,182,63,.42);
+    font-family: Poppins, sans-serif; font-size: 14px; font-weight: 500; color: var(--marfil);
+    text-shadow: 0 1px 0 rgba(7,14,27,.9);
+    background: linear-gradient(180deg, #1F3859 0%, #12233B 55%, #0C1A2E 100%);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255,255,255,.16),
+      inset 0 -2px 4px 0 rgba(7,14,27,.45),
+      0 var(--depth) 0 0 #050C18,
+      0 calc(var(--depth) + 6px) 14px 0 rgba(7,14,27,.55),
+      0 0 14px 0 rgba(244,182,63,var(--glow));
   }
-  .btn-ghost:hover {
-    border-color: var(--oro-real); background: rgba(244,182,63,.08);
-    transform: translateY(-2px);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(7,14,27,.7), 0 12px 22px rgba(7,14,27,.5), 0 0 0 1px rgba(244,182,63,.2);
+  @media (hover: hover) {
+    .btn-gold:hover { --ty: -3px; --depth: 7px; --glow: .6; filter: brightness(1.06) saturate(1.08); }
+    .btn-ghost:hover { --ty: -2px; --depth: 5px; --glow: .4; border-color: var(--oro-real); filter: brightness(1.12); }
   }
-  .btn-ghost:active { transform: translateY(1px); box-shadow: inset 0 2px 4px rgba(7,14,27,.6), 0 2px 6px rgba(7,14,27,.3); }
+  .btn-gold:focus-visible { --ty: -2px; --depth: 6px; --glow: .5; }
+  .btn-ghost:focus-visible { --ty: -2px; --glow: .35; }
+  .btn-gold:active { --ty: 4px; --depth: 1px; --glow: .18; filter: brightness(.97); transition-duration: .08s; }
+  .btn-ghost:active { --ty: 2px; --depth: 1px; --glow: .06; filter: brightness(.95); transition-duration: .08s; }
+  .btn-gold:focus-visible, .btn-ghost:focus-visible, .site-nav a:focus-visible { outline: 2px solid var(--oro-real); outline-offset: 3px; }
+
+  /* Capa interna (la inyecta JS): recorta el destello, el brillo del cursor
+     y la onda del clic al contorno redondeado del botón. */
+  .btn-fx { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+  .btn-fx::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.5), rgba(255,255,255,0) 58%);
+    opacity: 0; transition: opacity .25s;
+  }
+  @media (hover: hover) { .btn-gold:hover .btn-fx::before, .btn-ghost:hover .btn-fx::before { opacity: 1; } }
+  .btn-ghost .btn-fx::before { background: radial-gradient(circle at var(--mx) var(--my), rgba(244,182,63,.32), rgba(244,182,63,0) 60%); }
+  .btn-fx::after {
+    content: ''; position: absolute; top: -25%; bottom: -25%; left: 0; width: 36%;
+    background: linear-gradient(100deg, rgba(255,255,255,0), rgba(255,255,255,.6), rgba(255,255,255,0));
+    transform: translateX(-170%) skewX(-18deg);
+    animation: btnGlint 4.8s cubic-bezier(.4,0,.2,1) infinite; animation-delay: var(--fx-delay, 0s);
+  }
+  .btn-ghost .btn-fx::after { background: linear-gradient(100deg, rgba(244,182,63,0), rgba(244,182,63,.28), rgba(244,182,63,0)); }
+  @keyframes btnGlint {
+    0% { transform: translateX(-170%) skewX(-18deg); }
+    24%, 100% { transform: translateX(430%) skewX(-18deg); }
+  }
+  /* Aro de pulso: solo transform y opacity (no repinta). */
+  .btn-gold::before, .btn-ghost::before {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    border: 2px solid rgba(244,182,63,.85);
+    opacity: 0; transform: scale(1);
+    animation: btnPing 3.4s cubic-bezier(.2,.6,.3,1) infinite; animation-delay: var(--fx-delay, 0s);
+  }
+  .btn-ghost::before { border-width: 1.5px; border-color: rgba(244,182,63,.7); }
+  @keyframes btnPing {
+    0% { opacity: 0; transform: scale(1); }
+    10% { opacity: .85; }
+    64%, 100% { opacity: 0; transform: scale(var(--ping-x, 1.1), var(--ping-y, 1.55)); }
+  }
+  .card .btn-gold { --ping-x: 1.05; --ping-y: 1.45; }
+  .btn-ripple {
+    position: absolute; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,.75), rgba(255,255,255,0) 70%);
+    transform: scale(0); animation: btnRipple .65s ease-out forwards;
+  }
+  .btn-ghost .btn-ripple { background: radial-gradient(circle, rgba(244,182,63,.55), rgba(244,182,63,0) 70%); }
+  @keyframes btnRipple {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(var(--rs, 14)); opacity: 0; }
+  }
+  /* La flecha de los botones "invita" al clic: baja o sube a ritmo lento. */
+  .btn-arrow .material-symbols-outlined { animation: arrowNudgeDown 1.5s ease-in-out infinite; animation-delay: var(--fx-delay, 0s); }
+  .btn-arrow-up .material-symbols-outlined { animation-name: arrowNudgeUp; }
+  @keyframes arrowNudgeDown { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
+  @keyframes arrowNudgeUp { 0%, 100% { transform: translateY(2px); } 50% { transform: translateY(-3px); } }
+  @media (hover: hover) { .btn-arrow:hover .material-symbols-outlined { animation-duration: .7s; } }
+  /* Fuera de pantalla no se anima nada (ahorra GPU y batería). */
+  [data-off]::before, [data-off]::after, [data-off] .btn-fx::after, [data-off] .material-symbols-outlined { animation-play-state: paused; }
+
+  /* Enlaces del menú y del pie: subrayado dorado que barre al pasar. */
+  .site-nav a { position: relative; padding: 6px 0; }
+  .site-nav a::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--oro-real), #FBDB93);
+    box-shadow: 0 0 8px rgba(244,182,63,.7);
+    transform: scaleX(0); transform-origin: right center;
+    transition: transform .35s cubic-bezier(.16,1,.3,1);
+  }
+  .site-nav a:focus-visible::after { transform: scaleX(1); transform-origin: left center; }
+  @media (hover: hover) { .site-nav a:hover::after { transform: scaleX(1); transform-origin: left center; } }
+  .site-footer li a { display: inline-block; transition: transform .25s cubic-bezier(.16,1,.3,1), color .2s; }
+  @media (hover: hover) { .site-footer li a:hover { transform: translateX(4px); } }
+  [tabindex="-1"]:focus { outline: none; }
 
   /* Fondo fijo: la secuencia avanza con el scroll de toda la página */
-  .bg-seq { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; background: var(--medianoche); }
+  .bg-seq { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; object-fit: cover; background: var(--medianoche); }
   .bg-scrim {
     position: fixed; inset: 0; z-index: 1; pointer-events: none;
     background:
       linear-gradient(to right, rgba(7,14,27,.8) 0%, rgba(7,14,27,.25) 55%, rgba(7,14,27,.1) 100%),
       linear-gradient(to top, rgba(7,14,27,.9) 0%, rgba(7,14,27,0) 35%);
   }
-  .page { position: relative; z-index: 2; }
+  .page { position: relative; z-index: 2; overflow-x: clip; }
 
   /* Hero: primera pantalla sobre el fondo. 100dvh evita el salto de alto en
      móviles cuando la barra de direcciones aparece o desaparece al hacer
@@ -253,7 +345,6 @@
   th, td { border-top: 0; }
   /* Legibilidad sin cajas: sombra suave en el texto */
   body, .page { text-shadow: 0 0 3px rgba(7,14,27,.95), 0 1px 14px rgba(7,14,27,.95), 0 0 24px rgba(7,14,27,.7); }
-  .btn-gold, .btn-ghost { text-shadow: none; }
   /* El pie de página quedó sin ningún fondo al quitar las cajas, y ahí la
      letra se lee mal: es el texto más chico de la página, justo al final
      del scroll. Un degradado (no una caja sólida) le da un piso oscuro sin
@@ -267,7 +358,10 @@
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .card, .btn-gold { transition: none; }
+    .card { transition: none; }
+    .btn-gold, .btn-ghost { transform: translateY(var(--ty)); transition: box-shadow .2s, filter .2s; }
+    .btn-gold::before, .btn-ghost::before, .btn-fx::after, .btn-arrow .material-symbols-outlined { animation: none; }
+    .site-nav a::after, .site-footer li a { transition: none; }
   }
 
   /* En pantallas táctiles no hay mouse que "suelte" el :hover: sin esto, el
@@ -276,14 +370,8 @@
      dando retroalimentación al presionar. */
   @media (hover: none) {
     .brand:hover, .brand:focus-visible { transform: none; filter: drop-shadow(0 2px 5px rgba(7,14,27,.5)); }
-    .btn-gold:hover {
-      transform: none;
-      box-shadow: inset 0 1px 1px 0 rgba(255,255,255,.6), 0 4px 0 0 var(--oro-antiguo), 0 12px 20px 0 rgba(7,14,27,.5), 0 4px 14px 0 rgba(244,182,63,.3);
-    }
-    .btn-ghost:hover {
-      transform: none; border-color: rgba(244,182,63,.3); background: var(--azul-profundo);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 1px 0 rgba(7,14,27,.7), 0 6px 14px rgba(7,14,27,.4);
-    }
+    /* (los botones ya no necesitan neutralización: su :hover vive dentro de
+       @media (hover: hover)) */
     .site-nav a:hover { color: var(--lino); }
     .site-footer a:hover { color: inherit; }
   }
@@ -363,7 +451,7 @@
     <h1 style="margin-top:.75rem">Precisión arquitectónica y <em>presencia digital</em> inconfundible.</h1>
     <p class="hero-quote">Diseñamos sitios web que transmiten la confianza de un negocio serio, desde la primera pantalla.</p>
     <div class="hero-actions">
-      <a class="btn-gold" href="#guia">¿No sabes qué página comprar? <span class="material-symbols-outlined" aria-hidden="true">south</span></a>
+      <a class="btn-gold btn-arrow" href="#guia">¿No sabes qué página comprar? <span class="material-symbols-outlined" aria-hidden="true">south</span></a>
     </div>
   </div>
 </section>
@@ -480,7 +568,7 @@
     <span class="eyebrow">Hablemos</span>
     <h2 id="cierre-titulo">Tu negocio merece una presencia <em>a su altura.</em></h2>
     <p>Cuéntanos qué vendes y para quién. Te recomendamos la opción que mejor encaja con tu etapa.</p>
-    <a class="btn-gold" href="#guia">Ver opciones <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span></a>
+    <a class="btn-gold btn-arrow btn-arrow-up" href="#guia">Ver opciones <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span></a>
   </div>
 </section>
 
@@ -509,77 +597,236 @@
 
 <script src="assets/secuencia-scroll.js"></script>
 <script>
-  // Cualquier botón que apunte a otra sección de la página (href="#id") baja
-  // a un ritmo controlado y constante, en vez del scroll-behavior:smooth del
-  // navegador (casi instantáneo), para que se alcance a ver el fondo
-  // animado avanzar de principio a fin. Los enlaces a "Servicios" (menú y
-  // pie de página) además centran la matriz comparativa en la pantalla, en
-  // vez de pegarla arriba del todo contra el encabezado fijo.
+  // Scroll controlado. Cualquier enlace interno (href="#id": botones, menú,
+  // logo, pie de página y también atrás/adelante del navegador) baja a un
+  // ritmo natural (~750px/s, entre 1.8 y 6 s) con ease-in-out suave, en
+  // vez del scroll-behavior:smooth del navegador (casi instantáneo), para
+  // que se alcance a ver el fondo animado avanzar de principio a fin.
+  // Robusto a todo:
+  //  - una sola animación activa: un clic nuevo reemplaza a la anterior;
+  //  - si la persona toca la rueda, la pantalla, una tecla de scroll o
+  //    arrastra la barra, la animación se cancela y manda el usuario;
+  //  - el punto de llegada se recalcula en cada cuadro (cambia si cargan
+  //    fuentes, si se redimensiona o se mueve la barra del navegador) y
+  //    nunca pasa del final real de la página;
+  //  - "Servicios" se centra en pantalla, sin quedar bajo el encabezado;
+  //  - al llegar se actualiza la URL y el foco pasa a la sección (accesible);
+  //  - con prefers-reduced-motion el salto es inmediato.
   (function () {
+    var root = document.documentElement;
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var PX_PER_SEC = 750, MIN_MS = 1800, MAX_MS = 6000;
+    var active = null;
 
-    function easeInOutCubic(t) {
-      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    function easeInOutSine(t) {
+      return -(Math.cos(Math.PI * t) - 1) / 2;
+    }
+
+    function headerHeight() {
+      var h = document.querySelector('.site-header');
+      return h ? h.offsetHeight : 0;
     }
 
     // Cuánto bajar el punto de llegada para que `target` quede centrado en
-    // la pantalla. Si el bloque es más alto que la pantalla, no se puede
-    // centrar de verdad: se deja un respiro fijo arriba en vez de pegarlo
-    // al borde.
+    // la pantalla. Si no cabe, se deja un respiro fijo bajo el encabezado
+    // en vez de pegarlo al borde (o taparlo).
     function centeredOffset(target) {
       var vh = window.innerHeight;
       var th = target.getBoundingClientRect().height;
-      if (th < vh) return Math.min(vh * 0.22, (vh - th) / 2);
-      return vh * 0.08;
+      var floor = headerHeight() + 12;
+      if (th < vh - floor) return Math.max(floor, Math.min(vh * 0.22, (vh - th) / 2));
+      return floor;
     }
 
-    function scrollToTarget(target, hash, centered) {
-      var startY = window.scrollY;
-      var offset = centered ? centeredOffset(target) : 0;
-      var endY = target.getBoundingClientRect().top + startY - offset;
-      var distance = endY - startY;
-      if (Math.abs(distance) < 2) return false;
+    // Y de llegada actual (se vuelve a calcular en cada cuadro).
+    function endFor(target, centered) {
+      var maxY = Math.max(0, root.scrollHeight - window.innerHeight);
+      var top = target.getBoundingClientRect().top + window.scrollY;
+      var y = top - (centered ? centeredOffset(target) : 0);
+      return Math.max(0, Math.min(maxY, y));
+    }
 
-      if (reduceMotion) {
-        window.scrollTo(0, endY);
-        history.pushState(null, '', hash);
-        return true;
+    function setHash(hash) {
+      try {
+        if (location.hash === hash) history.replaceState(null, '', hash);
+        else history.pushState(null, '', hash);
+      } catch (err) { /* file:// u otros contextos sin historial */ }
+    }
+
+    function focusTarget(target) {
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      try { target.focus({ preventScroll: true }); } catch (err) { target.focus(); }
+    }
+
+    // Detiene la animación en curso. `done` = true si llegó al final.
+    function stop(token, done) {
+      if (!token || token.over) return;
+      token.over = true;
+      if (active === token) active = null;
+      root.style.scrollBehavior = '';
+      if (done) {
+        if (token.hash) setHash(token.hash);
+        focusTarget(token.target);
+      }
+    }
+
+    function cancel() {
+      if (active) stop(active, false);
+    }
+
+    function go(target, hash, centered, push) {
+      cancel();
+      var startY = window.scrollY;
+      var firstEnd = endFor(target, centered);
+      var distance = firstEnd - startY;
+      var token = { target: target, hash: push ? hash : null, over: false, t0: performance.now() };
+
+      if (Math.abs(distance) < 2 || reduceMotion) {
+        if (!reduceMotion || Math.abs(distance) >= 2) {
+          root.style.scrollBehavior = 'auto';
+          window.scrollTo(0, firstEnd);
+          root.style.scrollBehavior = '';
+        }
+        token.over = true;
+        if (push) setHash(hash);
+        focusTarget(target);
+        return;
       }
 
-      // Ritmo constante (~750px/s), con un mínimo y un máximo razonables.
-      var duration = Math.min(6000, Math.max(1800, (Math.abs(distance) / 750) * 1000));
-      var prevBehavior = document.documentElement.style.scrollBehavior;
-      document.documentElement.style.scrollBehavior = 'auto';
+      var duration = Math.min(MAX_MS, Math.max(MIN_MS, (Math.abs(distance) / PX_PER_SEC) * 1000));
+      active = token;
+      root.style.scrollBehavior = 'auto';
       var startTime = null;
 
       function step(ts) {
+        if (token.over) return;
         if (startTime === null) startTime = ts;
         var t = Math.min(1, (ts - startTime) / duration);
-        window.scrollTo(0, startY + distance * easeInOutCubic(t));
-        if (t < 1) {
-          requestAnimationFrame(step);
-        } else {
-          document.documentElement.style.scrollBehavior = prevBehavior;
-          history.pushState(null, '', hash);
-        }
+        var end = endFor(target, centered);
+        window.scrollTo(0, startY + (end - startY) * easeInOutSine(t));
+        if (t < 1) requestAnimationFrame(step);
+        else stop(token, true);
       }
       requestAnimationFrame(step);
-      return true;
     }
 
-    function wire(selector, centered) {
-      document.querySelectorAll(selector).forEach(function (btn) {
-        var hash = btn.getAttribute('href');
-        var target = document.querySelector(hash);
-        if (!target) return;
-        btn.addEventListener('click', function (e) {
-          if (scrollToTarget(target, hash, centered)) e.preventDefault();
-        });
+    // La persona retoma el control: cancelar. La rueda ignora los primeros
+    // 250 ms para no confundirse con la inercia de un gesto anterior.
+    function onWheel() {
+      if (active && performance.now() - active.t0 > 250) cancel();
+    }
+    window.addEventListener('wheel', onWheel, { passive: true });
+    window.addEventListener('touchstart', cancel, { passive: true });
+    window.addEventListener('pointerdown', cancel, { passive: true });
+    window.addEventListener('keydown', function (e) {
+      if (/^(ArrowUp|ArrowDown|PageUp|PageDown|Home|End| )$/.test(e.key)) cancel();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a || a.target || a.hasAttribute('download')) return;
+      var hash = a.getAttribute('href');
+      if (!hash || hash === '#') return;
+      var target = null;
+      try { target = document.querySelector(hash); } catch (err) { return; }
+      if (!target) return;
+      e.preventDefault();
+      go(target, hash, hash === '#servicios', true);
+    });
+
+    // Atrás/adelante del navegador o un hash escrito a mano: mismo ritmo.
+    window.addEventListener('hashchange', function () {
+      var hash = location.hash;
+      var target = null;
+      if (hash) { try { target = document.querySelector(hash); } catch (err) { return; } }
+      if (hash && !target) return;
+      if (!hash) { window.scrollTo(0, 0); return; }
+      go(target, hash, hash === '#servicios', false);
+    });
+  })();
+</script>
+<script>
+  // Botones 3D (ver el CSS de .btn-gold / .btn-ghost): inyecta la capa de
+  // efectos, desfasa las animaciones de atención entre botones, las apaga
+  // fuera de pantalla, inclina el botón hacia el mouse (solo mouse real, no
+  // táctil), mueve el brillo con el cursor y lanza una onda desde el punto
+  // del clic o toque (o desde el centro si se activa con el teclado).
+  (function () {
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var fineMouse = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    var gate = 'IntersectionObserver' in window
+      ? new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) en.target.removeAttribute('data-off');
+            else en.target.setAttribute('data-off', '');
+          });
+        }, { rootMargin: '60px' })
+      : null;
+
+    function ripple(btn, fx, x, y) {
+      var r = btn.getBoundingClientRect();
+      var d = document.createElement('span');
+      d.className = 'btn-ripple';
+      d.style.left = x + 'px';
+      d.style.top = y + 'px';
+      d.style.setProperty('--rs', (Math.max(r.width, r.height) * 0.13).toFixed(1));
+      fx.appendChild(d);
+      var gone = function () { if (d.parentNode) d.parentNode.removeChild(d); };
+      d.addEventListener('animationend', gone);
+      setTimeout(gone, 900);
+    }
+
+    function attachTilt(btn) {
+      var raf = 0, ev = null;
+      function update() {
+        raf = 0;
+        if (!ev) return;
+        var r = btn.getBoundingClientRect();
+        var hw = (btn.offsetWidth || 1) / 2, hh = (btn.offsetHeight || 1) / 2;
+        var nx = Math.max(-1, Math.min(1, (ev.clientX - (r.left + r.width / 2)) / hw));
+        var ny = Math.max(-1, Math.min(1, (ev.clientY - (r.top + r.height / 2)) / hh));
+        btn.style.setProperty('--ry', (nx * 9).toFixed(2) + 'deg');
+        btn.style.setProperty('--rx', (-ny * 7).toFixed(2) + 'deg');
+        btn.style.setProperty('--mx', ((nx + 1) * 50).toFixed(1) + '%');
+        btn.style.setProperty('--my', ((ny + 1) * 50).toFixed(1) + '%');
+      }
+      btn.addEventListener('pointermove', function (e) {
+        if (e.pointerType !== 'mouse') return;
+        ev = e;
+        if (!raf) raf = requestAnimationFrame(update);
+      });
+      btn.addEventListener('pointerleave', function () {
+        ev = null;
+        btn.style.setProperty('--rx', '0deg');
+        btn.style.setProperty('--ry', '0deg');
+        btn.style.setProperty('--mx', '50%');
+        btn.style.setProperty('--my', '50%');
       });
     }
 
-    wire('.btn-gold[href^="#"], .btn-ghost[href^="#"]', false);
-    wire('a[href="#servicios"]', true);
+    document.querySelectorAll('.btn-gold, .btn-ghost').forEach(function (btn, i) {
+      var fx = document.createElement('span');
+      fx.className = 'btn-fx';
+      fx.setAttribute('aria-hidden', 'true');
+      btn.appendChild(fx);
+      // Cada botón arranca en un punto distinto del ciclo, para que no
+      // pulsen todos a la vez.
+      btn.style.setProperty('--fx-delay', '-' + ((i * 0.83) % 3.4).toFixed(2) + 's');
+      if (gate) gate.observe(btn);
+      if (reduceMotion) return;
+      if (fineMouse) attachTilt(btn);
+      btn.addEventListener('pointerdown', function (e) {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        var r = btn.getBoundingClientRect();
+        ripple(btn, fx, e.clientX - r.left, e.clientY - r.top);
+      });
+      btn.addEventListener('click', function (e) {
+        if (e.detail !== 0) return; // clic real: la onda ya salió en pointerdown
+        ripple(btn, fx, btn.offsetWidth / 2, btn.offsetHeight / 2);
+      });
+    });
   })();
 </script>
 <script>
@@ -598,12 +845,23 @@
       '.closing h2'
     ].join(',');
 
+    // El barrido solo corre mientras el título está en pantalla.
+    var gate = 'IntersectionObserver' in window
+      ? new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) en.target.removeAttribute('data-off');
+            else en.target.setAttribute('data-off', '');
+          });
+        }, { rootMargin: '80px' })
+      : null;
+
     document.querySelectorAll(selector).forEach(function (el) {
       if (el.closest('.btn-gold') || el.closest('.brand-icon')) return;
       var text = el.textContent.replace(/\s+/g, ' ').trim();
       if (!text) return;
       el.classList.add('glow-sweep');
       el.setAttribute('data-glow-text', text);
+      if (gate) gate.observe(el);
     });
   })();
 </script>

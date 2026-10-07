@@ -10,11 +10,13 @@
  * avanza con el scroll de toda la página, dividida en 4 zonas (una por
  * sección: #inicio, la guía "¿Cuál es tu página?", la matriz comparativa y
  * #contacto). Cada zona tiene asignado un tramo de frames propio, en
- * proporción a lo alto que es; el scroll dentro de una sección solo
- * recorre los frames de esa sección. Sin scroll, la nave queda
- * "estacionada": oscila con inercia entre unos pocos frames cercanos al
- * punto donde se detuvo (sin salir del tramo de esa sección), o, antes del
- * primer scroll, cercanos a un frame elegido a mano por impacto visual.
+ * proporción a lo alto que es (y a un peso); el scroll dentro de una
+ * sección solo recorre los frames de esa sección. La velocidad de la
+ * secuencia cambia de forma gradual al cruzar de una sección a otra, no de
+ * golpe. Sin scroll, la nave queda "estacionada": oscila con inercia entre
+ * unos pocos frames cercanos al punto donde se detuvo (sin salir del tramo
+ * de esa sección), o, antes del primer scroll, cercanos a un frame elegido
+ * a mano por impacto visual.
  *   <canvas data-secuencia-fondo data-frames="..." data-total="157"></canvas>
  */
 (function () {
@@ -22,19 +24,32 @@
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  // Los frames miden 1280x720: dibujar en un bitmap bastante más grande que
+  // ~2 MP solo gasta GPU en cada cuadro sin ganar nada de detalle.
+  var MAX_PIXELS = 2.1e6;
 
   function pad(n) {
     return ('000' + n).slice(-3);
   }
 
+  // Tamaño del bitmap del canvas para un área CSS de w x h: respeta el dpr,
+  // pero sin pasar de MAX_PIXELS.
+  function bitmapSize(w, h) {
+    var k = Math.min(dpr, Math.sqrt(MAX_PIXELS / Math.max(1, w * h)));
+    k = Math.max(0.5, k);
+    return { w: Math.max(1, Math.round(w * k)), h: Math.max(1, Math.round(h * k)) };
+  }
+
   // Crea el controlador de un canvas. `progress()` devuelve un valor 0..1.
-  // `size()` ajusta el tamaño del canvas al contenedor.
-  // `idle` ({amplitude, period, initialFrame} o null) activa el vaivén de
-  // "estacionamiento" cuando no hay scroll. Ver `defaultIdle()`.
+  // `size()` ajusta el bitmap del canvas y devuelve false si no hizo falta
+  // tocarlo (así no se borra ni se redibuja en vano).
+  // `idle` ({amplitude, period, initialFrame, zoneBounds} o null) activa el
+  // vaivén de "estacionamiento" cuando no hay scroll. Ver `defaultIdle()`.
   function createPlayer(canvas, pattern, total, progress, size, idle) {
-    var ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d', { alpha: false });
     var frames = new Array(total);
-    var current = -1;
+    var decoded = new Uint8Array(total);
+    var current = -1;         // frame que de verdad está pintado en el canvas
     var pos = 0;              // posición fraccionaria, lo que se dibuja (con inercia)
     var target = 0;           // posición hacia la que `pos` se acerca cada frame
     var hasScrolled = false;  // false hasta el primer scroll real del usuario
@@ -43,33 +58,57 @@
     var idleStart = 0;
     var idleTimer = null;     // dispara el inicio del reposo una sola vez por parada
     var last = 0;
+    var prevPf = null;        // frame que corresponde al scroll, en el cuadro anterior
+    var speed = 0;            // velocidad (frames/s) del scroll, suavizada
+    var lastPrefetch = -1;
 
-    function loadFrame(i) {
+    function frameReady(i) {
+      var im = frames[i];
+      return !!(im && im.complete && im.naturalWidth);
+    }
+
+    function loadFrame(i, low) {
       if (i < 0 || i >= total) return null;
       if (!frames[i]) {
         var img = new Image();
         img.decoding = 'async';
-        img.src = pattern.replace('%03d', pad(i + 1));
+        if (low && 'fetchPriority' in img) img.fetchPriority = 'low';
         // Si el frame llega después de que el scroll ya pidió dibujarlo, se dibuja al cargar.
-        img.onload = function () { render(); };
+        img.onload = render;
+        img.src = pattern.replace('%03d', pad(i + 1));
         frames[i] = img;
       }
       return frames[i];
     }
 
+    // El frame cargado más cercano a `index` (o -1 si no hay ninguno cerca).
+    function nearestReady(index) {
+      for (var d = 1; d <= 24; d++) {
+        if (frameReady(index - d)) return index - d;
+        if (frameReady(index + d)) return index + d;
+      }
+      return -1;
+    }
+
     // Cubre el canvas manteniendo proporción (equivale a object-fit: cover).
+    // Si el frame pedido todavía no cargó, muestra el cargado más cercano en
+    // vez de quedarse con uno lejano: la animación nunca se congela.
     function draw(index, force) {
       if (index < 0) return;
+      var use = index;
       var img = loadFrame(index);
-      if (!img || !img.complete || !img.naturalWidth) return;
-      if (index === current && !force) return;
-      current = index;
+      if (!frameReady(index)) {
+        use = nearestReady(index);
+        if (use < 0) return;
+        img = frames[use];
+      }
+      if (use === current && !force) return;
+      current = use;
       var cw = canvas.width;
       var ch = canvas.height;
       var scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
       var w = img.naturalWidth * scale;
       var h = img.naturalHeight * scale;
-      ctx.clearRect(0, 0, cw, ch);
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
     }
 
@@ -78,18 +117,41 @@
     }
 
     function resize() {
-      size();
+      if (size() === false) return;
       current = -1;
       render();
+    }
+
+    // Pide por adelantado los frames que se van a dibujar en los próximos
+    // cuadros, en la dirección del movimiento. Con scroll rápido cada cuadro
+    // salta varios frames, así que se piden los que de verdad tocarán (a
+    // `step` de distancia), no todos los intermedios. Solo con movimiento
+    // lento (un frame por cuadro o menos) se decodifican también por
+    // adelantado: decodificar todo lo que se cruza en un scroll rápido
+    // saturaría el procesador (y la batería en celulares) sin ganar nada.
+    function prefetch(idx, dir) {
+      if (idx === lastPrefetch) return;
+      lastPrefetch = idx;
+      var ahead = dir >= 0 ? 1 : -1;
+      var step = Math.max(1, Math.round(speed / 60));
+      var k, i, im;
+      for (k = 1; k <= 4; k++) {
+        i = idx + ahead * step * k;
+        im = loadFrame(i);
+        if (step === 1 && k <= 2 && im && im.decode && i >= 0 && i < total && !decoded[i]) {
+          decoded[i] = 1;
+          im.decode().catch(function () {});
+        }
+      }
+      for (k = 1; k <= 2; k++) loadFrame(idx - ahead * step * k);
     }
 
     // Precarga el resto de frames en tiempo ocioso. En celulares o conexiones
     // lentas/con ahorro de datos no se baja la secuencia completa (953
     // imágenes pueden ser varias decenas de MB): se precarga solo 1 de cada
     // `step` frames, de forma pareja a lo largo de toda la secuencia. Los
-    // frames que de verdad se muestran siempre se piden al vuelo desde
-    // `draw()`, así que el scroll sigue funcionando bien, solo que una
-    // imagen no precargada puede tardar un instante en aparecer.
+    // frames que de verdad se muestran siempre se piden al vuelo, y mientras
+    // llegan se muestra el cargado más cercano.
     function preloadStep() {
       var narrow = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
       var conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
@@ -102,9 +164,15 @@
     function preload() {
       var step = preloadStep();
       var i = 0;
+      // Primero lo que se ve al abrir la página: el arranque de la secuencia y
+      // el frame elegido para el reposo inicial, con sus vecinos.
+      var f0 = idle && idle.initialFrame != null ? idle.initialFrame : 0;
+      var a, b;
+      for (a = 0; a <= 12; a++) loadFrame(a);
+      for (b = f0 - 8; b <= f0 + 8; b++) loadFrame(b);
       function next() {
         if (i >= total) return;
-        loadFrame(i);
+        loadFrame(i, true);
         i += step;
         (window.requestIdleCallback || function (cb) { setTimeout(cb, 40); })(next);
       }
@@ -113,13 +181,15 @@
 
     // Entra en reposo una sola vez por parada: lo dispara el temporizador de
     // onScroll, nunca el propio bucle, así que el ancla y la fase del vaivén
-    // no se reinician mientras el reposo sigue en curso.
+    // no se reinician mientras el reposo sigue en curso. El ancla es el frame
+    // que corresponde exactamente a la posición del scroll (no el `pos`
+    // que aún podría ir rezagado), así reposo y scroll quedan alineados.
     function enterIdle() {
       idleTimer = null;
       if (parked || !idle) return;
-      idleAnchor = (!hasScrolled && idle.initialFrame != null)
+      idleAnchor = (!hasScrolled && idle.initialFrame != null && window.scrollY < 4)
         ? Math.max(0, Math.min(total - 1, idle.initialFrame))
-        : pos;
+        : progress() * (total - 1);
       idleStart = performance.now();
       parked = true;
     }
@@ -132,20 +202,31 @@
     }
 
     // Bucle: con scroll activo, el objetivo sigue al progreso y `pos` se le
-    // acerca con inercia (nunca salta). 0.3s después de que el scroll se
-    // detiene (una sola vez, vía el temporizador de onScroll), el objetivo
-    // empieza a oscilar entre unos pocos frames alrededor del punto donde se
-    // detuvo (o, la primera vez, alrededor de un frame elegido a mano),
-    // simulando una nave "estacionada"; esa oscilación sigue como un bucle
-    // continuo mientras dure el reposo, sin reiniciarse. Al reanudar el
-    // scroll, la posición sigue acercándose con la misma inercia desde el
-    // frame donde quedó el reposo, sin reiniciarse de golpe.
+    // acerca con inercia (nunca salta). La inercia se adapta a la velocidad
+    // del scroll: suave si es lento, más ajustada si es rápido, para que el
+    // frame no se quede rezagado cuando hay mucho movimiento. 0.3s después
+    // de que el scroll se detiene (una sola vez, vía el temporizador de
+    // onScroll), el objetivo empieza a oscilar entre unos pocos frames
+    // alrededor del punto donde se detuvo (o, la primera vez, alrededor de
+    // un frame elegido a mano), simulando una nave "estacionada"; esa
+    // oscilación sigue como un bucle continuo mientras dure el reposo, sin
+    // reiniciarse. Al reanudar el scroll, la posición sigue acercándose
+    // desde el frame donde quedó el reposo, sin reiniciarse de golpe.
     function tick(now) {
       var dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
       last = now;
 
+      // Frame que corresponde al scroll, y qué tan rápido se mueve.
+      var pf = progress() * (total - 1);
+      if (prevPf !== null && dt > 0) {
+        speed += (Math.abs(pf - prevPf) / dt - speed) * Math.min(1, dt * 12);
+      }
+      prevPf = pf;
+
+      var rate = 8;
       if (!parked || !idle) {
-        target = progress() * (total - 1);
+        target = pf;
+        rate = 8 + Math.min(32, speed * 0.06);
       } else {
         // El vaivén no sale del rango de frames de la sección donde quedó
         // el ancla, para no mezclar imágenes de secciones distintas.
@@ -154,13 +235,15 @@
         target = Math.min(bounds[1], Math.max(bounds[0], idleAnchor + wave * idle.amplitude));
       }
 
-      pos = idle ? pos + (target - pos) * (1 - Math.exp(-dt * 8)) : target;
-      draw(Math.round(pos));
+      pos = idle ? pos + (target - pos) * (1 - Math.exp(-dt * rate)) : target;
+      var idx = Math.round(pos);
+      draw(idx);
+      prefetch(idx, target - pos);
       requestAnimationFrame(tick);
     }
 
     pos = target = progress() * (total - 1);
-    loadFrame(0).addEventListener('load', function () { render(); });
+    loadFrame(0);
     resize();
 
     if (reduceMotion) {
@@ -201,8 +284,9 @@
 
     function size() {
       var rect = canvas.getBoundingClientRect();
-      canvas.width = Math.round(rect.width * dpr);
-      canvas.height = Math.round(rect.height * dpr);
+      var b = bitmapSize(rect.width, rect.height);
+      canvas.width = b.w;
+      canvas.height = b.h;
     }
 
     createPlayer(canvas, section.getAttribute('data-frames'), total, progress, size, null);
@@ -259,6 +343,54 @@
     };
   }
 
+  // Tabla scroll -> frame (un valor por pixel de scroll). Cada zona avanza a
+  // su propia velocidad (frames por pixel), pero en vez de cambiar de golpe
+  // al cruzar una frontera, la velocidad se mezcla con la de la zona vecina
+  // a lo largo de una franja alrededor de la frontera (suavizada con
+  // smoothstep, así el cambio de velocidad no se nota como un tirón). La
+  // mezcla es simétrica, así que cada frontera cae en el mismo frame que
+  // tendría con el cambio brusco, y la tabla se normaliza para que el
+  // inicio de la página sea el frame 0 y el final el último.
+  function makeLut(zones, total) {
+    var n = zones.length;
+    var max = Math.max(1, Math.round(zones[n - 1].end));
+    var speeds = zones.map(function (z) {
+      return z.frameCount / Math.max(1, z.end - z.start);
+    });
+    var bands = [];
+    for (var k = 0; k < n - 1; k++) {
+      var hA = Math.max(1, zones[k].end - zones[k].start);
+      var hB = Math.max(1, zones[k + 1].end - zones[k + 1].start);
+      bands.push({ at: zones[k].end, w: Math.max(1, Math.min(140, 0.25 * Math.min(hA, hB))) });
+    }
+
+    function speedAt(y) {
+      var i = 0;
+      while (i < n - 1 && y >= zones[i].end) i++;
+      var s = speeds[i];
+      for (var j = 0; j < bands.length; j++) {
+        var d = y - bands[j].at;
+        if (Math.abs(d) < bands[j].w) {
+          var t = (d + bands[j].w) / (2 * bands[j].w);
+          s = speeds[j] + (speeds[j + 1] - speeds[j]) * (t * t * (3 - 2 * t));
+        }
+      }
+      return s;
+    }
+
+    var lut = new Float32Array(max + 2);
+    var acc = 0;
+    var y;
+    for (y = 0; y <= max; y++) {
+      lut[y] = acc;
+      acc += speedAt(y + 0.5);
+    }
+    lut[max + 1] = acc;
+    var norm = Math.max(1, total - 1) / Math.max(1e-6, acc);
+    for (y = 0; y <= max + 1; y++) lut[y] *= norm;
+    return lut;
+  }
+
   function initFondo(canvas) {
     var total = parseInt(canvas.getAttribute('data-total'), 10) || 1;
 
@@ -271,46 +403,82 @@
     // energía, hacia la zona de mayor transformación de la nave).
     var zoneWeights = [3.2, 1, 0.75, 0.6];
     var computeZones = zoneEls.length === 4 ? makeZones(zoneEls, total, zoneWeights) : null;
-    var zones = computeZones ? computeZones() : null;
+    var zones = null;
+    var lut = null;
 
-    function zoneAt(y) {
-      for (var i = 0; i < zones.length; i++) {
-        if (y < zones[i].end || i === zones.length - 1) return zones[i];
-      }
-      return zones[zones.length - 1];
+    // Recalcula dónde cae cada sección. Se llama al cambiar el tamaño de la
+    // ventana y también cuando el contenido cambia de alto solo (cargan las
+    // fuentes, aparece una imagen...), si no las zonas quedarían desfasadas
+    // de las secciones reales y el fondo no iría sincronizado con el texto.
+    function refreshZones() {
+      if (!computeZones) return;
+      zones = computeZones();
+      lut = makeLut(zones, total);
     }
+    refreshZones();
 
     function zoneForFrame(frame) {
       for (var i = 0; i < zones.length; i++) {
-        var last = zones[i].frameStart + zones[i].frameCount - 1;
-        if (frame <= last || i === zones.length - 1) return zones[i];
+        var lastFrame = zones[i].frameStart + zones[i].frameCount - 1;
+        if (frame <= lastFrame || i === zones.length - 1) return zones[i];
       }
       return zones[zones.length - 1];
     }
 
-    // Avance dentro de la sección actual, mapeado a los frames que le
-    // tocaron a esa sección (si no hay 4 secciones detectadas, recorre toda
-    // la secuencia con el scroll de la página, como antes).
+    // Frame que corresponde al scroll actual, como fracción 0..1 de la
+    // secuencia (si no hay 4 secciones detectadas, recorre toda la
+    // secuencia con el scroll de la página, como antes).
     function progress() {
-      if (!zones) {
+      var y = window.scrollY;
+      if (!lut) {
         var max = document.documentElement.scrollHeight - window.innerHeight;
-        return max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        return max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
       }
-      var z = zoneAt(window.scrollY);
-      var span = Math.max(1, z.end - z.start);
-      var local = Math.min(1, Math.max(0, (window.scrollY - z.start) / span));
-      var frame = z.frameStart + local * (z.frameCount - 1);
-      return frame / (total - 1);
+      var top = lut.length - 2;
+      y = y < 0 ? 0 : (y > top ? top : y);
+      var i = y | 0;
+      var f = y - i;
+      return (lut[i] + (lut[i + 1] - lut[i]) * f) / Math.max(1, total - 1);
     }
 
+    // Ajusta el bitmap del canvas. En celulares la barra de direcciones
+    // aparece y desaparece al hacer scroll y cambia el alto de la ventana
+    // unos 50-110px; recrear el bitmap en cada cambio (borra el canvas y es
+    // caro) provocaría parpadeos, así que los cambios chicos de alto se
+    // ignoran: el canvas usa object-fit: cover y solo recorta un poco.
+    var lastW = 0;
+    var lastH = 0;
     function size() {
-      canvas.width = Math.round(window.innerWidth * dpr);
-      canvas.height = Math.round(window.innerHeight * dpr);
-      if (computeZones) zones = computeZones();
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+      refreshZones();
+      if (canvas.width && w === lastW && Math.abs(h - lastH) < 160) return false;
+      lastW = w;
+      lastH = h;
+      var b = bitmapSize(w, h);
+      canvas.width = b.w;
+      canvas.height = b.h;
+      return true;
     }
+
+    // Si el contenido cambia de alto sin que cambie la ventana, también hay
+    // que recalcular.
+    var refreshRaf = 0;
+    function scheduleRefresh() {
+      if (refreshRaf) return;
+      refreshRaf = requestAnimationFrame(function () {
+        refreshRaf = 0;
+        refreshZones();
+      });
+    }
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(scheduleRefresh).observe(document.body);
+    }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(scheduleRefresh);
+    window.addEventListener('load', scheduleRefresh);
 
     var idle = canvas.getAttribute('data-idle') === 'off' ? null : defaultIdle();
-    if (idle && zones) {
+    if (idle && computeZones) {
       idle.zoneBounds = function (frame) {
         var z = zoneForFrame(Math.round(frame));
         return [z.frameStart, z.frameStart + z.frameCount - 1];
