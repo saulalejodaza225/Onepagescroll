@@ -451,8 +451,7 @@
   function initFondo(canvas) {
     var total = parseInt(canvas.getAttribute('data-total'), 10) || 1;
 
-    // Cinco secciones, una por zona: inicio, guía de marca, diagnóstico
-    // (quiz), paquetes (incluye la matriz comparativa) y contacto (Hablemos).
+    // Cinco secciones, una por zona: inicio, guía de marca, diagnóstico, paquetes y contacto.
     var zoneEls = ['#inicio', '#guia', '#quiz', '#paquetes', '#contacto']
       .map(function (sel) { return document.querySelector(sel); })
       .filter(Boolean);

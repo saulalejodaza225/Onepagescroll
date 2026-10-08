@@ -336,48 +336,23 @@
   .site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
   .copy { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(80,69,53,.3); font-size: 12px; color: var(--pizarra); }
 
-  /* Modo solo tipografía y botones: la animación queda visible detrás */
-  .bg-scrim { background: linear-gradient(rgba(7,14,27,.3), rgba(7,14,27,.3)), linear-gradient(to top, rgba(7,14,27,.6) 0%, rgba(7,14,27,0) 30%); }
-  body, .page, .guia, .closing, .site-footer, .site-header, .card, .card.featured,
-  .matrix, .matrix-foot, table, thead th, tbody tr, th, td, .delivery {
-    background: none !important;
-    box-shadow: none !important;
-  }
-  .site-header, .site-footer, .card, .card.featured, .matrix, .matrix-foot, th, td, .delivery {
-    border: 0 !important;
-    backdrop-filter: none !important;
-  }
-  .site-header { box-shadow: none; height: 88px; background: linear-gradient(to bottom, rgba(7,14,27,.9) 45%, rgba(7,14,27,0) 100%) !important; }
-  .divider { display: none; }
-  .card, .matrix, .matrix-foot { padding: 0; }
-  .card { padding: 0 1rem; }
-  .card:hover { transform: none; }
-  .card .btn-gold { margin-top: 1.5rem; }
-  .delivery { padding: 0; }
-  /* Espacio claro entre "Guía" (termina en los botones Quiero esta) y
-     "Servicios" (la matriz comparativa), para que se lean como dos bloques
-     distintos en vez de uno encimado con el otro. */
-  .matrix { margin-top: 8rem; }
-  tbody tr:hover { background: none; }
-  th, td { border-top: 0; }
-  /* Legibilidad sin cajas: sombra suave en el texto */
-  /* Contorno negro fino alrededor de cada letra: legibilidad sin oscurecer
-     el fondo. Antes la sombra difusa de 24px tapaba el efecto del scroll
-     alrededor del texto; ahora el halo es corto y el contorno marca la letra. */
-  body, .page {
+  /* Legibilidad sobre el video/secuencia de fondo, solo en textos sin caja propia */
+  .hero-content, .zona-corte span, .guia-head, .quiz-head {
     text-shadow: 0 0 1px rgba(0,0,0,.9), 0 1px 2px rgba(0,0,0,.9), 0 0 6px rgba(0,0,0,.85), 0 0 14px rgba(0,0,0,.55);
   }
-  .btn-gold, .btn-ghost { -webkit-text-stroke: 0; }
-  /* El pie de página quedó sin ningún fondo al quitar las cajas, y ahí la
-     letra se lee mal: es el texto más chico de la página, justo al final
-     del scroll. Un degradado (no una caja sólida) le da un piso oscuro sin
-     tapar del todo la animación detrás. */
-  .site-footer {
-    background: linear-gradient(to bottom, rgba(7,14,27,.25), rgba(7,14,27,.88) 45%, rgba(7,14,27,.92)) !important;
-  }
-  .site-footer, .copy {
-    text-shadow: 0 0 3px rgba(7,14,27,1), 0 1px 10px rgba(7,14,27,1), 0 0 20px rgba(7,14,27,.85);
-  }
+  .paquetes { background: transparent; padding: var(--section) 0; position: relative; }
+  .pilares { display: grid; grid-template-columns: 1fr; gap: 1.5rem; max-width: 980px; margin: 0 auto; }
+  @media (min-width: 768px) { .pilares { grid-template-columns: repeat(3, 1fr); } }
+  .pilar { padding: 2rem 1.75rem; border-radius: 16px; text-align: center; background: rgba(11,29,51,.55); border: 1px solid rgba(94,58,168,.25); box-shadow: 0 16px 36px rgba(0,0,0,.4); backdrop-filter: blur(6px); transition: transform .2s cubic-bezier(.16,1,.3,1), border-color .2s; }
+  .pilar:hover { transform: translateY(-4px); border-color: rgba(94,58,168,.55); }
+  .pilar-icono { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%; margin-bottom: 1rem; background: rgba(94,58,168,.18); color: #B79FE8; font-size: 24px; }
+  .pilar h3 { font-size: 20px; line-height: 28px; }
+  .pilar p { margin-top: .5rem; font-size: 14px; line-height: 20px; color: var(--niebla); }
+  .guia-cta { display: flex; justify-content: center; margin-top: 2.5rem; }
+  .quiz-progreso { background: rgba(94,58,168,.22); }
+  .quiz-progreso span { background: linear-gradient(90deg, var(--violeta), #9B7FD4); }
+  .quiz-contador { color: #B79FE8; }
+
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -420,7 +395,7 @@
     .hero-actions { width: 100%; }
     .hero-actions .btn-gold { width: 100%; padding: 1rem 1.25rem; font-size: 13px; }
     .hero-quote { font-size: 18px; line-height: 28px; }
-    .guia, .closing { padding: 4rem 0; }
+    .guia, .closing, .paquetes { padding: 4rem 0; }
     .guia-head { margin-bottom: 2rem; }
     .guia-head h2, .closing h2 { font-size: 2rem; line-height: 1.2; }
     .guia-head p, .closing p { font-size: 16px; line-height: 24px; }
@@ -568,7 +543,8 @@
     </a>
     <nav class="site-nav" aria-label="Principal">
       <a href="#guia">Guía</a>
-      <a href="#servicios">Servicios</a>
+      <a href="#quiz">Diagnóstico</a>
+      <a href="#paquetes">Paquetes</a>
       <a href="#contacto">Contacto</a>
     </nav>
     <div class="idioma" role="group" aria-label="Idioma">
@@ -583,9 +559,9 @@
 <nav class="dot-nav" aria-label="Secciones de la página">
   <ul class="dot-lista">
     <li><a class="dot" href="#inicio" data-label="Inicio" aria-label="Inicio"></a></li>
+    <li><a class="dot" href="#guia" data-label="Guía de marca" aria-label="Guía de marca"></a></li>
     <li><a class="dot" href="#quiz" data-label="¿En qué etapa estás?" aria-label="¿En qué etapa estás?"></a></li>
-    <li><a class="dot" href="#guia" data-label="Paquetes" aria-label="Paquetes"></a></li>
-    <li><a class="dot" href="#servicios" data-label="Matriz comparativa" aria-label="Matriz comparativa"></a></li>
+    <li><a class="dot" href="#paquetes" data-label="Paquetes" aria-label="Paquetes"></a></li>
     <li><a class="dot" href="#contacto" data-label="Hablemos" aria-label="Hablemos"></a></li>
   </ul>
 </nav>
@@ -614,12 +590,68 @@
 <div class="divider" role="presentation"><div class="star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z"/></svg></div></div>
 
 <!-- GUÍA -->
-<div class="zona-corte" aria-hidden="true"><span>02 · Guía</span></div>
+<div class="zona-corte" aria-hidden="true"><span>02 · Guía de marca</span></div>
 <section class="guia" id="guia" aria-labelledby="guia-titulo">
   <div class="wrap">
     <div class="guia-head">
+      <span class="eyebrow">Nuestra manera de trabajar</span>
+      <h2 id="guia-titulo">Diseño con <em>intención.</em></h2>
+      <p>Antes de mostrarte paquetes, esto es lo que puedes esperar de nosotros en cada proyecto.</p>
+    </div>
+    <div class="pilares">
+      <article class="pilar">
+        <span class="pilar-icono material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+        <h3>Precisión editorial</h3>
+        <p>Tipografía, ritmo y jerarquía cuidados en cada pantalla, no plantillas genéricas repetidas.</p>
+      </article>
+      <article class="pilar">
+        <span class="pilar-icono material-symbols-outlined" aria-hidden="true">handshake</span>
+        <h3>Proceso transparente</h3>
+        <p>Precio cerrado, 50% al inicio y 50% a la entrega, con dos rondas de ajustes incluidas.</p>
+      </article>
+      <article class="pilar">
+        <span class="pilar-icono material-symbols-outlined" aria-hidden="true">support_agent</span>
+        <h3>Acompañamiento real</h3>
+        <p>Te guiamos en dominio, hosting y puesta en marcha. Nada queda a tu cuenta y riesgo.</p>
+      </article>
+    </div>
+    <div class="guia-cta">
+      <a class="btn-gold btn-arrow" href="#quiz" data-scroll-lento>Encuentra tu página <span class="material-symbols-outlined" aria-hidden="true">south</span></a>
+    </div>
+  </div>
+</section>
+<div class="zona-corte" aria-hidden="true"><span>03 · Diagnóstico</span></div>
+<section class="quiz" id="quiz" aria-labelledby="quiz-titulo">
+    <div class="quiz-head">
+      <span class="eyebrow">Diagnóstico rápido · 5 preguntas</span>
+      <h2 id="quiz-titulo">¿En qué etapa está <em>tu negocio?</em></h2>
+      <p>Responde cinco preguntas y te diremos qué modelo de página encaja mejor contigo, con una demo real para que la veas antes de decidir.</p>
+    </div>
+    <div class="quiz-box" data-quiz>
+      <div class="quiz-progreso" aria-hidden="true"><span></span></div>
+      <p class="quiz-contador" aria-live="polite"></p>
+      <h3 class="quiz-pregunta" tabindex="-1"></h3>
+      <div class="quiz-opciones"></div>
+      <div class="quiz-resultado" aria-live="polite" hidden>
+        <p class="quiz-res-etiqueta">Te recomendamos</p>
+        <h3 class="quiz-res-titulo" tabindex="-1"></h3>
+        <p class="quiz-res-precio"></p>
+        <p class="quiz-res-entrega"></p>
+        <p class="quiz-res-texto"></p>
+        <div class="quiz-acciones">
+          <a class="btn-gold quiz-demo" href="#" target="_blank" rel="noopener">Ver demo</a>
+          <a class="btn-ghost quiz-ver-paquetes" href="#paquetes">Ver todos los paquetes</a>
+          <button type="button" class="btn-ghost quiz-reiniciar">Volver a empezar</button>
+        </div>
+      </div>
+    </div>
+</section>
+<div class="zona-corte" aria-hidden="true"><span>04 · Paquetes</span></div>
+<section class="paquetes" id="paquetes" aria-labelledby="paquetes-titulo">
+  <div class="wrap">
+    <div class="guia-head">
       <span class="eyebrow">Orientación clara y estructurada</span>
-      <h2 id="guia-titulo">¿Cuál es <em>tu página?</em></h2>
+      <h2 id="paquetes-titulo">¿Cuál es <em>tu página?</em></h2>
       <p>Cada negocio necesita algo distinto. Elige el tuyo y revisa qué incluye cada opción.</p>
     </div>
 
@@ -690,32 +722,6 @@
       </article>
     </div>
 
-<div class="zona-corte" aria-hidden="true"><span>03 · Guía de estilo</span></div>
-<section class="quiz" id="quiz" aria-labelledby="quiz-titulo">
-    <div class="quiz-head">
-      <span class="eyebrow">Diagnóstico rápido · 5 preguntas</span>
-      <h2 id="quiz-titulo">¿En qué etapa está <em>tu negocio?</em></h2>
-      <p>Responde cinco preguntas y te diremos qué modelo de página encaja mejor contigo.</p>
-    </div>
-    <div class="quiz-box" data-quiz>
-      <div class="quiz-progreso" aria-hidden="true"><span></span></div>
-      <p class="quiz-contador" aria-live="polite"></p>
-      <h3 class="quiz-pregunta" tabindex="-1"></h3>
-      <div class="quiz-opciones"></div>
-      <div class="quiz-resultado" aria-live="polite" hidden>
-        <p class="quiz-res-etiqueta">Te recomendamos</p>
-        <h3 class="quiz-res-titulo" tabindex="-1"></h3>
-        <p class="quiz-res-precio"></p>
-        <p class="quiz-res-entrega"></p>
-        <p class="quiz-res-texto"></p>
-        <div class="quiz-acciones">
-          <a class="btn-gold quiz-demo" href="#" target="_blank" rel="noopener">Ver demo</a>
-          <button type="button" class="btn-ghost quiz-reiniciar">Volver a empezar</button>
-        </div>
-      </div>
-    </div>
-</section>
-    <div class="zona-corte" aria-hidden="true"><span>04 · Servicios</span></div>
     <div class="matrix" id="servicios">
       <h4>Matriz comparativa de capacidades</h4>
       <div class="table-wrap">
@@ -741,6 +747,7 @@
         </ul>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -750,7 +757,7 @@
   <div class="wrap">
     <h2 id="cierre-titulo">Tu negocio merece una presencia <em>a su altura.</em></h2>
     <p>Cuéntanos qué vendes y para quién. Te recomendamos la opción que mejor encaja con tu etapa.</p>
-    <a class="btn-gold btn-arrow btn-arrow-up" href="#guia">Ver opciones <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span></a>
+    <a class="btn-gold btn-arrow btn-arrow-up" href="#paquetes">Ver paquetes <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span></a>
   </div>
 </section>
 
@@ -765,7 +772,7 @@
       </div>
       <nav aria-label="Secciones">
         <h5>Explorar</h5>
-        <ul><li><a href="#inicio">Inicio</a></li><li><a href="#guia">Guía</a></li><li><a href="#servicios">Servicios</a></li></ul>
+        <ul><li><a href="#inicio">Inicio</a></li><li><a href="#guia">Guía</a></li><li><a href="#quiz">Diagnóstico</a></li><li><a href="#paquetes">Paquetes</a></li></ul>
       </nav>
       <div>
         <h5>Contacto</h5>
@@ -936,7 +943,7 @@
       try { target = document.querySelector(hash); } catch (err) { return; }
       if (!target) return;
       e.preventDefault();
-      go(target, hash, hash === '#servicios', true, a.hasAttribute('data-seq-scroll'), a.hasAttribute('data-scroll-lento'));
+      go(target, hash, hash === '#servicios' || hash === '#paquetes', true, a.hasAttribute('data-seq-scroll'), a.hasAttribute('data-scroll-lento'));
     });
 
     // Atrás/adelante del navegador o un hash escrito a mano: mismo ritmo.
@@ -946,7 +953,7 @@
       if (hash) { try { target = document.querySelector(hash); } catch (err) { return; } }
       if (hash && !target) return;
       if (!hash) { window.scrollTo(0, 0); return; }
-      go(target, hash, hash === '#servicios', false);
+      go(target, hash, hash === '#servicios' || hash === '#paquetes', false);
     });
   })();
 </script>
@@ -1162,6 +1169,25 @@
       "a su altura.": "worthy of it.",
       "Cuéntanos qué vendes y para quién. Te recomendamos la opción que mejor encaja con tu etapa.": "Tell us what you sell and to whom. We'll recommend the option that best fits your stage.",
       "Ver opciones": "See options",
+      "Ver paquetes": "See packages",
+      "Ver todos los paquetes": "See all packages",
+      "Guía de marca": "Brand guide",
+      "02 · Guía de marca": "02 · Brand guide",
+      "03 · Diagnóstico": "03 · Diagnosis",
+      "04 · Paquetes": "04 · Packages",
+      "Diagnóstico": "Diagnosis",
+      "Nuestra manera de trabajar": "How we work",
+      "Diseño con": "Design with",
+      "intención.": "intention.",
+      "Antes de mostrarte paquetes, esto es lo que puedes esperar de nosotros en cada proyecto.": "Before showing you packages, here is what you can expect from us on every project.",
+      "Precisión editorial": "Editorial precision",
+      "Tipografía, ritmo y jerarquía cuidados en cada pantalla, no plantillas genéricas repetidas.": "Careful typography, rhythm and hierarchy on every screen, not repeated generic templates.",
+      "Proceso transparente": "Transparent process",
+      "Precio cerrado, 50% al inicio y 50% a la entrega, con dos rondas de ajustes incluidas.": "Fixed price, 50% upfront and 50% on delivery, with two rounds of revisions included.",
+      "Acompañamiento real": "Real support",
+      "Te guiamos en dominio, hosting y puesta en marcha. Nada queda a tu cuenta y riesgo.": "We guide you through domain, hosting and launch. Nothing is left to your own risk.",
+      "Encuentra tu página": "Find your page",
+      "Responde cinco preguntas y te diremos qué modelo de página encaja mejor contigo, con una demo real para que la veas antes de decidir.": "Answer five questions and we'll tell you which page model fits you best, with a real demo so you can see it before deciding.",
       "Arquitectura digital y diseño web de alta gama para negocios en Bogotá.": "High-end digital architecture and web design for businesses in Bogotá.",
       "Explorar": "Explore",
       "© 2026 OnePage Studio. Todos los derechos reservados.": "© 2026 OnePage Studio. All rights reserved.",
@@ -1429,7 +1455,11 @@
     });
 
     // Al cambiar de idioma se vuelve a pintar lo que se ve, sin perder el avance.
+    var verPaquetes = root.querySelector('.quiz-ver-paquetes');
+    verPaquetes.textContent = tr('Ver todos los paquetes');
+
     window.addEventListener('nocturne:idioma', function () {
+      verPaquetes.textContent = tr('Ver todos los paquetes');
       if (modelo) pintarResultado();
       else mostrarPaso();
     });
