@@ -541,6 +541,20 @@
   }
   @keyframes liquidoBrillo { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
   @media (prefers-reduced-motion: reduce) { .brand-text { animation: none; } }
+  /* Textura líquida verde (selector de idioma y botón Hablemos): reflejos tipo metal
+     pulido, vetas de luz y un brillo que se desplaza despacio. */
+  :root { --textura-verde: radial-gradient(ellipse 55% 35% at 28% 32%, rgba(200,255,210,.9), rgba(200,255,210,0) 70%), radial-gradient(ellipse 35% 22% at 72% 68%, rgba(140,255,170,.55), rgba(140,255,170,0) 70%), repeating-linear-gradient(112deg, rgba(0,0,0,0) 0 9px, rgba(0,0,0,.42) 12px 15px, rgba(255,255,255,.14) 17px 18px, rgba(0,0,0,0) 22px 40px), linear-gradient(120deg, #010C06 0%, #0A4A24 22%, #22B864 40%, #03200F 52%, #0E6A38 66%, #46E88A 74%, #021A0D 86%, #010C06 100%); }
+  .idioma { border-color: rgba(60,255,110,.5); }
+  .idioma-btn { background-image: var(--textura-verde); background-size: 220% 220%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; font-weight: 700; animation: texturaMov 9s ease-in-out infinite; }
+  .idioma-btn.is-on { background: none; box-shadow: inset 0 0 0 1px rgba(120,255,160,.6), 0 0 10px rgba(60,255,110,.35); border-radius: 6px; }
+  .btn-ghost.btn-simple { background-image: var(--textura-verde); background-size: 220% 220%; color: #F2FFF5; text-shadow: 0 1px 2px rgba(0,0,0,.9); border: 1px solid rgba(120,255,160,.6); box-shadow: inset 0 1px 0 rgba(220,255,225,.35), 0 0 16px rgba(60,255,110,.35), 0 4px 10px rgba(0,0,0,.45); animation: texturaMov 9s ease-in-out infinite; }
+  @keyframes texturaMov { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  @media (prefers-reduced-motion: reduce) { .idioma-btn, .btn-ghost.btn-simple { animation: none; } }
+  /* Selector de idioma: misma textura verde que "Hablemos", con texto claro y legible. */
+  .idioma { background-image: var(--textura-verde); background-size: 220% 220%; border: 1px solid rgba(120,255,160,.6); box-shadow: inset 0 1px 0 rgba(220,255,225,.3), 0 0 14px rgba(60,255,110,.35); padding: 3px; animation: texturaMov 9s ease-in-out infinite; }
+  .idioma-btn { background: none; background-image: none; -webkit-background-clip: border-box; background-clip: border-box; color: rgba(242,255,245,.78); -webkit-text-fill-color: currentColor; text-shadow: 0 1px 2px rgba(0,0,0,.9); font-weight: 700; animation: none; }
+  .idioma-btn.is-on { background: rgba(255,255,255,.16); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 0 8px rgba(120,255,160,.55); border-radius: 6px; }
+  .idioma-btn:hover { color: #FFFFFF; }
 </style>
 </head>
 <body>
