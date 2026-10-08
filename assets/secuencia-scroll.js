@@ -25,15 +25,23 @@
   // Los frames miden 1280x720: dibujar en un bitmap bastante más grande que
   // ~2 MP solo gasta GPU en cada cuadro sin ganar nada de detalle.
   var MAX_PIXELS = 2.1e6;
+  // En celulares y tablets el lienzo se dibuja con menos píxeles: la imagen
+  // fuente ya se está ampliando (en vertical solo se ve una franja angosta
+  // del frame), así que más resolución no añade detalle, pero sí cuesta
+  // relleno de GPU en cada cuadro. El navegador escala el lienzo al
+  // tamaño de la pantalla sin que se note.
+  var MAX_PIXELS_SMALL = 1.3e6;
+  var SMALL_DPR = 1.25;
 
   function pad(n) {
     return ('000' + n).slice(-3);
   }
 
   // Tamaño del bitmap del canvas para un área CSS de w x h: respeta el dpr,
-  // pero sin pasar de MAX_PIXELS.
+  // pero sin pasar de MAX_PIXELS (o de MAX_PIXELS_SMALL en pantallas chicas).
   function bitmapSize(w, h) {
-    var k = Math.min(dpr, Math.sqrt(MAX_PIXELS / Math.max(1, w * h)));
+    var small = Math.min(w, h) <= 1100 && Math.max(w, h) <= 1400;
+    var k = Math.min(dpr, small ? SMALL_DPR : dpr, Math.sqrt((small ? MAX_PIXELS_SMALL : MAX_PIXELS) / Math.max(1, w * h)));
     k = Math.max(0.5, k);
     return { w: Math.max(1, Math.round(w * k)), h: Math.max(1, Math.round(h * k)) };
   }
@@ -43,12 +51,19 @@
   // tocarlo (así no se borra ni se redibuja en vano).
   // `smooth` (true en el modo fondo) hace que el frame dibujado siga al del
   // scroll con un resorte, en vez de saltar directo a él.
+  // `getPattern()` devuelve la ruta de los frames a usar ahora: en
+  // vertical (celulares y tablets) puede ser un set recortado al centro,
+  // mucho más liviano de descargar y decodificar; si cambia (al girar el
+  // dispositivo) se reinicia la caché de frames.
   // Devuelve { wake }: reactiva el bucle si el progreso cambió sin que
   // hubiera un evento de scroll (p. ej. al cambiar el alto de la página).
-  function createPlayer(canvas, pattern, total, progress, size, smooth) {
+  function createPlayer(canvas, getPattern, total, progress, size, smooth) {
     var ctx = canvas.getContext('2d', { alpha: false });
+    var pattern = getPattern();
     var frames = new Array(total);
     var decoded = new Uint8Array(total);
+    var inflight = 0;         // frames de precarga que todavía se están descargando
+    var preloadId = 0;        // invalida una precarga en curso al cambiar de set
     var current = -1;         // frame que de verdad está pintado en el canvas
     var pos = 0;              // posición fraccionaria: lo que se dibuja
     var track = { p: 0, v: 0 }; // resorte que sigue al frame del scroll (posición y velocidad)
@@ -69,8 +84,18 @@
         var img = new Image();
         img.decoding = 'async';
         if (low && 'fetchPriority' in img) img.fetchPriority = 'low';
+        if (low) {
+          inflight++;
+          img.__pre = true;
+        }
         // Si el frame llega después de que el scroll ya pidió dibujarlo, se dibuja al cargar.
-        img.onload = render;
+        img.onload = img.onerror = function (ev) {
+          if (img.__pre) {
+            img.__pre = false;
+            inflight = Math.max(0, inflight - 1);
+          }
+          if (ev && ev.type === 'load') render();
+        };
         img.src = pattern.replace('%03d', pad(i + 1));
         frames[i] = img;
       }
@@ -113,7 +138,17 @@
     }
 
     function resize() {
-      if (size() === false) return;
+      var next = getPattern();
+      var switched = next !== pattern;
+      if (switched) {
+        pattern = next;
+        frames = new Array(total);
+        decoded = new Uint8Array(total);
+        inflight = 0;
+        lastPrefetch = -1;
+        startPreload();
+      }
+      if (size() === false && !switched) return;
       current = -1;
       render();
     }
@@ -134,7 +169,7 @@
       for (k = 1; k <= 4; k++) {
         i = idx + ahead * step * k;
         im = loadFrame(i);
-        if (step === 1 && k <= 2 && im && im.decode && i >= 0 && i < total && !decoded[i]) {
+        if (step <= 2 && k <= 2 && im && im.decode && i >= 0 && i < total && !decoded[i]) {
           decoded[i] = 1;
           im.decode().catch(function () {});
         }
@@ -149,26 +184,58 @@
     // frames que de verdad se muestran siempre se piden al vuelo, y mientras
     // llegan se muestra el cargado más cercano.
     function preloadStep() {
-      var narrow = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+      var touch = window.matchMedia && window.matchMedia('(pointer: coarse), (max-width: 640px)').matches;
       var conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
       var slow = !!(conn && (conn.saveData || /^(slow-2g|2g|3g)$/.test(conn.effectiveType || '')));
       if (slow) return 8;
-      if (narrow) return 4;
+      if (touch) return 2;
       return 1;
     }
 
-    function preload() {
-      var step = preloadStep();
-      var i = 0;
-      // Primero lo que se ve al abrir la página: el arranque de la secuencia.
-      for (var a = 0; a <= 12; a++) loadFrame(a);
-      function next() {
-        if (i >= total) return;
-        loadFrame(i, true);
-        i += step;
-        (window.requestIdleCallback || function (cb) { setTimeout(cb, 40); })(next);
+    // Orden de precarga "de grueso a fino": primero 1 de cada 16 frames, luego
+    // los de en medio (1 de cada 8, 4, 2 y 1). Así, apenas empieza la
+    // descarga ya hay un frame cargado cerca de CUALQUIER punto de la
+    // secuencia (y el "frame cargado más cercano" siempre está a pocos
+    // pasos), en vez de tener los primeros cargados y el resto vacío hasta
+    // el final. Respeta `step` (celulares / conexión lenta).
+    function preloadOrder(step) {
+      var seen = new Uint8Array(total);
+      var order = [];
+      var strides = [16, 8, 4, 2, 1];
+      for (var s = 0; s < strides.length; s++) {
+        if (strides[s] < step) continue;
+        for (var i = 0; i < total; i += strides[s]) {
+          if (!seen[i]) { seen[i] = 1; order.push(i); }
+        }
       }
-      next();
+      if (!seen[total - 1]) order.push(total - 1);
+      return order;
+    }
+
+    // Precarga en tiempo ocioso, de a pocos frames a la vez (como mucho 6
+    // descargas simultáneas de precarga) para no competir con los frames que
+    // el scroll pide al momento. Los frames que de verdad se muestran
+    // siempre se piden al vuelo; mientras llegan se muestra el cargado más
+    // cercano.
+    function startPreload() {
+      var id = ++preloadId;
+      var order = preloadOrder(preloadStep());
+      var n = 0;
+      var idle = window.requestIdleCallback || function (cb) { setTimeout(function () { cb(null); }, 40); };
+      // Primero lo que se ve al abrir la página: el arranque de la secuencia.
+      for (var a = 0; a <= 8; a++) loadFrame(a);
+      function next(deadline) {
+        if (id !== preloadId || n >= order.length) return;
+        var batch = 0;
+        while (n < order.length && inflight < 6 && batch < 4 &&
+               (batch === 0 || !deadline || deadline.timeRemaining() > 6)) {
+          loadFrame(order[n++], true);
+          batch++;
+        }
+        if (inflight >= 6) setTimeout(function () { next(null); }, 80);
+        else idle(next);
+      }
+      idle(next);
     }
 
     // Resorte críticamente amortiguado (solución exacta: estable con
@@ -248,7 +315,7 @@
 
     window.addEventListener('scroll', wake, { passive: true });
     window.addEventListener('resize', function () { resize(); wake(); });
-    preload();
+    startPreload();
     wake();
     return { wake: wake };
   }
@@ -272,7 +339,8 @@
       canvas.height = b.h;
     }
 
-    createPlayer(canvas, section.getAttribute('data-frames'), total, progress, size, false);
+    var fixedPattern = section.getAttribute('data-frames');
+    createPlayer(canvas, function () { return fixedPattern; }, total, progress, size, false);
   }
 
   // Divide la página en zonas (una por sección) y reparte los frames entre
@@ -455,8 +523,14 @@
     function size() {
       var w = window.innerWidth;
       var h = window.innerHeight;
+      if (canvas.width && w === lastW && Math.abs(h - lastH) < 160) {
+        // Solo cambió el alto un poco (barra de direcciones del celular): el
+        // bitmap se queda igual y las zonas se recalculan sin prisa (un solo
+        // recálculo cada ~120 ms, aunque lleguen decenas de eventos).
+        scheduleRefresh();
+        return false;
+      }
       refreshZones();
-      if (canvas.width && w === lastW && Math.abs(h - lastH) < 160) return false;
       lastW = w;
       lastH = h;
       var b = bitmapSize(w, h);
@@ -469,14 +543,14 @@
     // que recalcular (y reactivar el bucle, que puede estar apagado porque
     // no hay scroll).
     var player = null;
-    var refreshRaf = 0;
+    var refreshTimer = 0;
     function scheduleRefresh() {
-      if (refreshRaf) return;
-      refreshRaf = requestAnimationFrame(function () {
-        refreshRaf = 0;
+      if (refreshTimer) return;
+      refreshTimer = setTimeout(function () {
+        refreshTimer = 0;
         refreshZones();
         if (player) player.wake();
-      });
+      }, 120);
     }
     if (typeof ResizeObserver !== 'undefined') {
       new ResizeObserver(scheduleRefresh).observe(document.body);
@@ -484,7 +558,22 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(scheduleRefresh);
     window.addEventListener('load', scheduleRefresh);
 
-    player = createPlayer(canvas, canvas.getAttribute('data-frames'), total, progress, size, true);
+    // Set de frames: en vertical (celulares y tablets en retrato) se usa el
+    // recortado al centro (data-frames-portrait), idéntico en encuadre a lo
+    // que se vería del completo pero con ~2.2x menos píxeles que decodificar
+    // y la mitad de bytes. Con histéresis, para que el pequeño cambio de
+    // alto de la barra del navegador no lo haga saltar de uno a otro.
+    var fullPattern = canvas.getAttribute('data-frames');
+    var portraitPattern = canvas.getAttribute('data-frames-portrait');
+    var usePortrait = false;
+    function getPattern() {
+      if (!portraitPattern) return fullPattern;
+      var ar = window.innerWidth / Math.max(1, window.innerHeight);
+      usePortrait = usePortrait ? ar <= 0.82 : ar <= 0.78;
+      return usePortrait ? portraitPattern : fullPattern;
+    }
+
+    player = createPlayer(canvas, getPattern, total, progress, size, true);
   }
 
   function boot() {

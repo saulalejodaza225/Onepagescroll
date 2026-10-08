@@ -9,7 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&family=Poppins:wght@500;600;700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
-<link rel="preload" as="image" href="assets/video/frame_001.jpg" type="image/jpeg"><style>
+<link rel="preload" as="image" href="assets/video/frame_001.jpg" type="image/jpeg" media="(min-aspect-ratio: 39/50)">
+<link rel="preload" as="image" href="assets/video-m/frame_001.jpg" type="image/jpeg" media="(max-aspect-ratio: 39/50)"><style>
   /* Tokens de DESIGN.md (Bogotá Nocturne) */
   :root {
     --medianoche: #070E1B;
@@ -222,12 +223,16 @@
   }
   .page { position: relative; z-index: 2; overflow-x: clip; }
 
-  /* Hero: primera pantalla sobre el fondo. 100dvh evita el salto de alto en
-     móviles cuando la barra de direcciones aparece o desaparece al hacer
-     scroll (100vh por si el navegador no soporta dvh). */
-  .hero { position: relative; min-height: 100vh; min-height: 100dvh; }
+  /* Hero: primera pantalla sobre el fondo. 100svh (alto "pequeño" del
+     viewport, con la barra de direcciones visible) es ESTABLE: no cambia
+     cuando la barra aparece o desaparece al hacer scroll. 100dvh, en
+     cambio, se redimensiona continuamente durante el scroll en celulares:
+     cada cambio reacomoda toda la página (el texto "salta") y obliga a
+     recalcular qué frame toca a cada sección, justo cuando más fluido debe
+     estar el scroll. (100vh por si el navegador no soporta svh.) */
+  .hero { position: relative; min-height: 100vh; min-height: 100svh; }
   .hero-content {
-    position: relative; min-height: 100vh; min-height: 100dvh;
+    position: relative; min-height: 100vh; min-height: 100svh;
     display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;
     padding: 0 var(--margin) 12vh; max-width: 1280px; margin: 0 auto;
   }
@@ -463,7 +468,7 @@
 </header>
 
 <!-- FONDO FIJO: secuencia de imágenes ligada al scroll de toda la página -->
-<canvas class="bg-seq" data-secuencia-fondo data-frames="assets/video/frame_%03d.jpg" data-total="953" aria-hidden="true"></canvas>
+<canvas class="bg-seq" data-secuencia-fondo data-frames="assets/video/frame_%03d.jpg" data-frames-portrait="assets/video-m/frame_%03d.jpg" data-total="953" aria-hidden="true"></canvas>
 <div class="bg-scrim" aria-hidden="true"></div>
 
 <div class="page">
