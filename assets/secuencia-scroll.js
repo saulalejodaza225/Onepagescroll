@@ -456,11 +456,10 @@
     var zoneEls = ['#inicio', '#guia', '#servicios', '#contacto']
       .map(function (sel) { return document.querySelector(sel); })
       .filter(Boolean);
-    // El inicio recorre varias veces los frames que le tocarían solo por
-    // alto: el mismo scroll se siente mucho más movido y dinámico ahí, y
-    // llega bastante más lejos en la secuencia (bien pasado el anillo de
-    // energía, hacia la zona de mayor transformación de la nave).
-    var zoneWeights = [3.2, 1, 0.75, 0.6];
+    // La sección 1 (inicio) la cubre el video del hero, así que no recibe
+    // frames: peso 0 la deja con un único frame (el primero). Todos los demás
+    // frames van a las secciones 2 a 4, que es donde empieza la secuencia.
+    var zoneWeights = [0, 1, 0.75, 0.6];
     var computeZones = zoneEls.length === 4 ? makeZones(zoneEls, total, zoneWeights) : null;
     var zones = null;
     var lut = null;
