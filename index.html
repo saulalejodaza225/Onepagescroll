@@ -505,6 +505,13 @@
     .wrap, .hero-content { padding-right: calc(var(--gutter) + 34px); }
     .site-header .wrap { padding-right: var(--gutter); }
   }
+  /* Cajas translúcidas: el fondo de scroll se ve a través de ellas. Se conservan
+     los bordes para distinguir cada bloque, sin desenfoque que tape la animación. */
+  .card, .matrix, .matrix-foot { background: rgba(11,29,51,.36) !important; box-shadow: 0 10px 28px rgba(0,0,0,.2) !important; backdrop-filter: none !important; }
+  .card.featured { background: rgba(18,35,59,.42) !important; box-shadow: 0 10px 28px rgba(0,0,0,.2) !important; backdrop-filter: none !important; }
+  .pilar { background: rgba(11,29,51,.3) !important; box-shadow: 0 10px 24px rgba(0,0,0,.18); backdrop-filter: none; }
+  .quiz-opciones .btn-ghost { background: rgba(18,35,59,.45); }
+  .site-footer { background: linear-gradient(to bottom, rgba(7,14,27,.15), rgba(7,14,27,.62) 45%, rgba(7,14,27,.7)) !important; }
 </style>
 </head>
 <body>
