@@ -1,0 +1,923 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nocturne Studio · Arquitectura Digital en Bogotá</title>
+<meta name="description" content="Nocturne Studio: diseño web de alta gama para negocios en Bogotá. Landing, página PYME, empresarial y tienda online.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&family=Poppins:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
+<link rel="preload" as="image" href="assets/video/frame_001.jpg" type="image/jpeg" media="(min-aspect-ratio: 39/50)">
+<link rel="preload" as="image" href="assets/video-m/frame_001.jpg" type="image/jpeg" media="(max-aspect-ratio: 39/50)"><style>
+  /* Tokens de DESIGN.md (Bogotá Nocturne) */
+  :root {
+    --medianoche: #070E1B;
+    --azul-real: #0B1D33;
+    --azul-profundo: #12233B;
+    --oro-real: #F4B63F;
+    --oro-antiguo: #8A6212;
+    --marfil: #FAF8F3;
+    --lino: #ECE6DA;
+    --niebla: #B4BECC;
+    --pizarra: #4E5968;
+    --violeta: #5E3AA8;
+    --gutter: 1.5rem;
+    --margin: 4rem;
+    --section: 6rem;
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; overscroll-behavior-y: none; }
+  body {
+    margin: 0;
+    background: var(--medianoche);
+    color: var(--marfil);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3, h4 { margin: 0; font-weight: 600; }
+  p { margin: 0; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter); }
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal; font-style: normal; font-size: 20px; line-height: 1;
+    display: inline-block; vertical-align: middle; -webkit-font-feature-settings: 'liga';
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .label { font-family: Poppins, sans-serif; font-size: 12px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+  .eyebrow { font-family: Poppins, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--oro-real); }
+
+  /* Cabecera */
+  .site-header {
+    position: fixed; inset: 0 0 auto 0; z-index: 50; height: 80px;
+    background: rgba(12,19,33,.8); backdrop-filter: blur(16px);
+    box-shadow: 0 1px 8px rgba(0,0,0,.25);
+  }
+  .site-header .wrap { height: 100%; display: flex; align-items: center; justify-content: space-between; }
+  .brand {
+    display: flex; align-items: center; gap: .5rem; font-family: Lora, serif; font-weight: 600; font-size: 24px; color: var(--oro-real); letter-spacing: -.01em;
+    transform-origin: left center;
+    transition: transform .4s cubic-bezier(.16,1,.3,1), filter .4s;
+    filter: drop-shadow(0 2px 5px rgba(7,14,27,.5));
+  }
+  .brand:hover, .brand:focus-visible {
+    transform: perspective(500px) rotateY(-24deg) translateZ(4px);
+    filter: drop-shadow(0 10px 16px rgba(7,14,27,.6)) drop-shadow(0 0 12px rgba(244,182,63,.4));
+  }
+  /* Pieza 3D independiente: la luna creciente gira sobre su eje Y todo el
+     tiempo. No es un recorte plano: son 13 capas idénticas apiladas en Z
+     (cada 0.7px, ±4.2px en total) que forman un cuerpo con espesor real.
+     La capa delantera es dorada con degradado, la trasera "oro antiguo" y
+     las de en medio (el canto) un dorado oscuro: al girar se ve el grosor y
+     el canto de la luna, y la perspectiva cerrada (220px) exagera la
+     profundidad. */
+  .brand-icon { position: relative; display: inline-grid; place-items: center; width: 30px; height: 30px; perspective: 220px; flex: none; }
+  .brand-icon-3d { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: moonSpin 7s linear infinite; }
+  .moon-layer {
+    position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible;
+    transform: translateZ(calc((var(--i) - 6) * .7px));
+    fill: #A9781A;
+  }
+  .moon-layer.moon-back { fill: var(--oro-antiguo); }
+  .moon-layer.moon-front { fill: url(#moonGold); filter: drop-shadow(0 2px 4px rgba(7,14,27,.6)); }
+  @keyframes moonSpin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .brand-icon-3d { animation: none; } }
+  .site-nav { display: none; gap: 2rem; }
+  .site-nav a { font-family: Poppins, sans-serif; font-size: 14px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--lino); transition: color .2s; }
+  .site-nav a:hover { color: var(--oro-real); }
+  @media (min-width: 1024px) { .site-nav { display: flex; } }
+
+  /* Botones 3D. Cuerpo biselado con grosor real (la cara se hunde al
+     presionar), inclinación hacia el mouse, brillo que sigue al cursor,
+     destello que cruza cada cierto tiempo y un aro de pulso que invita al
+     clic. Los efectos de atención solo corren mientras el botón está en
+     pantalla (JS marca data-off al salir) y se apagan con
+     prefers-reduced-motion. El estado :hover solo existe con mouse real. */
+  .btn-gold, .btn-ghost {
+    --rx: 0deg; --ry: 0deg; --ty: 0px; --mx: 50%; --my: 50%; --depth: 5px; --glow: .3;
+    position: relative; display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    cursor: pointer; -webkit-user-select: none; user-select: none; touch-action: manipulation;
+    transform: perspective(700px) translateY(var(--ty)) rotateX(var(--rx)) rotateY(var(--ry));
+    transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .25s ease, filter .25s ease;
+  }
+  .btn-gold {
+    padding: 1rem 2.5rem; border-radius: 12px; border: 0;
+    font-family: Poppins, sans-serif; font-size: 14px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--medianoche);
+    text-shadow: 0 1px 0 rgba(255,240,205,.7), 0 -1px 0 rgba(120,76,8,.2);
+    background: linear-gradient(180deg, #FBDB93 0%, #F4B63F 42%, #DDA024 78%, #C98818 100%);
+    box-shadow:
+      inset 0 1px 1px 0 rgba(255,255,255,.75),
+      inset 0 -3px 5px 0 rgba(138,98,18,.35),
+      0 var(--depth) 0 0 var(--oro-antiguo),
+      0 calc(var(--depth) + 8px) 18px 0 rgba(7,14,27,.55),
+      0 4px 16px 0 rgba(244,182,63,var(--glow));
+  }
+  .btn-ghost {
+    --depth: 3px; --glow: .1;
+    padding: .75rem 1.25rem; border-radius: 8px; border: 1px solid rgba(244,182,63,.42);
+    font-family: Poppins, sans-serif; font-size: 14px; font-weight: 500; color: var(--marfil);
+    text-shadow: 0 1px 0 rgba(7,14,27,.9);
+    background: linear-gradient(180deg, #1F3859 0%, #12233B 55%, #0C1A2E 100%);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255,255,255,.16),
+      inset 0 -2px 4px 0 rgba(7,14,27,.45),
+      0 var(--depth) 0 0 #050C18,
+      0 calc(var(--depth) + 6px) 14px 0 rgba(7,14,27,.55),
+      0 0 14px 0 rgba(244,182,63,var(--glow));
+  }
+  @media (hover: hover) {
+    .btn-gold:hover { --ty: -3px; --depth: 7px; --glow: .6; filter: brightness(1.06) saturate(1.08); }
+    .btn-ghost:hover { --ty: -2px; --depth: 5px; --glow: .4; border-color: var(--oro-real); filter: brightness(1.12); }
+  }
+  .btn-gold:focus-visible { --ty: -2px; --depth: 6px; --glow: .5; }
+  .btn-ghost:focus-visible { --ty: -2px; --glow: .35; }
+  .btn-gold:active { --ty: 4px; --depth: 1px; --glow: .18; filter: brightness(.97); transition-duration: .08s; }
+  .btn-ghost:active { --ty: 2px; --depth: 1px; --glow: .06; filter: brightness(.95); transition-duration: .08s; }
+  .btn-gold:focus-visible, .btn-ghost:focus-visible, .site-nav a:focus-visible { outline: 2px solid var(--oro-real); outline-offset: 3px; }
+
+  /* Capa interna (la inyecta JS): recorta el destello, el brillo del cursor
+     y la onda del clic al contorno redondeado del botón. */
+  .btn-fx { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+  .btn-fx::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.5), rgba(255,255,255,0) 58%);
+    opacity: 0; transition: opacity .25s;
+  }
+  @media (hover: hover) { .btn-gold:hover .btn-fx::before, .btn-ghost:hover .btn-fx::before { opacity: 1; } }
+  .btn-ghost .btn-fx::before { background: radial-gradient(circle at var(--mx) var(--my), rgba(244,182,63,.32), rgba(244,182,63,0) 60%); }
+  .btn-fx::after {
+    content: ''; position: absolute; top: -25%; bottom: -25%; left: 0; width: 36%;
+    background: linear-gradient(100deg, rgba(255,255,255,0), rgba(255,255,255,.6), rgba(255,255,255,0));
+    transform: translateX(-170%) skewX(-18deg);
+    animation: btnGlint 4.8s cubic-bezier(.4,0,.2,1) infinite; animation-delay: var(--fx-delay, 0s);
+  }
+  .btn-ghost .btn-fx::after { background: linear-gradient(100deg, rgba(244,182,63,0), rgba(244,182,63,.28), rgba(244,182,63,0)); }
+  @keyframes btnGlint {
+    0% { transform: translateX(-170%) skewX(-18deg); }
+    24%, 100% { transform: translateX(430%) skewX(-18deg); }
+  }
+  /* Aro de pulso: solo transform y opacity (no repinta). */
+  .btn-gold::before, .btn-ghost::before {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    border: 2px solid rgba(244,182,63,.85);
+    opacity: 0; transform: scale(1);
+    animation: btnPing 3.4s cubic-bezier(.2,.6,.3,1) infinite; animation-delay: var(--fx-delay, 0s);
+  }
+  .btn-ghost::before { border-width: 1.5px; border-color: rgba(244,182,63,.7); }
+  @keyframes btnPing {
+    0% { opacity: 0; transform: scale(1); }
+    10% { opacity: .85; }
+    64%, 100% { opacity: 0; transform: scale(var(--ping-x, 1.1), var(--ping-y, 1.55)); }
+  }
+  .card .btn-gold { --ping-x: 1.05; --ping-y: 1.45; }
+  .btn-ripple {
+    position: absolute; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,.75), rgba(255,255,255,0) 70%);
+    transform: scale(0); animation: btnRipple .65s ease-out forwards;
+  }
+  .btn-ghost .btn-ripple { background: radial-gradient(circle, rgba(244,182,63,.55), rgba(244,182,63,0) 70%); }
+  @keyframes btnRipple {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(var(--rs, 14)); opacity: 0; }
+  }
+  /* La flecha de los botones "invita" al clic: baja o sube a ritmo lento. */
+  .btn-arrow .material-symbols-outlined { animation: arrowNudgeDown 1.5s ease-in-out infinite; animation-delay: var(--fx-delay, 0s); }
+  .btn-arrow-up .material-symbols-outlined { animation-name: arrowNudgeUp; }
+  @keyframes arrowNudgeDown { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
+  @keyframes arrowNudgeUp { 0%, 100% { transform: translateY(2px); } 50% { transform: translateY(-3px); } }
+  @media (hover: hover) { .btn-arrow:hover .material-symbols-outlined { animation-duration: .7s; } }
+  /* Fuera de pantalla no se anima nada (ahorra GPU y batería). */
+  [data-off]::before, [data-off]::after, [data-off] .btn-fx::after, [data-off] .material-symbols-outlined { animation-play-state: paused; }
+
+  /* Enlaces del menú y del pie: subrayado dorado que barre al pasar. */
+  .site-nav a { position: relative; padding: 6px 0; }
+  .site-nav a::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--oro-real), #FBDB93);
+    box-shadow: 0 0 8px rgba(244,182,63,.7);
+    transform: scaleX(0); transform-origin: right center;
+    transition: transform .35s cubic-bezier(.16,1,.3,1);
+  }
+  .site-nav a:focus-visible::after { transform: scaleX(1); transform-origin: left center; }
+  @media (hover: hover) { .site-nav a:hover::after { transform: scaleX(1); transform-origin: left center; } }
+  .site-footer li a { display: inline-block; transition: transform .25s cubic-bezier(.16,1,.3,1), color .2s; }
+  @media (hover: hover) { .site-footer li a:hover { transform: translateX(4px); } }
+  [tabindex="-1"]:focus { outline: none; }
+
+  /* Fondo fijo: la secuencia avanza con el scroll de toda la página */
+  .bg-seq { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; object-fit: cover; background: var(--medianoche); }
+  .bg-scrim {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      linear-gradient(to right, rgba(7,14,27,.8) 0%, rgba(7,14,27,.25) 55%, rgba(7,14,27,.1) 100%),
+      linear-gradient(to top, rgba(7,14,27,.9) 0%, rgba(7,14,27,0) 35%);
+  }
+  .page { position: relative; z-index: 2; overflow-x: clip; }
+
+  /* Hero: primera pantalla sobre el fondo. 100svh (alto "pequeño" del
+     viewport, con la barra de direcciones visible) es ESTABLE: no cambia
+     cuando la barra aparece o desaparece al hacer scroll. 100dvh, en
+     cambio, se redimensiona continuamente durante el scroll en celulares:
+     cada cambio reacomoda toda la página (el texto "salta") y obliga a
+     recalcular qué frame toca a cada sección, justo cuando más fluido debe
+     estar el scroll. (100vh por si el navegador no soporta svh.) */
+  .hero { position: relative; min-height: 100vh; min-height: 100svh; }
+  .hero-content {
+    position: relative; min-height: 100vh; min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;
+    padding: 0 var(--margin) 12vh; max-width: 1280px; margin: 0 auto;
+  }
+  .hero-content h1 {
+    font-family: Lora, serif; font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.1; letter-spacing: -.02em; max-width: 14ch;
+  }
+  .hero-content h1 em { color: var(--oro-real); font-weight: 400; }
+  .hero-quote { margin-top: 1rem; font-family: Lora, serif; font-style: italic; font-size: 22px; line-height: 32px; color: rgba(220,226,245,.9); max-width: 36ch; }
+  .hero-actions { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+  @media (max-width: 767px) {
+    .hero-content { padding: 0 var(--gutter) 10vh; }
+    .hero-content h1 { font-size: 2.5rem; }
+  }
+
+  /* Separador */
+  .divider { position: relative; height: 1px; background: linear-gradient(to right, transparent, rgba(244,182,63,.5), transparent); margin: 0; }
+  .divider .star {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 32px; height: 32px; border-radius: 50%; background: var(--azul-real);
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px rgba(244,182,63,.3);
+  }
+  .divider .star svg { width: 16px; height: 16px; fill: var(--oro-real); }
+
+  /* Guía */
+  .guia { background: transparent; padding: var(--section) 0; position: relative; }
+  .guia-head { text-align: center; max-width: 640px; margin: 0 auto 3rem; }
+  .guia-head h2 { margin-top: .75rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; letter-spacing: -.02em; }
+  .guia-head h2 em { color: var(--oro-real); font-weight: 400; }
+  .guia-head p { margin-top: 1rem; font-size: 18px; line-height: 28px; color: var(--niebla); }
+
+  .cards { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  @media (min-width: 768px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .card {
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 2rem; border-radius: 16px; background: rgba(18,35,59,.9);
+    border: 1px solid rgba(244,182,63,.12); box-shadow: 0 16px 36px rgba(0,0,0,.5);
+    transition: transform .2s cubic-bezier(.16,1,.3,1), border-color .2s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: rgba(244,182,63,.4); }
+  .card.featured { background: linear-gradient(180deg, #19202D, #12233B); border-color: rgba(244,182,63,.4); position: relative; }
+  .card .badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--violeta); color: var(--marfil); padding: 2px 12px; border-radius: 9999px;
+    font-family: Poppins, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;
+  }
+  .card h3 { margin-top: .5rem; font-size: 24px; line-height: 32px; }
+  .price { margin-top: 1rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .5rem; }
+  .price strong { font-family: Poppins, sans-serif; font-size: clamp(28px, 3vw, 44px); line-height: 1.1; font-weight: 700; letter-spacing: -.02em; color: var(--oro-real); }
+  .price s { font-size: 14px; color: var(--niebla); }
+  .delivery {
+    display: inline-flex; align-items: center; gap: .25rem; margin-top: .5rem; padding: 4px 8px; border-radius: 4px;
+    background: rgba(244,182,63,.15); color: var(--oro-real); font-family: Poppins, sans-serif; font-size: 12px; font-weight: 600;
+  }
+  .card > div > p { margin-top: 1rem; font-size: 14px; line-height: 20px; color: var(--niebla); }
+  .checks { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: .5rem; font-size: 14px; line-height: 20px; color: var(--niebla); }
+  .checks li { display: flex; gap: .5rem; align-items: flex-start; }
+  .checks .material-symbols-outlined { color: var(--oro-real); font-size: 16px; margin-top: 2px; }
+  .card .btn-gold { width: 100%; margin-top: 1.5rem; padding: .875rem 1rem; font-size: 12px; border-radius: 8px; }
+
+  /* Tabla */
+  .matrix { margin-top: 4rem; padding: 2rem; border-radius: 16px; background: rgba(18,35,59,.9); border: 1px solid rgba(244,182,63,.25); box-shadow: 0 20px 45px rgba(0,0,0,.6); }
+  .matrix h4 { font-size: 24px; margin-bottom: 1rem; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 1rem; text-align: center; border-top: 1px solid rgba(80,69,53,.3); }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: var(--azul-real); color: var(--marfil); font-weight: 600; }
+  tbody td { color: var(--niebla); }
+  tbody td:first-child { color: var(--marfil); font-weight: 500; }
+  tbody tr:hover { background: rgba(18,35,59,1); }
+  td.hl { color: var(--oro-real); font-weight: 700; }
+  .matrix-foot { margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: 8px; background: var(--azul-real); display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; font-size: 14px; border: 1px solid rgba(80,69,53,.3); }
+  .matrix-foot p { display: flex; gap: .5rem; align-items: center; font-weight: 600; color: var(--marfil); }
+  .matrix-foot p .material-symbols-outlined { color: var(--oro-real); }
+  .matrix-foot ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1rem; font-family: Poppins, sans-serif; font-size: 12px; color: var(--niebla); }
+  .matrix-foot li::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--oro-real); margin-right: .4rem; vertical-align: middle; }
+
+  /* Cierre */
+  .closing { padding: var(--section) 0; text-align: center; background: linear-gradient(180deg, rgba(7,14,27,0), rgba(7,14,27,.75) 30%, rgba(7,14,27,.75) 70%, rgba(7,14,27,0)); }
+  .closing h2 { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.02em; max-width: 20ch; margin: .75rem auto 0; }
+  .closing h2 em { color: var(--oro-real); font-weight: 400; }
+  .closing p { margin: 1rem auto 2rem; max-width: 48ch; color: var(--niebla); font-size: 18px; line-height: 28px; }
+
+  /* Pie */
+  .site-footer { background: rgba(11,29,51,.92); border-top: 1px solid rgba(244,182,63,.12); padding: 3rem 0 2rem; font-size: 14px; color: var(--niebla); }
+  .footer-grid { display: grid; gap: 2rem; }
+  @media (min-width: 768px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr; } }
+  .site-footer h5 { margin: 0 0 .75rem; font-family: Poppins, sans-serif; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--oro-real); font-weight: 600; }
+  .site-footer a:hover { color: var(--oro-real); }
+  .site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+  .copy { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(80,69,53,.3); font-size: 12px; color: var(--pizarra); }
+
+  /* Modo solo tipografía y botones: la animación queda visible detrás */
+  .bg-scrim { background: linear-gradient(to top, rgba(7,14,27,.55) 0%, rgba(7,14,27,0) 28%); }
+  body, .page, .guia, .closing, .site-footer, .site-header, .card, .card.featured,
+  .matrix, .matrix-foot, table, thead th, tbody tr, th, td, .delivery {
+    background: none !important;
+    box-shadow: none !important;
+  }
+  .site-header, .site-footer, .card, .card.featured, .matrix, .matrix-foot, th, td, .delivery {
+    border: 0 !important;
+    backdrop-filter: none !important;
+  }
+  .site-header { box-shadow: none; height: 88px; background: linear-gradient(to bottom, rgba(7,14,27,.9) 45%, rgba(7,14,27,0) 100%) !important; }
+  .divider { display: none; }
+  .card, .matrix, .matrix-foot { padding: 0; }
+  .card { padding: 0 1rem; }
+  .card:hover { transform: none; }
+  .card .btn-gold { margin-top: 1.5rem; }
+  .delivery { padding: 0; }
+  /* Espacio claro entre "Guía" (termina en los botones Quiero esta) y
+     "Servicios" (la matriz comparativa), para que se lean como dos bloques
+     distintos en vez de uno encimado con el otro. */
+  .matrix { margin-top: 8rem; }
+  tbody tr:hover { background: none; }
+  th, td { border-top: 0; }
+  /* Legibilidad sin cajas: sombra suave en el texto */
+  /* Contorno negro fino alrededor de cada letra: legibilidad sin oscurecer
+     el fondo. Antes la sombra difusa de 24px tapaba el efecto del scroll
+     alrededor del texto; ahora el halo es corto y el contorno marca la letra. */
+  body, .page {
+    -webkit-text-stroke: 1px #000;
+    paint-order: stroke fill;
+    text-shadow: 0 0 2px rgba(0,0,0,.9), 0 1px 3px rgba(0,0,0,.7);
+  }
+  .btn-gold, .btn-ghost { -webkit-text-stroke: 0; }
+  /* El pie de página quedó sin ningún fondo al quitar las cajas, y ahí la
+     letra se lee mal: es el texto más chico de la página, justo al final
+     del scroll. Un degradado (no una caja sólida) le da un piso oscuro sin
+     tapar del todo la animación detrás. */
+  .site-footer {
+    background: linear-gradient(to bottom, rgba(7,14,27,.25), rgba(7,14,27,.88) 45%, rgba(7,14,27,.92)) !important;
+  }
+  .site-footer, .copy {
+    text-shadow: 0 0 3px rgba(7,14,27,1), 0 1px 10px rgba(7,14,27,1), 0 0 20px rgba(7,14,27,.85);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .card { transition: none; }
+    .btn-gold, .btn-ghost { transform: translateY(var(--ty)); transition: box-shadow .2s, filter .2s; }
+    .btn-gold::before, .btn-ghost::before, .btn-fx::after, .btn-arrow .material-symbols-outlined { animation: none; }
+    .site-nav a::after, .site-footer li a { transition: none; }
+  }
+
+  /* En pantallas táctiles no hay mouse que "suelte" el :hover: sin esto, el
+     logo, los botones y los enlaces quedarían inclinados/elevados después
+     de tocarlos, hasta tocar otra parte de la pantalla. El :active sigue
+     dando retroalimentación al presionar. */
+  @media (hover: none) {
+    .brand:hover, .brand:focus-visible { transform: none; filter: drop-shadow(0 2px 5px rgba(7,14,27,.5)); }
+    /* (los botones ya no necesitan neutralización: su :hover vive dentro de
+       @media (hover: hover)) */
+    .site-nav a:hover { color: var(--lino); }
+    .site-footer a:hover { color: inherit; }
+  }
+
+  /* ===== Adaptación tablet y smartphone =====
+     Según la referencia de "stitch_one_page_studio_bogot (1)" (DESIGN.md):
+     - Tablet (768–1023px): márgenes de 2.5rem y paquetes en 2 columnas.
+     - Móvil (<768px): márgenes de 1.25rem, títulos de 40/26px, paquetes en
+       carrusel deslizable (como el "carrusel horizontal swipeable" de la
+       referencia) y la matriz comparativa desplazable en horizontal.
+     Va al final para ganar sobre las reglas de escritorio de arriba. */
+  @media (max-width: 1023px) {
+    :root { --gutter: 2.5rem; }
+    .site-header { height: 80px; }
+    .cards { gap: 1.25rem; }
+    .matrix { margin-top: 6rem; }
+  }
+  @media (max-width: 767px) {
+    :root { --gutter: 1.25rem; }
+    .site-header { height: 72px; }
+    .brand { font-size: 20px; }
+    .btn-ghost { padding: .6rem 1rem; font-size: 13px; }
+    .hero-actions { width: 100%; }
+    .hero-actions .btn-gold { width: 100%; padding: 1rem 1.25rem; font-size: 13px; }
+    .hero-quote { font-size: 18px; line-height: 28px; }
+    .guia, .closing { padding: 4rem 0; }
+    .guia-head { margin-bottom: 2rem; }
+    .guia-head h2, .closing h2 { font-size: 2rem; line-height: 1.2; }
+    .guia-head p, .closing p { font-size: 16px; line-height: 24px; }
+    /* Paquetes: carrusel horizontal que se desliza con el dedo. */
+    .cards {
+      display: flex; overflow-x: auto; gap: 1rem;
+      margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter) 1rem;
+      scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter);
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .cards::-webkit-scrollbar { display: none; }
+    .card { flex: 0 0 78%; min-width: 0; scroll-snap-align: start; }
+    .card h3 { font-size: 22px; line-height: 28px; }
+    .price strong { font-size: 32px; }
+    .checks { font-size: 13px; }
+    .card .btn-gold { font-size: 12px; }
+    /* Comparativa: la tabla se desliza en horizontal dentro de su bloque. */
+    .matrix { margin-top: 3.5rem; }
+    .matrix h4 { font-size: 22px; }
+    table { font-size: 12px; }
+    th, td { padding: .6rem .45rem; }
+    .matrix-foot { flex-direction: column; align-items: flex-start; }
+    .site-footer { padding: 2.5rem 0 1.5rem; }
+    .footer-grid { gap: 1.5rem; }
+  }
+  /* Cortes visibles entre secciones: un filo dorado fino en el borde exacto
+     donde empieza cada sección del fondo, con su número. Alto cero: no
+     mueve nada del diseño. */
+  .zona-corte { position: relative; height: 0; pointer-events: none; }
+  .zona-corte::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(244,182,63,.7) 20%, rgba(244,182,63,.7) 80%, transparent);
+    box-shadow: 0 0 10px rgba(244,182,63,.35);
+  }
+  .zona-corte span {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%); white-space: nowrap;
+    font-family: Poppins, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--oro-real); -webkit-text-stroke: 0; text-shadow: 0 1px 6px rgba(7,14,27,.9);
+  }
+  @media (max-width: 767px) { .zona-corte span { font-size: 10px; } }
+  /* PROTOTIPO: video de fondo del inicio en bucle, en todos los dispositivos. */
+  .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none; }
+  .hero-content { z-index: 1; }
+  @media (prefers-reduced-motion: reduce) { .hero-video { display: none; } }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#inicio" data-seq-scroll aria-label="Nocturne Studio, inicio">
+      <span class="brand-icon" aria-hidden="true"><span class="brand-icon-3d">
+        <svg class="moon-layer moon-back" style="--i:0" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer" style="--i:1" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer" style="--i:2" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer" style="--i:3" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer" style="--i:4" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer" style="--i:5" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer" style="--i:6" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer" style="--i:7" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer" style="--i:8" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer" style="--i:9" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer" style="--i:10" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer" style="--i:11" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer moon-front" style="--i:12" viewBox="0 0 24 24" focusable="false"><defs><linearGradient id="moonGold" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0" stop-color="#FFE9AE"/><stop offset=".5" stop-color="#F4B63F"/><stop offset="1" stop-color="#D49418"/></linearGradient></defs><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+      </span></span><span class="brand-text">NOCTURNE</span>
+    </a>
+    <nav class="site-nav" aria-label="Principal">
+      <a href="#guia">Guía</a>
+      <a href="#servicios">Servicios</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <a class="btn-ghost" href="#contacto">Hablemos</a>
+  </div>
+</header>
+
+<!-- FONDO FIJO: secuencia de imágenes ligada al scroll de toda la página -->
+<canvas class="bg-seq" data-secuencia-fondo data-frames="assets/video/frame_%03d.jpg" data-frames-portrait="assets/video-m/frame_%03d.jpg" data-total="953" aria-hidden="true"></canvas>
+<div class="bg-scrim" aria-hidden="true"></div>
+
+<div class="page">
+<main>
+
+<!-- HERO -->
+<section class="hero" id="inicio" aria-label="Presentación">
+  <video class="hero-video" src="assets/prototipo/hero-hailuo-loop-1080p.mp4" poster="assets/video/frame_001.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+  <div class="hero-content">
+    <span class="eyebrow">Boutique Digital · Bogotá</span>
+    <h1 style="margin-top:.75rem">Precisión arquitectónica y <em>presencia digital</em> inconfundible.</h1>
+    <p class="hero-quote">Diseñamos sitios web que transmiten la confianza de un negocio serio, desde la primera pantalla.</p>
+    <div class="hero-actions">
+      <a class="btn-gold btn-arrow" href="#guia">¿No sabes qué página comprar? <span class="material-symbols-outlined" aria-hidden="true">south</span></a>
+    </div>
+  </div>
+</section>
+
+<div class="divider" role="presentation"><div class="star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z"/></svg></div></div>
+
+<!-- GUÍA -->
+<div class="zona-corte" aria-hidden="true"><span>02 · Guía</span></div>
+<section class="guia" id="guia" aria-labelledby="guia-titulo">
+  <div class="wrap">
+    <div class="guia-head">
+      <span class="eyebrow">Orientación clara y estructurada</span>
+      <h2 id="guia-titulo">¿Cuál es <em>tu página?</em></h2>
+      <p>Cada negocio necesita algo distinto. Elige el tuyo y revisa qué incluye cada opción.</p>
+    </div>
+
+    <div class="cards">
+      <article class="card">
+        <div>
+          <span class="label" style="color:var(--oro-real)">Presencia inmediata</span>
+          <h3>Landing Page</h3>
+          <div class="price"><strong>$675.000</strong><s>$750.000</s></div>
+          <span class="delivery"><span class="material-symbols-outlined" style="font-size:16px">bolt</span> Entrega: 5 días</span>
+          <p>Ideal para un negocio que hoy no tiene nada en línea y quiere empezar a recibir clientes.</p>
+          <ul class="checks">
+            <li><span class="material-symbols-outlined">check_circle</span>4 bloques modulares</li>
+            <li><span class="material-symbols-outlined">check_circle</span>2 banners de conversión</li>
+            <li><span class="material-symbols-outlined">check_circle</span>Hasta 15 imágenes curadas</li>
+          </ul>
+        </div>
+        <a class="btn-gold" href="#contacto">Quiero esta</a>
+      </article>
+
+      <article class="card">
+        <div>
+          <span class="label" style="color:var(--oro-real)">Autogestionable</span>
+          <h3>Página PYME</h3>
+          <div class="price"><strong>$1.080.000</strong><s>$1.200.000</s></div>
+          <span class="delivery"><span class="material-symbols-outlined" style="font-size:16px">bolt</span> Entrega: 8 días</span>
+          <p>Ideal para un negocio que quiere poder actualizar su propia web sin depender de terceros.</p>
+          <ul class="checks">
+            <li><span class="material-symbols-outlined">check_circle</span>8 bloques estructurados</li>
+            <li><span class="material-symbols-outlined">check_circle</span>3 banners cinemáticos</li>
+            <li><span class="material-symbols-outlined">check_circle</span>Hasta 20 fotos + CMS y blog</li>
+          </ul>
+        </div>
+        <a class="btn-gold" href="#contacto">Quiero esta</a>
+      </article>
+
+      <article class="card featured">
+        <span class="badge">Recomendada</span>
+        <div>
+          <span class="label" style="color:var(--oro-real)">Máximo despliegue</span>
+          <h3>Página Empresarial</h3>
+          <div class="price"><strong>$1.620.000</strong><s>$1.800.000</s></div>
+          <span class="delivery"><span class="material-symbols-outlined" style="font-size:16px">bolt</span> Entrega: 12 días</span>
+          <p>Ideal para un negocio que necesita mostrar un catálogo amplio de productos o servicios con prestancia.</p>
+          <ul class="checks">
+            <li><span class="material-symbols-outlined">check_circle</span>14 secciones completas</li>
+            <li><span class="material-symbols-outlined">check_circle</span>5 banners animados</li>
+            <li><span class="material-symbols-outlined">check_circle</span>Hasta 50 productos catalogados</li>
+          </ul>
+        </div>
+        <a class="btn-gold" href="#contacto">Quiero esta</a>
+      </article>
+
+      <article class="card">
+        <div>
+          <span class="label" style="color:var(--oro-real)">Comercio 24/7</span>
+          <h3>Tienda Online</h3>
+          <div class="price"><strong>$2.160.000</strong><s>$2.400.000</s></div>
+          <span class="delivery"><span class="material-symbols-outlined" style="font-size:16px">bolt</span> Entrega: 15 días</span>
+          <p>Ideal para un negocio que quiere vender y cobrar en línea directamente con pasarela de pagos.</p>
+          <ul class="checks">
+            <li><span class="material-symbols-outlined">check_circle</span>Carrito y pasarela Wompi / PayU</li>
+            <li><span class="material-symbols-outlined">check_circle</span>Control de inventario</li>
+            <li><span class="material-symbols-outlined">check_circle</span>Checkout optimizado</li>
+          </ul>
+        </div>
+        <a class="btn-gold" href="#contacto">Quiero esta</a>
+      </article>
+    </div>
+
+    <div class="zona-corte" aria-hidden="true"><span>03 · Servicios</span></div>
+    <div class="matrix" id="servicios">
+      <h4>Matriz comparativa de capacidades</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th scope="col">Característica</th><th scope="col">Landing</th><th scope="col">PYME</th><th scope="col">Empresarial</th><th scope="col">Tienda</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Bloques / secciones</td><td>4 bloques</td><td>8 bloques</td><td>14 secciones</td><td>Ilimitadas (e-comm)</td></tr>
+            <tr><td>Panel autogestionable (CMS)</td><td>Punto estático</td><td class="hl">✓ Incluido</td><td class="hl">✓ Avanzado</td><td class="hl">✓ Completo</td></tr>
+            <tr><td>Pasarela de pagos en línea</td><td>-</td><td>-</td><td>-</td><td class="hl">✓ Wompi / PayU / PSE</td></tr>
+            <tr><td>Fotografías y recursos</td><td>Hasta 15 fotos</td><td>Hasta 20 fotos</td><td>Hasta 50 elementos</td><td>Catálogo ampliado</td></tr>
+            <tr><td>Plazo de entrega</td><td class="hl">5 días hábiles</td><td class="hl">8 días hábiles</td><td class="hl">12 días hábiles</td><td class="hl">15 días hábiles</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="matrix-foot">
+        <p><span class="material-symbols-outlined" aria-hidden="true">verified</span>Formulario, WhatsApp, redes, SEO básico y Analytics vienen en las cuatro.</p>
+        <ul>
+          <li>50% inicio / 50% entrega</li>
+          <li>2 rondas de ajustes</li>
+          <li>Dominio y hosting a nombre del cliente</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<div class="zona-corte" aria-hidden="true"><span>04 · Hablemos</span></div>
+<section class="closing" id="contacto" aria-labelledby="cierre-titulo">
+  <div class="wrap">
+    <span class="eyebrow">Hablemos</span>
+    <h2 id="cierre-titulo">Tu negocio merece una presencia <em>a su altura.</em></h2>
+    <p>Cuéntanos qué vendes y para quién. Te recomendamos la opción que mejor encaja con tu etapa.</p>
+    <a class="btn-gold btn-arrow btn-arrow-up" href="#guia">Ver opciones <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span></a>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <p class="brand" style="font-size:20px">NOCTURNE</p>
+        <p style="margin-top:.75rem;max-width:36ch">Arquitectura digital y diseño web de alta gama para negocios en Bogotá.</p>
+      </div>
+      <nav aria-label="Secciones">
+        <h5>Explorar</h5>
+        <ul><li><a href="#inicio">Inicio</a></li><li><a href="#guia">Guía</a></li><li><a href="#servicios">Servicios</a></li></ul>
+      </nav>
+      <div>
+        <h5>Contacto</h5>
+        <ul><li>Bogotá, Colombia</li><li>Lunes a viernes</li></ul>
+      </div>
+    </div>
+    <p class="copy">© 2026 Nocturne Studio. Todos los derechos reservados.</p>
+  </div>
+</footer>
+</div>
+
+<script src="assets/secuencia-scroll.js"></script>
+<script>
+  // Scroll controlado. Cualquier enlace interno (href="#id": botones, menú,
+  // logo, pie de página y también atrás/adelante del navegador) baja a un
+  // ritmo natural (~750px/s, entre 1.8 y 6 s) con ease-in-out suave, en
+  // vez del scroll-behavior:smooth del navegador (casi instantáneo), para
+  // que se alcance a ver el fondo animado avanzar de principio a fin.
+  // Robusto a todo:
+  //  - una sola animación activa: un clic nuevo reemplaza a la anterior;
+  //  - si la persona toca la rueda, la pantalla, una tecla de scroll o
+  //    arrastra la barra, la animación se cancela y manda el usuario;
+  //  - el punto de llegada se recalcula en cada cuadro (cambia si cargan
+  //    fuentes, si se redimensiona o se mueve la barra del navegador) y
+  //    nunca pasa del final real de la página;
+  //  - "Servicios" se centra en pantalla, sin quedar bajo el encabezado;
+  //  - al llegar se actualiza la URL y el foco pasa a la sección (accesible);
+  //  - con prefers-reduced-motion el salto es inmediato;
+  //  - el logo (data-seq-scroll) recorre la secuencia de fondo completa a
+  //    ritmo parejo de frames (ver `go`), de abajo hacia arriba (con el
+  //    scroll en el fondo de la página tarda ~9 s: ajustable con SEQ_FPS).
+  (function () {
+    var root = document.documentElement;
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var PX_PER_SEC = 750, MIN_MS = 1800, MAX_MS = 6000;
+    var SEQ_FPS = 110, SEQ_MIN_MS = 2200, SEQ_MAX_MS = 10000;
+    var active = null;
+
+    function easeInOutSine(t) {
+      return -(Math.cos(Math.PI * t) - 1) / 2;
+    }
+
+    function headerHeight() {
+      var h = document.querySelector('.site-header');
+      return h ? h.offsetHeight : 0;
+    }
+
+    // Cuánto bajar el punto de llegada para que `target` quede centrado en
+    // la pantalla. Si no cabe, se deja un respiro fijo bajo el encabezado
+    // en vez de pegarlo al borde (o taparlo).
+    function centeredOffset(target) {
+      var vh = window.innerHeight;
+      var th = target.getBoundingClientRect().height;
+      var floor = headerHeight() + 12;
+      if (th < vh - floor) return Math.max(floor, Math.min(vh * 0.22, (vh - th) / 2));
+      return floor;
+    }
+
+    // Y de llegada actual (se vuelve a calcular en cada cuadro).
+    function endFor(target, centered) {
+      var maxY = Math.max(0, root.scrollHeight - window.innerHeight);
+      var top = target.getBoundingClientRect().top + window.scrollY;
+      var y = top - (centered ? centeredOffset(target) : 0);
+      return Math.max(0, Math.min(maxY, y));
+    }
+
+    function setHash(hash) {
+      try {
+        if (location.hash === hash) history.replaceState(null, '', hash);
+        else history.pushState(null, '', hash);
+      } catch (err) { /* file:// u otros contextos sin historial */ }
+    }
+
+    function focusTarget(target) {
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      try { target.focus({ preventScroll: true }); } catch (err) { target.focus(); }
+    }
+
+    // Detiene la animación en curso. `done` = true si llegó al final.
+    function stop(token, done) {
+      if (!token || token.over) return;
+      token.over = true;
+      if (active === token) active = null;
+      root.style.scrollBehavior = '';
+      if (done) {
+        if (token.hash) setHash(token.hash);
+        focusTarget(token.target);
+      }
+    }
+
+    function cancel() {
+      if (active) stop(active, false);
+    }
+
+    // `seq` (el logo): en vez de recorrer los pixeles a ritmo parejo, recorre
+    // los FRAMES de la secuencia a ritmo parejo (~SEQ_FPS frames/s, con
+    // arranque y frenado suaves), así la animación de fondo se ve completa
+    // y fluida de principio a fin aunque unas secciones midan mucho más
+    // que otras, o tengan muchos más frames por pixel (como el inicio).
+    function go(target, hash, centered, push, seq) {
+      cancel();
+      var api = seq && !reduceMotion && window.nocturneSeq ? window.nocturneSeq : null;
+      var startY = window.scrollY;
+      var firstEnd = endFor(target, centered);
+      var distance = firstEnd - startY;
+      var token = { target: target, hash: push ? hash : null, over: false, t0: performance.now() };
+
+      if (Math.abs(distance) < 2 || reduceMotion) {
+        if (!reduceMotion || Math.abs(distance) >= 2) {
+          root.style.scrollBehavior = 'auto';
+          window.scrollTo(0, firstEnd);
+          root.style.scrollBehavior = '';
+        }
+        token.over = true;
+        if (push) setHash(hash);
+        focusTarget(target);
+        return;
+      }
+
+      var f0 = api ? api.frameAtY(startY) : 0;
+      var duration = api
+        ? Math.min(SEQ_MAX_MS, Math.max(SEQ_MIN_MS, (Math.abs(api.frameAtY(firstEnd) - f0) / SEQ_FPS) * 1000))
+        : Math.min(MAX_MS, Math.max(MIN_MS, (Math.abs(distance) / PX_PER_SEC) * 1000));
+      active = token;
+      root.style.scrollBehavior = 'auto';
+      var startTime = null;
+
+      function step(ts) {
+        if (token.over) return;
+        if (startTime === null) startTime = ts;
+        var t = Math.min(1, (ts - startTime) / duration);
+        var end = endFor(target, centered);
+        var e = easeInOutSine(t);
+        var y;
+        if (t >= 1) y = end;
+        else if (api) y = api.yAtFrame(f0 + (api.frameAtY(end) - f0) * e);
+        else y = startY + (end - startY) * e;
+        window.scrollTo(0, y);
+        if (t < 1) requestAnimationFrame(step);
+        else stop(token, true);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // La persona retoma el control: cancelar. La rueda ignora los primeros
+    // 250 ms para no confundirse con la inercia de un gesto anterior.
+    function onWheel() {
+      if (active && performance.now() - active.t0 > 250) cancel();
+    }
+    window.addEventListener('wheel', onWheel, { passive: true });
+    window.addEventListener('touchstart', cancel, { passive: true });
+    window.addEventListener('pointerdown', cancel, { passive: true });
+    window.addEventListener('keydown', function (e) {
+      if (/^(ArrowUp|ArrowDown|PageUp|PageDown|Home|End| )$/.test(e.key)) cancel();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a || a.target || a.hasAttribute('download')) return;
+      var hash = a.getAttribute('href');
+      if (!hash || hash === '#') return;
+      var target = null;
+      try { target = document.querySelector(hash); } catch (err) { return; }
+      if (!target) return;
+      e.preventDefault();
+      go(target, hash, hash === '#servicios', true, a.hasAttribute('data-seq-scroll'));
+    });
+
+    // Atrás/adelante del navegador o un hash escrito a mano: mismo ritmo.
+    window.addEventListener('hashchange', function () {
+      var hash = location.hash;
+      var target = null;
+      if (hash) { try { target = document.querySelector(hash); } catch (err) { return; } }
+      if (hash && !target) return;
+      if (!hash) { window.scrollTo(0, 0); return; }
+      go(target, hash, hash === '#servicios', false);
+    });
+  })();
+</script>
+<script>
+  // Botones 3D (ver el CSS de .btn-gold / .btn-ghost): inyecta la capa de
+  // efectos, desfasa las animaciones de atención entre botones, las apaga
+  // fuera de pantalla, inclina el botón hacia el mouse (solo mouse real, no
+  // táctil), mueve el brillo con el cursor y lanza una onda desde el punto
+  // del clic o toque (o desde el centro si se activa con el teclado).
+  (function () {
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var fineMouse = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    var gate = 'IntersectionObserver' in window
+      ? new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) en.target.removeAttribute('data-off');
+            else en.target.setAttribute('data-off', '');
+          });
+        }, { rootMargin: '60px' })
+      : null;
+
+    function ripple(btn, fx, x, y) {
+      var r = btn.getBoundingClientRect();
+      var d = document.createElement('span');
+      d.className = 'btn-ripple';
+      d.style.left = x + 'px';
+      d.style.top = y + 'px';
+      d.style.setProperty('--rs', (Math.max(r.width, r.height) * 0.13).toFixed(1));
+      fx.appendChild(d);
+      var gone = function () { if (d.parentNode) d.parentNode.removeChild(d); };
+      d.addEventListener('animationend', gone);
+      setTimeout(gone, 900);
+    }
+
+    function attachTilt(btn) {
+      var raf = 0, ev = null;
+      function update() {
+        raf = 0;
+        if (!ev) return;
+        var r = btn.getBoundingClientRect();
+        var hw = (btn.offsetWidth || 1) / 2, hh = (btn.offsetHeight || 1) / 2;
+        var nx = Math.max(-1, Math.min(1, (ev.clientX - (r.left + r.width / 2)) / hw));
+        var ny = Math.max(-1, Math.min(1, (ev.clientY - (r.top + r.height / 2)) / hh));
+        btn.style.setProperty('--ry', (nx * 9).toFixed(2) + 'deg');
+        btn.style.setProperty('--rx', (-ny * 7).toFixed(2) + 'deg');
+        btn.style.setProperty('--mx', ((nx + 1) * 50).toFixed(1) + '%');
+        btn.style.setProperty('--my', ((ny + 1) * 50).toFixed(1) + '%');
+      }
+      btn.addEventListener('pointermove', function (e) {
+        if (e.pointerType !== 'mouse') return;
+        ev = e;
+        if (!raf) raf = requestAnimationFrame(update);
+      });
+      btn.addEventListener('pointerleave', function () {
+        ev = null;
+        btn.style.setProperty('--rx', '0deg');
+        btn.style.setProperty('--ry', '0deg');
+        btn.style.setProperty('--mx', '50%');
+        btn.style.setProperty('--my', '50%');
+      });
+    }
+
+    document.querySelectorAll('.btn-gold, .btn-ghost').forEach(function (btn, i) {
+      var fx = document.createElement('span');
+      fx.className = 'btn-fx';
+      fx.setAttribute('aria-hidden', 'true');
+      btn.appendChild(fx);
+      // Cada botón arranca en un punto distinto del ciclo, para que no
+      // pulsen todos a la vez.
+      btn.style.setProperty('--fx-delay', '-' + ((i * 0.83) % 3.4).toFixed(2) + 's');
+      if (gate) gate.observe(btn);
+      if (reduceMotion) return;
+      if (fineMouse) attachTilt(btn);
+      btn.addEventListener('pointerdown', function (e) {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        var r = btn.getBoundingClientRect();
+        ripple(btn, fx, e.clientX - r.left, e.clientY - r.top);
+      });
+      btn.addEventListener('click', function (e) {
+        if (e.detail !== 0) return; // clic real: la onda ya salió en pointerdown
+        ripple(btn, fx, btn.offsetWidth / 2, btn.offsetHeight / 2);
+      });
+    });
+  })();
+</script>
+<script>
+</script>
+
+<script>
+  // Bucle indefinido del video del inicio: si el navegador lo detiene al terminar
+  // o se pausa (ahorro de energía, cambio de pestaña), vuelve al inicio y sigue.
+  (function () {
+    var v = document.querySelector('.hero-video');
+    if (!v) return;
+    v.loop = true;
+    function again() { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    v.addEventListener('ended', again);
+    v.addEventListener('pause', function () { if (document.visibilityState === 'visible' && !v.ended) v.play().catch(function () {}); });
+    document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') v.play().catch(function () {}); });
+  })();
+</script>
+</body>
+</html>

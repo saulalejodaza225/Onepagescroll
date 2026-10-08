@@ -1,0 +1,1311 @@
+<!DOCTYPE html><html class="dark" lang="es"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_standard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Lora:ital,wght@0,400;0,600;1,400&amp;family=Poppins:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;scroll-behavior:smooth;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+/* Animaciones personalizadas de alta gama */
+@keyframes cosmicAurora {
+  0%, 100% { opacity: 0.35; transform: scale(1) translate(0, 0); }
+  50% { opacity: 0.7; transform: scale(1.15) translate(-20px, 15px); }
+}
+@keyframes starFloat {
+  0% { transform: translateY(0px) rotate(0deg); opacity: 0.2; }
+  50% { transform: translateY(-25px) rotate(180deg); opacity: 0.9; }
+  100% { transform: translateY(0px) rotate(360deg); opacity: 0.2; }
+}
+@keyframes heroGlowPulse {
+  0%, 100% { box-shadow: 0 16px 32px rgba(7,14,27,0.8), 0 0 20px rgba(244,182,63,0.35); }
+  50% { box-shadow: 0 20px 42px rgba(7,14,27,0.95), 0 0 35px rgba(244,182,63,0.65); }
+}
+@keyframes blueprintSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes blueprintSpinReverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes floatingPrism {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(8deg); }
+}
+@keyframes spotlightSweep {
+  0% { transform: translateX(-60%) rotate(-12deg); opacity: 0.15; }
+  50% { transform: translateX(60%) rotate(12deg); opacity: 0.45; }
+  100% { transform: translateX(-60%) rotate(-12deg); opacity: 0.15; }
+}
+@keyframes orbitFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(4deg); }
+}
+@keyframes cameraFlash {
+  0%, 92%, 100% { opacity: 0; transform: scale(0.5); }
+  94% { opacity: 1; transform: scale(1.3); }
+  96% { opacity: 0.2; transform: scale(0.8); }
+}
+@keyframes constellationPulse {
+  0%, 100% { opacity: 0.25; transform: scale(0.95); }
+  50% { opacity: 0.85; transform: scale(1.05); }
+}
+@keyframes borderFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes vaultPulseRing {
+  0% { transform: scale(0.85); opacity: 0.8; }
+  50% { transform: scale(1.18); opacity: 0.2; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "primary-fixed": "#ffdeaa", "surface-container-highest": "#2e3543", "surface": "#0c1321", "on-surface-variant": "#d4c4af", "surface-container-high": "#232a38", "surface-container-lowest": "#070e1b", "on-tertiary-fixed": "#24005b", "tertiary-container": "#ccb5ff", "error-container": "#93000a", "surface-bright": "#323948", "secondary-fixed": "#d4e3ff", "secondary-fixed-dim": "#b7c7e5", "on-secondary": "#213148", "on-primary": "#422c00", "on-primary-fixed": "#271900", "primary-fixed-dim": "#fabc44", "inverse-surface": "#dce2f5", "on-secondary-fixed": "#0a1c32", "surface-tint": "#fabc44", "on-error-container": "#ffdad6", "surface-container": "#19202d", "on-tertiary-container": "#5b37a5", "secondary-container": "#374860", "secondary": "#b7c7e5", "tertiary-fixed-dim": "#d1bcff", "on-error": "#690005", "surface-dim": "#0c1321", "on-secondary-container": "#a5b6d3", "background": "#0c1321", "surface-variant": "#2e3543", "tertiary-fixed": "#eaddff", "on-surface": "#dce2f5", "on-primary-container": "#694900", "inverse-primary": "#7d5700", "error": "#ffb4ab", "primary-container": "#f4b63f", "surface-container-low": "#151c29", "inverse-on-surface": "#2a303f", "on-secondary-fixed-variant": "#374860", "outline-variant": "#504535", "on-background": "#dce2f5", "tertiary": "#e5d6ff", "on-tertiary": "#3c0e86", "primary": "#ffd795", "outline": "#9d8f7b", "on-primary-fixed-variant": "#5f4100", "on-tertiary-fixed-variant": "#532e9d" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-sm": "1rem", "space-md": "1rem", "space-lg": "1.5rem", "space-xl": "2.5rem", "space-sm": "0.5rem", "space-section": "6rem", "margin": "4rem", "margin-mobile": "1.25rem", "space-xs": "0.25rem", "gutter": "1.5rem", "space-xxl": "4rem" }, "fontFamily": { "headline-lg": [ "Lora" ], "body-md": [ "Inter" ], "headline-sm": [ "Lora" ], "accent-quote": [ "Lora" ], "headline-lg-mobile": [ "Lora" ], "headline-md": [ "Lora" ], "display": [ "Lora" ], "body-lg": [ "Inter" ], "body-sm": [ "Inter" ], "headline-md-mobile": [ "Lora" ], "label-sm": [ "Poppins" ], "price-display": [ "Poppins" ], "label-lg": [ "Poppins" ], "display-mobile": [ "Lora" ], "label-md": [ "Poppins" ] }, "fontSize": { "headline-lg": [ "48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600" } ], "body-md": [ "16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" } ], "headline-sm": [ "24px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "600" } ], "accent-quote": [ "22px", { "lineHeight": "32px", "letterSpacing": "0.01em", "fontWeight": "400" } ], "headline-lg-mobile": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "headline-md": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "display": [ "64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "600" } ], "body-lg": [ "18px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "400" } ], "body-sm": [ "14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" } ], "headline-md-mobile": [ "26px", { "lineHeight": "34px", "letterSpacing": "0em", "fontWeight": "600" } ], "label-sm": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500" } ], "price-display": [ "44px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "label-lg": [ "16px", { "lineHeight": "22px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "display-mobile": [ "40px", { "lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "label-md": [ "14px", { "lineHeight": "18px", "letterSpacing": "0.03em", "fontWeight": "600" } ] } } } };</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 z-50 transition-colors duration-500 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.25)]" id="global-header"><div class="h-20 max-w-[1280px] mx-auto px-gutter-sm lg:px-gutter flex items-center justify-between"><a class="flex items-center gap-space-sm group" href="#inicio"><img alt="Minimalist golden lion profile icon with head held high and brilliant golden eye, noble crown star accent, vector logo mark" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1V-loTcUAUZ6Ux9SNGW4LDJPvQH2FgyoL-XEr41aS9RE8AbgyBo4YFbcpZz_ZDNNAzkh393gIoxKX3T0xEs31gsFVqLHhyqLcJSruxSQPpVvt7LjAG-HkN1PMxhPp6fnmNSrepf8o4HLQQ9GCXhwnJF6zvnVqeIGaF0MDuUUrGydWMuIphtdvtZRCxwQrJsxMA_s2lyLyqr3t4LdHg8Bc_J1ibor4-z2LZy9o9Gp8bQ7dYJ2_IOq0peZMw"><span class="font-headline-sm text-headline-sm tracking-tight text-primary font-semibold">NOCTURNE</span></a><div class="flex items-center gap-space-lg"><nav class="hidden lg:flex items-center gap-space-lg" data-active-classes="text-primary-container font-semibold"><a aria-current="page" class="tracking-wider uppercase transition-colors text-primary-container font-semibold" data-path="inicio" href="#inicio">Inicio</a><a class="font-label-md text-label-md tracking-wider uppercase text-on-surface-variant hover:text-on-surface transition-colors" data-path="guia" href="#guia">Guía</a><a class="font-label-md text-label-md tracking-wider uppercase text-on-surface-variant hover:text-on-surface transition-colors" data-path="demos" href="#demos">Demos</a><a class="font-label-md text-label-md tracking-wider uppercase text-on-surface-variant hover:text-on-surface transition-colors" data-path="catalogo" href="#catalogo">Catálogo</a><a class="font-label-md text-label-md tracking-wider uppercase text-on-surface-variant hover:text-on-surface transition-colors" data-path="carrito" href="#carrito">Carrito</a></nav><div class="flex items-center gap-space-md"><a class="relative p-space-xs text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center" href="#carrito"><span class="material-symbols-outlined text-[24px]">shopping_bag</span><span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm flex items-center justify-center font-bold ring-2 ring-surface">0</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><nav aria-label="Navegación de secciones" class="hidden xl:flex fixed right-gutter top-1/2 -translate-y-1/2 z-40 flex-col gap-space-md py-space-md px-space-xs"><a class="group flex items-center justify-end gap-space-sm" href="#inicio"><span class="font-label-sm text-label-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">Inicio</span><span class="w-2.5 h-2.5 rounded-full bg-primary-container ring-4 ring-primary-container/20 transition-all"></span></a><a class="group flex items-center justify-end gap-space-sm" href="#guia"><span class="font-label-sm text-label-sm text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">Guía</span><span class="w-2 h-2 rounded-full bg-surface-container-highest hover:bg-primary transition-colors"></span></a><a class="group flex items-center justify-end gap-space-sm" href="#demos"><span class="font-label-sm text-label-sm text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">Demos</span><span class="w-2 h-2 rounded-full bg-surface-container-highest hover:bg-primary transition-colors"></span></a><a class="group flex items-center justify-end gap-space-sm" href="#catalogo"><span class="font-label-sm text-label-sm text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">Catálogo</span><span class="w-2 h-2 rounded-full bg-surface-container-highest hover:bg-primary transition-colors"></span></a><a class="group flex items-center justify-end gap-space-sm" href="#carrito"><span class="font-label-sm text-label-sm text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">Carrito</span><span class="w-2 h-2 rounded-full bg-surface-container-highest hover:bg-primary transition-colors"></span></a></nav><main class="w-full pt-20 bg-background"><div class="flex flex-col w-full selection:bg-primary-container selection:text-on-primary-container">
+<!-- ========================================== -->
+<!-- SECCIÓN 1: #inicio (HERO PANTALLA COMPLETA ANIMADO) -->
+<!-- ========================================== -->
+<section class="relative w-full min-h-[calc(100vh-5rem)] flex flex-col justify-end items-center bg-surface-container-lowest overflow-hidden pb-space-xxl -mt-20 pt-20" id="inicio">
+<!-- Cinematic Full-Bleed Background Frame -->
+<div class="absolute inset-0 z-0">
+<img alt="Cinematic double exposure lion with cosmic mane and luminous golden eye looking left" class="w-full h-full object-cover object-right md:object-center opacity-90 brightness-95" src="https://lh3.googleusercontent.com/aida/AEtjO1UUwmaZbV22YBOPLTejV37K8QIn0vrTiHBVHidonGwtWsrYHC63b0MvWLWkz3Xb7qTctvnyow9Y3-O2t9Q-J6GopC7iw3GnKoDnvjGLvmgqgcKTRoIOROjA7jp1jiGTr3PJbZuU5vpv8640qjQeihKt-BZsKKz4Pt4tDef-fDyyYLtWDFOvqanoAyOEw4w5Mjnj_q7fKuSCwC-9hwuhRHc5eu5T3hHr6UoTn6OMaRzfQBcz3u0ual-wbS4">
+<!-- Hero 3D Cósmico con anillos celestiales y polvo de estrellas con cursor dinámico -->
+<!-- STITCH_THREEJS_START:ANIMATION_19 class="absolute inset-0 w-full h-full pointer-events-none z-10" -->
+<div class="absolute inset-0 w-full h-full pointer-events-none z-10" style="display:block;">
+<script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
+<div id="threejs-container-ANIMATION_19" style="width:100%;height:100%"></div>
+<script>
+(function() {
+  const container = document.getElementById('threejs-container-ANIMATION_19');
+  const devicePixelRatio = window.devicePixelRatio || 1;
+  // Hero #inicio: Cosmic Lion Celestial Core with realistic luminous particle corona & glowing nebula flow aligned with lion silhouette
+const container = document.getElementById('threejs-container-ANIMATION_17') || (typeof container !== 'undefined' ? container : document.body);
+const width = container.clientWidth || window.innerWidth;
+const height = container.clientHeight || window.innerHeight;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+camera.position.set(0, 0, 22);
+
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(width, height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+container.appendChild(renderer.domElement);
+
+const ambientLight = new THREE.AmbientLight(0x070E1B, 1.2);
+scene.add(ambientLight);
+
+// Intense directional lights in golden & cyan blue to realistically illuminate space
+const goldLight = new THREE.PointLight(0xF4B63F, 4.5, 60);
+goldLight.position.set(8, 6, 12);
+scene.add(goldLight);
+
+const blueLight = new THREE.PointLight(0x4A6CF7, 3.5, 50);
+blueLight.position.set(-10, -5, 8);
+scene.add(blueLight);
+
+const rootGroup = new THREE.Group();
+scene.add(rootGroup);
+
+// Realistic Lion Eye Golden Flare Core (positioned at right upper quadrant where lion's glowing eye sits: x: 3.5, y: 1.8)
+const eyeCoreGeo = new THREE.SphereGeometry(0.7, 32, 32);
+const eyeCoreMat = new THREE.MeshBasicMaterial({ color: 0xFFF1C5 });
+const eyeMesh = new THREE.Mesh(eyeCoreGeo, eyeCoreMat);
+eyeMesh.position.set(3.6, 1.8, 2);
+rootGroup.add(eyeMesh);
+
+// Volumetric Halo around Eye
+const haloGeo = new THREE.RingGeometry(0.8, 1.6, 32);
+const haloMat = new THREE.MeshBasicMaterial({ color: 0xF4B63F, side: THREE.DoubleSide, transparent: true, opacity: 0.65 });
+const haloMesh = new THREE.Mesh(haloGeo, haloMat);
+haloMesh.position.set(3.6, 1.8, 1.95);
+rootGroup.add(haloMesh);
+
+// 3 Majestic Orbiting Golden Astronomical Rings
+const ringMatGold = new THREE.MeshPhongMaterial({
+  color: 0xF4B63F,
+  emissive: 0x6A460A,
+  shininess: 100,
+  specular: 0xFFFFFF
+});
+
+const ring1 = new THREE.Mesh(new THREE.TorusGeometry(6.5, 0.14, 16, 100), ringMatGold);
+ring1.position.set(3.6, 1.8, 0);
+ring1.rotation.x = Math.PI / 3;
+rootGroup.add(ring1);
+
+const ring2 = new THREE.Mesh(new THREE.TorusGeometry(9.2, 0.1, 16, 100), new THREE.MeshPhongMaterial({
+  color: 0x5E3AA8,
+  emissive: 0x2A1550,
+  shininess: 90,
+  specular: 0x8A6212
+}));
+ring2.position.set(3.6, 1.8, -1);
+ring2.rotation.y = Math.PI / 4;
+rootGroup.add(ring2);
+
+// Swirling cosmic mane particle stream matching the lion photo's galaxy
+const particleCount = 1200;
+const pGeo = new THREE.BufferGeometry();
+const pPos = new Float32Array(particleCount * 3);
+const pColors = new Float32Array(particleCount * 3);
+const pSpeeds = new Float32Array(particleCount);
+
+for(let i = 0; i < particleCount; i++) {
+  // Dispersed along the lion's mane & right hemisphere
+  const angle = Math.random() * Math.PI * 2;
+  const radius = 2 + Math.random() * 16;
+  const x = 3.6 + Math.cos(angle) * radius * 1.1;
+  const y = 1.0 + Math.sin(angle) * radius * 0.9;
+  const z = (Math.random() - 0.5) * 12;
+
+  pPos[i*3] = x;
+  pPos[i*3+1] = y;
+  pPos[i*3+2] = z;
+  pSpeeds[i] = 0.002 + Math.random() * 0.006;
+
+  // Realistic deep galactic colors (Gold, Electric Blue, Violet, Pure Starlight)
+  const rnd = Math.random();
+  if(rnd > 0.6) {
+    pColors[i*3] = 0.96; pColors[i*3+1] = 0.72; pColors[i*3+2] = 0.25; // Gold
+  } else if(rnd > 0.25) {
+    pColors[i*3] = 0.35; pColors[i*3+1] = 0.55; pColors[i*3+2] = 0.98; // Nebula Blue
+  } else {
+    pColors[i*3] = 0.65; pColors[i*3+1] = 0.40; pColors[i*3+2] = 0.95; // Stardust Violet
+  }
+}
+
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+pGeo.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
+const pMat = new THREE.PointsMaterial({ size: 0.32, vertexColors: true, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending });
+const particleSystem = new THREE.Points(pGeo, pMat);
+rootGroup.add(particleSystem);
+
+let mouseX = 0, mouseY = 0;
+window.addEventListener('mousemove', (e) => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+window.addEventListener('resize', () => {
+  const w = container.clientWidth || window.innerWidth;
+  const h = container.clientHeight || window.innerHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+});
+
+const animate = () => {
+  requestAnimationFrame(animate);
+  const t = Date.now() * 0.001;
+
+  ring1.rotation.z += 0.007;
+  ring1.rotation.y += 0.003;
+  ring2.rotation.x += 0.005;
+
+  eyeMesh.scale.setScalar(1 + Math.sin(t * 3) * 0.15);
+  haloMesh.rotation.z += 0.01;
+  haloMesh.scale.setScalar(1 + Math.sin(t * 2) * 0.1);
+
+  // Rotate star dust system gently
+  particleSystem.rotation.z += 0.0012;
+
+  rootGroup.rotation.y += (mouseX * 0.25 - rootGroup.rotation.y) * 0.05;
+  rootGroup.rotation.x += (-mouseY * 0.15 - rootGroup.rotation.x) * 0.05;
+
+  renderer.render(scene, camera);
+};
+animate();
+})();
+</script>
+</div>
+<!-- STITCH_THREEJS_END:ANIMATION_19 -->
+<!-- Polvo Estelar y Pulsación Auroral Dinámica -->
+<div class="absolute inset-0 pointer-events-none mix-blend-screen opacity-60">
+<div class="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-[#F4B63F]/25 via-[#3C0E86]/35 to-transparent blur-3xl animate-[cosmicAurora_12s_ease-in-out_infinite]"></div>
+<div class="absolute bottom-10 left-10 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-[#19202D] via-[#F4B63F]/15 to-transparent blur-2xl animate-[cosmicAurora_16s_ease-in-out_infinite_reverse]"></div>
+<!-- Partículas estelares CSS flotantes -->
+<span class="absolute top-[28%] left-[22%] w-1.5 h-1.5 rounded-full bg-[#F4B63F] shadow-[0_0_10px_#F4B63F] animate-[starFloat_7s_infinite_ease-in-out]"></span>
+<span class="absolute top-[45%] left-[38%] w-1 h-1 rounded-full bg-white shadow-[0_0_8px_#FFF] animate-[starFloat_9s_infinite_ease-in-out_1s]"></span>
+<span class="absolute top-[60%] left-[18%] w-2 h-2 rounded-full bg-[#F4B63F]/80 shadow-[0_0_12px_#F4B63F] animate-[starFloat_8s_infinite_ease-in-out_2s]"></span>
+<span class="absolute top-[35%] right-[32%] w-1.5 h-1.5 rounded-full bg-[#EADDFF] shadow-[0_0_8px_#EADDFF] animate-[starFloat_11s_infinite_ease-in-out_3s]"></span>
+</div>
+<!-- Vignette Gradient Scrim to integrate into dark ground -->
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-surface-container-lowest via-transparent to-transparent opacity-80"></div>
+</div>
+<!-- Semantic H1 (Visually Integrated & Atmospheric) -->
+<div class="relative z-10 max-w-[1280px] w-full px-gutter-sm lg:px-gutter flex flex-col items-center text-center mb-space-xxl">
+<h1 class="sr-only">Nocturne Studio - Arquitectura Digital y Diseño Web de Alta Gama en Bogotá</h1>
+<!-- Subtle Floating Emblem Indicator -->
+<div class="mb-space-md flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-high/60 backdrop-blur-md shadow-sm border border-outline-variant/30">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-ping"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">Boutique Digital Bogotá</span>
+</div>
+<p class="font-accent-quote text-accent-quote text-on-surface/90 max-w-xl mx-auto italic drop-shadow-md">
+        "Precisión arquitectónica y presencia digital inconfundible."
+      </p>
+</div>
+<!-- ÚNICO Elemento Protagonista Visible: Botón con Textura 3D y brillo pulsante -->
+<div class="relative z-20 flex flex-col items-center">
+<a class="group relative inline-flex items-center justify-center gap-space-sm px-space-xl py-space-lg rounded-xl font-label-lg text-label-lg uppercase tracking-wider text-surface-container-lowest font-bold transition-all duration-300 transform hover:-translate-y-1.5 active:translate-y-1 bg-gradient-to-b from-[#F9CF7A] via-[#F4B63F] to-[#C98818] animate-[heroGlowPulse_4s_ease-in-out_infinite]" href="#guia">
+<!-- Top Chamfer Specular Rim -->
+<span class="absolute inset-x-0 top-0 h-[1.5px] rounded-t-xl bg-white/70"></span>
+<!-- Bottom Bevel Extrusion -->
+<span class="absolute inset-x-0 bottom-0 h-[4px] rounded-b-xl bg-[#8A6212] group-active:h-[1px]"></span>
+<span class="relative z-10 drop-shadow-[0_1px_0_rgba(255,255,255,0.4)] flex items-center gap-space-xs">
+          ¿No sabes qué página comprar?
+          <span class="material-symbols-outlined text-[20px] transition-transform duration-300 group-hover:translate-y-1 animate-bounce">south</span>
+</span>
+</a>
+<span class="mt-space-sm font-label-sm text-label-sm tracking-widest uppercase text-on-surface-variant/70">Toca para descubrir la opción ideal</span>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- SEPARADOR ELEGANTE CON ESTRELLA DE 4 PUNTAS -->
+<!-- ========================================== -->
+<div class="relative w-full bg-gradient-to-r from-surface-container-lowest via-surface-container-low to-surface-container-lowest py-space-md flex items-center justify-center overflow-hidden">
+<div class="absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-[#F4B63F]/50 to-transparent"></div>
+<div class="relative z-10 flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-low shadow-[0_0_12px_rgba(244,182,63,0.3)]">
+<svg class="w-4 h-4 text-primary-container fill-current" viewBox="0 0 24 24">
+<path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z"></path>
+</svg>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- SECCIÓN 2: #guia (GUÍA DE ESTILO CON HERO BANNER ARQUITECTÓNICO ANIMADO) -->
+<!-- ========================================== -->
+<section class="relative w-full bg-[#070E1B] text-on-surface py-space-section transition-colors duration-500 overflow-hidden" id="guia">
+<div class="absolute inset-0 pointer-events-none mix-blend-screen opacity-50 z-0"><div class="absolute -top-1/4 -right-1/4 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#F4B63F]/20 via-[#5E3AA8]/30 to-transparent blur-3xl animate-[cosmicAurora_12s_ease-in-out_infinite]"></div><div class="absolute bottom-10 left-10 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-[#12233B] via-[#F4B63F]/15 to-transparent blur-2xl animate-[cosmicAurora_16s_ease-in-out_infinite_reverse]"></div></div><div class="max-w-[1280px] mx-auto px-gutter-sm lg:px-gutter flex flex-col items-center">
+<!-- HERO HEADER ANIMADO GUÍA: Planos arquitectónicos interactivos y mallas áureas -->
+<div class="relative w-full rounded-2xl bg-gradient-to-b from-[#121A2A] via-[#0C1321] to-[#070E1B] border border-outline-variant/30 p-space-xl md:p-space-xxl mb-space-xxl overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.6)] flex flex-col items-center text-center"><threejs-scene src="{{DATA:ANIMATION:ANIMATION_26}}" class="absolute inset-0 w-full h-full pointer-events-none z-0"></threejs-scene><div class="absolute inset-0 pointer-events-none opacity-40 flex items-center justify-center"><div class="w-[420px] h-[420px] rounded-full border border-dashed border-[#F4B63F]/30 animate-[blueprintSpin_45s_linear_infinite]"></div><div class="absolute w-[300px] h-[300px] rounded-full border border-[#5E3AA8]/40 animate-[blueprintSpinReverse_30s_linear_infinite]"></div><div class="absolute w-[180px] h-[180px] rounded-full border border-[#F4B63F]/40"></div><div class="absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-[#F4B63F]/20 to-transparent"></div><div class="absolute inset-y-0 w-px bg-gradient-to-b from-transparent via-[#F4B63F]/20 to-transparent"></div></div><div class="relative z-10 max-w-2xl flex flex-col items-center"><div class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-primary/10 border border-primary/20 mb-space-sm"><span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span><span class="font-label-sm text-label-sm tracking-widest uppercase text-primary font-semibold">Orientación Clara y Estructurada</span></div><h2 class="font-headline-lg text-headline-lg mt-space-xs text-on-surface tracking-tight">¿Cuál es <span class="font-headline-lg text-headline-lg italic text-[#F4B63F] drop-shadow-[0_0_20px_rgba(244,182,63,0.5)]">tu página?</span></h2><p class="font-body-lg text-body-lg text-on-surface-variant mt-space-sm max-w-xl">Cada negocio necesita algo distinto. Elige el tuyo y mira ejemplos reales con arquitectura garantizada.</p></div></div>
+<!-- 4 Tarjetas en fila -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-lg w-full mb-space-xxl"><div class="flex flex-col justify-between p-space-xl rounded-xl bg-[#12233B]/90 backdrop-blur-md border border-[#F4B63F]/20 text-white shadow-[0_16px_36px_rgba(0,0,0,0.5)] hover:border-[#F4B63F]/40 transition-all duration-300 hover:-translate-y-1"><div><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">Presencia Inmediata</span><h3 class="font-headline-sm text-headline-sm text-on-surface mt-space-xs">Landing Page</h3><div class="mt-space-md flex items-baseline gap-space-xs"><span class="font-price-display text-price-display text-primary">$675.000</span><span class="font-body-sm text-body-sm line-through text-on-surface-variant">$750.000</span></div><div class="inline-flex items-center gap-space-xs mt-space-xs px-space-sm py-1 rounded bg-[#F4B63F]/15 text-primary font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[16px]">bolt</span> Entrega: 5 días</div><p class="font-body-sm text-body-sm text-on-surface-variant mt-space-md">Ideal para un negocio que hoy no tiene nada en línea y quiere empezar a recibir clientes.</p><div class="mt-space-md flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="">4 bloques modulares</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="">2 banners de conversión</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="">Hasta 15 imágenes curadas</span></div></div></div><button class="group relative w-full mt-space-xl py-space-md px-space-md rounded-lg font-label-md text-label-md uppercase tracking-wider text-[#070E1B] font-bold bg-gradient-to-b from-[#F9CF7A] via-[#F4B63F] to-[#C98818] shadow-[0_8px_16px_rgba(138,98,18,0.2)] active:translate-y-0.5 text-center transition-transform" onclick="filtrarDemos('landing-page')"><span class="absolute inset-x-0 top-0 h-[1px] rounded-t-lg bg-white/60"></span><span class="absolute inset-x-0 bottom-0 h-[3px] rounded-b-lg bg-[#8A6212]"></span><span class="relative z-10 flex items-center justify-center gap-1">Ver demos de Landing<span class="material-symbols-outlined text-[16px]">arrow_downward</span></span></button></div><div class="flex flex-col justify-between p-space-xl rounded-xl bg-[#12233B]/90 backdrop-blur-md border border-[#F4B63F]/20 text-white shadow-[0_16px_36px_rgba(0,0,0,0.5)] hover:border-[#F4B63F]/40 transition-all duration-300 hover:-translate-y-1"><div><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">Autogestionable</span><h3 class="font-headline-sm text-headline-sm text-on-surface mt-space-xs">Página PYME</h3><div class="mt-space-md flex items-baseline gap-space-xs"><span class="font-price-display text-price-display text-primary">$1.080.000</span><span class="font-body-sm text-body-sm line-through text-on-surface-variant">$1.200.000</span></div><div class="inline-flex items-center gap-space-xs mt-space-xs px-space-sm py-1 rounded bg-[#F4B63F]/15 text-primary font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[16px]">bolt</span> Entrega: 8 días</div><p class="font-body-sm text-body-sm text-on-surface-variant mt-space-md">Ideal para un negocio que quiere poder actualizar su propia web sin depender de terceros.</p><div class="mt-space-md flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="">8 bloques estructurados</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="">3 banners cinemáticos</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="">Hasta 20 fotos + CMS y blog</span></div></div></div><button class="group relative w-full mt-space-xl py-space-md px-space-md rounded-lg font-label-md text-label-md uppercase tracking-wider text-[#070E1B] font-bold bg-gradient-to-b from-[#F9CF7A] via-[#F4B63F] to-[#C98818] shadow-[0_8px_16px_rgba(138,98,18,0.2)] active:translate-y-0.5 text-center transition-transform" onclick="filtrarDemos('pyme')"><span class="absolute inset-x-0 top-0 h-[1px] rounded-t-lg bg-white/60"></span><span class="absolute inset-x-0 bottom-0 h-[3px] rounded-b-lg bg-[#8A6212]"></span><span class="relative z-10 flex items-center justify-center gap-1">Ver demos de PYME<span class="material-symbols-outlined text-[16px]">arrow_downward</span></span></button></div><div class="relative flex flex-col justify-between p-space-xl rounded-xl bg-gradient-to-b from-[#19202D] to-[#12233B] border border-primary-container/40 text-white shadow-[0_20px_45px_rgba(0,0,0,0.6)] hover:border-[#F4B63F] transition-all duration-300 hover:-translate-y-1"><div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#5E3AA8] text-white px-space-md py-0.5 rounded-full font-label-sm text-label-sm font-semibold tracking-wider uppercase shadow-md">Recomendada</div><div><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">Máximo Despliegue</span><h3 class="font-headline-sm text-headline-sm text-on-surface mt-space-xs">Página Empresarial</h3><div class="mt-space-md flex items-baseline gap-space-xs"><span class="font-price-display text-price-display text-primary">$1.620.000</span><span class="font-body-sm text-body-sm line-through text-on-surface-variant">$1.800.000</span></div><div class="inline-flex items-center gap-space-xs mt-space-xs px-space-sm py-1 rounded bg-[#F4B63F]/15 text-primary font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[16px]">bolt</span> Entrega: 12 días</div><p class="font-body-sm text-body-sm text-on-surface-variant mt-space-md">Ideal para un negocio que necesita mostrar un catálogo amplio de productos o servicios con prestancia.</p><div class="mt-space-md flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="">14 secciones completas</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="">5 banners animados</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="">Hasta 50 productos catalogados</span></div></div></div><button class="group relative w-full mt-space-xl py-space-md px-space-md rounded-lg font-label-md text-label-md uppercase tracking-wider text-[#070E1B] font-bold bg-gradient-to-b from-[#F9CF7A] via-[#F4B63F] to-[#C98818] shadow-[0_8px_16px_rgba(138,98,18,0.2)] active:translate-y-0.5 text-center transition-transform" onclick="filtrarDemos('empresarial')"><span class="absolute inset-x-0 top-0 h-[1px] rounded-t-lg bg-white/60"></span><span class="absolute inset-x-0 bottom-0 h-[3px] rounded-b-lg bg-[#8A6212]"></span><span class="relative z-10 flex items-center justify-center gap-1">Ver demos de Empresarial<span class="material-symbols-outlined text-[16px]">arrow_downward</span></span></button></div><div class="flex flex-col justify-between p-space-xl rounded-xl bg-[#12233B]/90 backdrop-blur-md border border-[#F4B63F]/20 text-white shadow-[0_16px_36px_rgba(0,0,0,0.5)] hover:border-[#F4B63F]/40 transition-all duration-300 hover:-translate-y-1"><div><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">Comercio 24/7</span><h3 class="font-headline-sm text-headline-sm text-on-surface mt-space-xs">Tienda Online</h3><div class="mt-space-md flex items-baseline gap-space-xs"><span class="font-price-display text-price-display text-primary">$2.160.000</span><span class="font-body-sm text-body-sm line-through text-on-surface-variant">$2.400.000</span></div><div class="inline-flex items-center gap-space-xs mt-space-xs px-space-sm py-1 rounded bg-[#F4B63F]/15 text-primary font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[16px]">bolt</span> Entrega: 15 días</div><p class="font-body-sm text-body-sm text-on-surface-variant mt-space-md">Ideal para un negocio que quiere vender y cobrar en línea directamente con pasarela de pagos.</p><div class="mt-space-md flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="">Carrito y pasarela PayU/Wompi</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="">Control de inventario</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="">Checkout optimizado</span></div></div></div><button class="group relative w-full mt-space-xl py-space-md px-space-md rounded-lg font-label-md text-label-md uppercase tracking-wider text-[#070E1B] font-bold bg-gradient-to-b from-[#F9CF7A] via-[#F4B63F] to-[#C98818] shadow-[0_8px_16px_rgba(138,98,18,0.2)] active:translate-y-0.5 text-center transition-transform" onclick="filtrarDemos('tienda-online')"><span class="absolute inset-x-0 top-0 h-[1px] rounded-t-lg bg-white/60"></span><span class="absolute inset-x-0 bottom-0 h-[3px] rounded-b-lg bg-[#8A6212]"></span><span class="relative z-10 flex items-center justify-center gap-1">Ver demos de Tienda<span class="material-symbols-outlined text-[16px]">arrow_downward</span></span></button></div></div>
+<!-- Tabla Comparativa Detallada -->
+<div class="w-full bg-[#12233B]/90 backdrop-blur-md rounded-xl border border-[#F4B63F]/25 shadow-[0_20px_45px_rgba(0,0,0,0.6)] p-space-lg lg:p-space-xl"><h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md">Matriz Comparativa de Capacidades</h4><div class="overflow-x-auto"><table class="w-full text-left font-body-sm text-body-sm"><thead><tr class="bg-surface-container text-on-surface"><th class="p-space-md font-semibold">Característica</th><th class="p-space-md font-semibold text-center">Landing Page</th><th class="p-space-md font-semibold text-center">Página PYME</th><th class="p-space-md font-semibold text-center">Empresarial</th><th class="p-space-md font-semibold text-center">Tienda Online</th></tr></thead><tbody class="text-on-surface-variant"><tr class="border-t border-outline-variant/10 hover:bg-surface-container-high transition-colors"><td class="p-space-md font-medium text-on-surface">Bloques / Secciones</td><td class="p-space-md text-center">4 bloques</td><td class="p-space-md text-center">8 bloques</td><td class="p-space-md text-center">14 secciones</td><td class="p-space-md text-center">Ilimitadas (E-comm)</td></tr><tr class="border-t border-outline-variant/10 hover:bg-surface-container-high transition-colors"><td class="p-space-md font-medium text-on-surface">Panel Autogestionable (CMS)</td><td class="p-space-md text-center text-outline">Punto estático</td><td class="p-space-md text-center text-primary font-bold">✓ Incluido</td><td class="p-space-md text-center text-primary font-bold">✓ Avanzado</td><td class="p-space-md text-center text-primary font-bold">✓ Completo</td></tr><tr class="border-t border-outline-variant/10 hover:bg-surface-container-high transition-colors"><td class="p-space-md font-medium text-on-surface">Pasarela de pagos en línea</td><td class="p-space-md text-center text-outline">-</td><td class="p-space-md text-center text-outline">-</td><td class="p-space-md text-center text-outline">-</td><td class="p-space-md text-center text-primary font-bold">✓ Wompi / PayU / PSE</td></tr><tr class="border-t border-outline-variant/10 hover:bg-surface-container-high transition-colors"><td class="p-space-md font-medium text-on-surface">Fotografías y recursos curados</td><td class="p-space-md text-center">Hasta 15 fotos</td><td class="p-space-md text-center">Hasta 20 fotos</td><td class="p-space-md text-center">Hasta 50 elementos</td><td class="p-space-md text-center">Catálogo ampliado</td></tr><tr class="border-t border-outline-variant/10 hover:bg-surface-container-high transition-colors"><td class="p-space-md font-medium text-on-surface">Plazo de entrega pactado</td><td class="p-space-md text-center font-semibold text-primary">5 días hábiles</td><td class="p-space-md text-center font-semibold text-primary">8 días hábiles</td><td class="p-space-md text-center font-semibold text-primary">12 días hábiles</td><td class="p-space-md text-center font-semibold text-primary">15 días hábiles</td></tr></tbody></table></div><div class="mt-space-lg pt-space-md bg-surface-container p-space-md rounded-lg flex flex-col md:flex-row items-center justify-between gap-space-md border border-outline-variant/20"><div class="flex items-center gap-space-sm text-primary"><span class="material-symbols-outlined text-[24px]">verified</span><p class="font-body-sm text-body-sm font-semibold text-on-surface">Formulario, WhatsApp, redes, SEO básico y Analytics vienen en los cuatro.</p></div><div class="flex flex-wrap items-center gap-space-md font-label-sm text-label-sm text-on-surface-variant"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> 50% inicio / 50% entrega</span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> 2 rondas de ajustes</span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> Dominio y hosting a nombre del cliente</span></div></div></div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- SECCIÓN 3: #demos (DEMOS CON HERO ESTUDIO CINEMÁTICO ANIMADO) -->
+<!-- ========================================== -->
+<section class="w-full bg-[#ECE6DA] text-[#070E1B] py-space-section overflow-hidden" id="demos">
+<div class="max-w-[1280px] mx-auto px-gutter-sm lg:px-gutter flex flex-col items-center">
+<!-- HERO HEADER CINEMÁTICO DEMOS: Estudio de grabación con haz de luz cenital y destellos -->
+<div class="relative w-full rounded-2xl bg-gradient-to-b from-[#213148] via-[#151C29] to-[#070E1B] text-white p-space-xl md:p-space-xxl mb-space-xl overflow-hidden shadow-[0_16px_40px_rgba(7,14,27,0.25)] flex flex-col items-center text-center">
+<!-- Hero 3D Studio Mockup Stage con marcos de laptop y móvil 3D flotantes y reflectantes -->
+<!-- STITCH_THREEJS_START:ANIMATION_21 class="absolute inset-0 w-full h-full pointer-events-none z-0" -->
+<div class="absolute inset-0 w-full h-full pointer-events-none z-0" style="display:block;">
+<script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
+<div id="threejs-container-ANIMATION_21" style="width:100%;height:100%"></div>
+<script>
+(function() {
+  const container = document.getElementById('threejs-container-ANIMATION_21');
+  const devicePixelRatio = window.devicePixelRatio || 1;
+  // Hero #demos: Realistic 3D floating responsive hardware mockups with studio spotlighting & reflective screen bevels
+const container = document.getElementById('threejs-container-ANIMATION_21') || (typeof container !== 'undefined' ? container : document.body);
+const width = container.clientWidth || window.innerWidth;
+const height = container.clientHeight || window.innerHeight;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(48, width / height, 0.1, 1000);
+camera.position.set(0, 0, 24);
+
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(width, height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+container.appendChild(renderer.domElement);
+
+const ambientLight = new THREE.AmbientLight(0x070E1B, 1.4);
+scene.add(ambientLight);
+
+// Dynamic Studio Stage Spotlights
+const goldSpot = new THREE.SpotLight(0xF4B63F, 4.5, 60, Math.PI / 4, 0.4);
+goldSpot.position.set(-16, 18, 18);
+scene.add(goldSpot);
+
+const rimSpot = new THREE.PointLight(0x4A6CF7, 3.2, 45);
+rimSpot.position.set(16, -10, 14);
+scene.add(rimSpot);
+
+const stage = new THREE.Group();
+scene.add(stage);
+
+// 3D Realistic Laptop Aluminum Chassis + Glossy Display Glass
+const laptop = new THREE.Group();
+
+// Display lid
+const lidGeo = new THREE.BoxGeometry(11, 7, 0.25);
+const chassisMat = new THREE.MeshPhongMaterial({ color: 0x121A2A, emissive: 0x070E1B, shininess: 85, specular: 0xF4B63F });
+const lidMesh = new THREE.Mesh(lidGeo, chassisMat);
+laptop.add(lidMesh);
+
+// Screen bezel & display face
+const displayGeo = new THREE.BoxGeometry(10.3, 6.3, 0.26);
+const displayMat = new THREE.MeshBasicMaterial({ color: 0x091222 });
+const displayMesh = new THREE.Mesh(displayGeo, displayMat);
+laptop.add(displayMesh);
+
+// Golden edge frame
+const edgeGeo = new THREE.BoxGeometry(11.1, 7.1, 0.15);
+const edgeMat = new THREE.MeshBasicMaterial({ color: 0xF4B63F, wireframe: true, transparent: true, opacity: 0.6 });
+laptop.add(new THREE.Mesh(edgeGeo, edgeMat));
+
+// Base keyboard chassis
+const baseGeo = new THREE.BoxGeometry(11.5, 0.35, 7.5);
+const baseMesh = new THREE.Mesh(baseGeo, chassisMat);
+baseMesh.position.set(0, -3.6, 3.4);
+laptop.add(baseMesh);
+
+// Golden trackpad
+const padGeo = new THREE.BoxGeometry(3.5, 0.36, 2.2);
+const padMat = new THREE.MeshPhongMaterial({ color: 0xF4B63F, emissive: 0x8A6212, shininess: 90 });
+const padMesh = new THREE.Mesh(padGeo, padMat);
+padMesh.position.set(0, -3.55, 4.8);
+laptop.add(padMesh);
+
+laptop.position.set(-8.5, 1, -2);
+laptop.rotation.set(0.08, 0.38, -0.04);
+stage.add(laptop);
+
+// 3D Realistic Curved Smartphone Chassis
+const phone = new THREE.Group();
+const phoneBodyGeo = new THREE.BoxGeometry(3.4, 6.8, 0.3);
+const phoneMesh = new THREE.Mesh(phoneBodyGeo, chassisMat);
+phone.add(phoneMesh);
+
+const phoneScreenGeo = new THREE.BoxGeometry(3.1, 6.4, 0.32);
+const phoneScreenMesh = new THREE.Mesh(phoneScreenGeo, displayMat);
+phone.add(phoneScreenMesh);
+
+const phoneBorder = new THREE.Mesh(new THREE.BoxGeometry(3.5, 6.9, 0.2), edgeMat);
+phone.add(phoneBorder);
+
+phone.position.set(9.5, -0.5, 3);
+phone.rotation.set(-0.06, -0.42, 0.05);
+stage.add(phone);
+
+// Orbiting 3D Optical Camera Lens Rings
+const lens1 = new THREE.Mesh(new THREE.TorusGeometry(13.5, 0.09, 16, 80), new THREE.MeshBasicMaterial({ color: 0x8A6212, transparent: true, opacity: 0.45 }));
+lens1.rotation.x = Math.PI / 2.3;
+stage.add(lens1);
+
+let mouseX = 0, mouseY = 0;
+window.addEventListener('mousemove', (e) => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+window.addEventListener('resize', () => {
+  const w = container.clientWidth || window.innerWidth;
+  const h = container.clientHeight || window.innerHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+});
+
+const animate = () => {
+  requestAnimationFrame(animate);
+  const t = Date.now() * 0.0015;
+
+  laptop.position.y = 1 + Math.sin(t * 1.2) * 0.55;
+  phone.position.y = -0.5 + Math.cos(t * 1.4) * 0.45;
+
+  laptop.rotation.y = 0.38 + Math.sin(t * 0.8) * 0.08;
+  phone.rotation.y = -0.42 - Math.cos(t * 0.9) * 0.08;
+
+  goldSpot.position.x = -16 + Math.sin(t * 1.1) * 8;
+
+  stage.rotation.y += (mouseX * 0.28 - stage.rotation.y) * 0.05;
+  stage.rotation.x += (-mouseY * 0.18 - stage.rotation.x) * 0.05;
+
+  renderer.render(scene, camera);
+};
+animate();
+})();
+</script>
+</div>
+<!-- STITCH_THREEJS_END:ANIMATION_21 -->
+<!-- Spotlight cenital barre suavemente -->
+<div class="absolute inset-0 pointer-events-none flex justify-center">
+<div class="w-96 h-[500px] bg-gradient-to-b from-[#F4B63F]/45 via-[#F4B63F]/10 to-transparent blur-3xl transform -translate-y-24 animate-[spotlightSweep_14s_easeInOutSine_infinite]"></div>
+</div>
+<!-- Pantallas flotantes de estudio en órbita lenta -->
+<div class="hidden lg:block absolute left-8 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 animate-[orbitFloat_8s_ease-in-out_infinite]">
+<div class="w-28 h-20 rounded-lg border border-[#F4B63F]/40 bg-surface-container/60 backdrop-blur-sm p-1.5 shadow-lg">
+<div class="w-full h-2 rounded bg-[#F4B63F]/40 mb-1"></div>
+<div class="w-3/4 h-1.5 rounded bg-white/20"></div>
+</div>
+</div>
+<div class="hidden lg:block absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 animate-[orbitFloat_9s_ease-in-out_infinite_1.5s]">
+<div class="w-16 h-28 rounded-lg border border-[#F4B63F]/40 bg-surface-container/60 backdrop-blur-sm p-1.5 shadow-lg flex flex-col items-center justify-between">
+<div class="w-8 h-1 rounded-full bg-white/30"></div>
+<div class="w-full h-12 rounded bg-[#F4B63F]/20"></div>
+<div class="w-3 h-3 rounded-full border border-white/30"></div>
+</div>
+</div>
+<!-- Micro destellos de cámara de estudio -->
+<span class="absolute top-10 right-1/4 w-3 h-3 rounded-full bg-white shadow-[0_0_20px_#FFFFFF] pointer-events-none animate-[cameraFlash_7s_infinite]"></span>
+<span class="absolute bottom-12 left-1/4 w-2.5 h-2.5 rounded-full bg-[#F4B63F] shadow-[0_0_16px_#F4B63F] pointer-events-none animate-[cameraFlash_9s_infinite_2.5s]"></span>
+<div class="relative z-10 max-w-2xl flex flex-col items-center">
+<div class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-[#F4B63F]/15 border border-[#F4B63F]/30 mb-space-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">videocam</span>
+<span class="font-label-sm text-label-sm tracking-widest uppercase text-primary font-semibold">Casos Reales y Evidencia de Estudio</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg mt-space-xs text-white tracking-tight drop-shadow-md">
+      Así se ven <span class="italic font-headline-lg text-primary">en la vida real</span>
+</h2>
+<p class="font-body-md text-body-md text-[#B7C7E5] mt-space-xs max-w-lg">
+      Composiciones fotográficas y prototipos navegables proyectados sobre dispositivos reales de última generación.
+    </p>
+</div>
+</div>
+<!-- Barra Interactiva de Filtros -->
+<div class="flex flex-wrap items-center justify-center gap-space-xs mb-space-xl bg-[#FAF8F3] p-1.5 rounded-full shadow-sm" id="filtro-contenedor">
+<button class="filtro-btn px-space-md py-space-xs rounded-full font-label-md text-label-md font-semibold transition-all bg-[#070E1B] text-[#F4B63F] shadow-sm" data-filter="todas" onclick="filtrarDemos('todas')">
+          Todas
+        </button>
+<button class="filtro-btn px-space-md py-space-xs rounded-full font-label-md text-label-md font-medium text-[#4E5968] hover:text-[#070E1B] transition-all" data-filter="landing-page" onclick="filtrarDemos('landing-page')">
+          Landing Page
+        </button>
+<button class="filtro-btn px-space-md py-space-xs rounded-full font-label-md text-label-md font-medium text-[#4E5968] hover:text-[#070E1B] transition-all" data-filter="pyme" onclick="filtrarDemos('pyme')">
+          PYME
+        </button>
+<button class="filtro-btn px-space-md py-space-xs rounded-full font-label-md text-label-md font-medium text-[#4E5968] hover:text-[#070E1B] transition-all" data-filter="empresarial" onclick="filtrarDemos('empresarial')">
+          Empresarial
+        </button>
+<button class="filtro-btn px-space-md py-space-xs rounded-full font-label-md text-label-md font-medium text-[#4E5968] hover:text-[#070E1B] transition-all" data-filter="tienda-online" onclick="filtrarDemos('tienda-online')">
+          Tienda Online
+        </button>
+</div>
+<!-- Mosaico de Proyectos Reales -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-xl w-full mb-space-xl" id="grid-demos">
+<!-- Proyecto 1: Vértice Centro Automotriz -->
+<div class="demo-card group flex flex-col bg-white rounded-xl overflow-hidden shadow-[0_12px_24px_rgba(7,14,27,0.07)] hover:shadow-[0_20px_36px_rgba(7,14,27,0.14)] transition-all duration-300" data-category="landing-page tienda-online">
+<div class="relative overflow-hidden aspect-[16/9] bg-[#070E1B]">
+<img alt="Vértice Centro Automotriz responsive mockup showing dark blue and golden accents" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/AEtjO1WwNY9HVYNgMQJKQYWMlC2N3KJXsURqtkSjZw42ESzrRwNZZl5RrFm19JQShOclODfNU_m2i0BVZjftpad4Mzht3ZVhie4lvZOiy4-uXqHvUNFbj14aDDKtp9Jyx-YwVeGwQiQ_1_MUcrOZxxNAQIvfTg6dgRBVy7SJNXVcC_3RrFVAjIHjU33g2877UQFU-DHJyfzjoWxuhf87fuRHAqkuUt7m37AdUlCI95_wpLTgLPWi6v6ZT_alsr4">
+<span class="absolute top-4 left-4 px-space-md py-1 rounded-full bg-[#070E1B]/80 backdrop-blur-md text-[#F4B63F] font-label-sm text-label-sm font-semibold">
+              Landing Page &amp; Tienda Online
+            </span>
+</div>
+<div class="p-space-lg flex flex-col justify-between flex-grow">
+<div>
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-[#070E1B]">Vértice Centro Automotriz</h3>
+<span class="font-label-sm text-label-sm text-[#8A6212] font-semibold">Bogotá, D.C.</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#4E5968] mt-space-xs">
+                Portal de servicios mecánicos prémium con agendamiento previo y reservación de mantenimientos en línea.
+              </p>
+</div>
+<div class="mt-space-md pt-space-md flex items-center justify-between font-label-sm text-label-sm text-[#2E3543]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-[#8A6212]">speed</span> Carga: 0.9s</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-[#8A6212]">devices</span> 100% Adaptable</span>
+</div>
+</div>
+</div>
+<!-- Proyecto 2: Mecánica Prime Bogotá -->
+<div class="demo-card group flex flex-col bg-white rounded-xl overflow-hidden shadow-[0_12px_24px_rgba(7,14,27,0.07)] hover:shadow-[0_20px_36px_rgba(7,14,27,0.14)] transition-all duration-300" data-category="landing-page pyme">
+<div class="relative overflow-hidden aspect-[16/9] bg-[#070E1B]">
+<img alt="Mecánica Prime Bogotá laptop and mobile mockup on dark midnight background" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/AEtjO1USZYi_aWb_yIDW9m6vb3kFMz8ZAPLc6V1Ex9qF_-9oK_jkoGhw7SpmMmWHpZlWppgibhNpmrYSVMIOV2X2P_MXL_UDrXH42e5h9D2cZpQJ4envte59OJ9JpiBaOQf0NVnJ2Y1Vd5KCsBwKdl-meBUfvX0tjhRFX2eeX-V-ecdzNPlaeL26o0y6IvllmyYysInoy9RR8uSqorx6ogsIMns1lYu6zq4WUWGSJvb4AgDiRhoxMjZbEf4Mf5M">
+<span class="absolute top-4 left-4 px-space-md py-1 rounded-full bg-[#070E1B]/80 backdrop-blur-md text-[#F4B63F] font-label-sm text-label-sm font-semibold">
+              Landing Page
+            </span>
+</div>
+<div class="p-space-lg flex flex-col justify-between flex-grow">
+<div>
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-[#070E1B]">Mecánica Prime Bogotá</h3>
+<span class="font-label-sm text-label-sm text-[#8A6212] font-semibold">Zona Industrial</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#4E5968] mt-space-xs">
+                Arquitectura directa orientada a conversión exprés vía WhatsApp para mecánica especializada de alto nivel.
+              </p>
+</div>
+<div class="mt-space-md pt-space-md flex items-center justify-between font-label-sm text-label-sm text-[#2E3543]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-[#8A6212]">ads_click</span> CTA Directo</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-[#8A6212]">location_on</span> Google Maps</span>
+</div>
+</div>
+</div>
+<!-- Proyecto 3: Torque 88 Serviteca -->
+<div class="demo-card group flex flex-col bg-white rounded-xl overflow-hidden shadow-[0_12px_24px_rgba(7,14,27,0.07)] hover:shadow-[0_20px_36px_rgba(7,14,27,0.14)] transition-all duration-300" data-category="landing-page empresarial">
+<div class="relative overflow-hidden aspect-[16/9] bg-[#070E1B]">
+<img alt="Torque 88 Serviteca landing page mockup with modern express automotive UI layout" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/AEtjO1Xt0JLcAvE7l7LkSgJUAVsVfcjtTF0YfKtKvpb_qk0L398Rc1k_2rAVC2jU-bOTgnZEXpg1kVRWYk60pAjBC5yP6nkCuP5kax6pANZklP2dNV10TGkM3KqbIoxIptYfkXCMMBvqLGhM2lZQEvMACQxQ_VciNKFiDVHDcwNXgId5p20AWtRs6I9Y0t-2ODvdLWlWcT8fiNNf-9ddQqwKnkGyzpA6JurAHxQGrZLl-w-QS7o7wvymlFRf-g">
+<span class="absolute top-4 left-4 px-space-md py-1 rounded-full bg-[#070E1B]/80 backdrop-blur-md text-[#F4B63F] font-label-sm text-label-sm font-semibold">
+              Landing Page / Serviteca
+            </span>
+</div>
+<div class="p-space-lg flex flex-col justify-between flex-grow">
+<div>
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-[#070E1B]">Torque 88 Serviteca</h3>
+<span class="font-label-sm text-label-sm text-[#8A6212] font-semibold">Av. El Dorado</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#4E5968] mt-space-xs">
+                Presentación de paquetes de cambio de aceite, sincronización y llantas con botón rápido a WhatsApp.
+              </p>
+</div>
+<div class="mt-space-md pt-space-md flex items-center justify-between font-label-sm text-label-sm text-[#2E3543]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-[#8A6212]">query_stats</span> SEO Local</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-[#8A6212]">chat</span> WhatsApp 1-Click</span>
+</div>
+</div>
+</div>
+<!-- Proyecto 4: Tienda Online E-commerce -->
+<div class="demo-card group flex flex-col bg-white rounded-xl overflow-hidden shadow-[0_12px_24px_rgba(7,14,27,0.07)] hover:shadow-[0_20px_36px_rgba(7,14,27,0.14)] transition-all duration-300" data-category="tienda-online">
+<div class="relative overflow-hidden aspect-[16/9] bg-[#070E1B]">
+<img alt="Isometric 3D box and tablet mockup for Tienda Online ecommerce package" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/AEtjO1WVzjgNQF6UhmRauz08ZRyLstsZwX4CAHHRQQHgobaaTbFtkR0yTvsZr00UbTFggTrBWB9INek_C5RkPuQKiHDIG2blerWVIhzkpf4ziYzC2TC_bidcJjRwACUUV99bG0DSgD4dWovxr4mmLh4Lpq5TblR68ZNNDxs-X1uBAvYkjnAaUbFEgbPcprRB9-4rpc9_gxCUBXC1K_ETFe8CN8jv3bsPCrFrdxXgLib_sEl6oH3GEgL-kDglcNM">
+<span class="absolute top-4 left-4 px-space-md py-1 rounded-full bg-[#070E1B]/80 backdrop-blur-md text-[#F4B63F] font-label-sm text-label-sm font-semibold">
+              Tienda Online E-commerce
+            </span>
+</div>
+<div class="p-space-lg flex flex-col justify-between flex-grow">
+<div>
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-[#070E1B]">Tienda Online E-commerce</h3>
+<span class="font-label-sm text-label-sm text-[#8A6212] font-semibold">Nacional</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#4E5968] mt-space-xs">
+                Plataforma de ventas con carrito, liquidación automática de envíos nacionales y pasarela de cobros segura.
+              </p>
+</div>
+<div class="mt-space-md pt-space-md flex items-center justify-between font-label-sm text-label-sm text-[#2E3543]">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-[#8A6212]">credit_card</span> Pasarela Wompi</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-[#8A6212]">inventory_2</span> Inventario Real</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Aviso sutil -->
+<p class="font-body-sm text-body-sm text-[#4E5968] text-center mb-space-xl">
+        Marcas ficticias creadas para mostrar nuestro trabajo.
+      </p>
+<!-- Botón 3D centrado: Quiero uno para mi negocio -->
+<a class="group relative inline-flex items-center justify-center gap-space-sm px-space-xl py-space-lg rounded-xl font-label-lg text-label-lg uppercase tracking-wider text-[#070E1B] font-bold transition-all duration-200 transform hover:-translate-y-1 active:translate-y-1 bg-gradient-to-b from-[#F9CF7A] via-[#F4B63F] to-[#C98818] shadow-[0_16px_32px_rgba(7,14,27,0.15),0_4px_16px_rgba(244,182,63,0.35)]" href="#catalogo">
+<span class="absolute inset-x-0 top-0 h-[1.5px] rounded-t-xl bg-white/70"></span>
+<span class="absolute inset-x-0 bottom-0 h-[4px] rounded-b-xl bg-[#8A6212] group-active:h-[1px]"></span>
+<span class="relative z-10 flex items-center gap-space-xs drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]">
+          Quiero uno para mi negocio
+          <span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+</span>
+</a>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- SEPARADOR CON ESTRELLA DE 4 PUNTAS ORO REAL -->
+<!-- ========================================== -->
+<div class="relative w-full bg-surface-container-lowest py-space-md flex items-center justify-center overflow-hidden">
+<div class="absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-[#F4B63F]/40 to-transparent"></div>
+<div class="relative z-10 flex items-center justify-center w-8 h-8 rounded-full bg-surface-container shadow-[0_0_12px_rgba(244,182,63,0.35)]">
+<svg class="w-4 h-4 text-primary-container fill-current" viewBox="0 0 24 24">
+<path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z"></path>
+</svg>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- SECCIÓN 4: #catalogo (CATÁLOGO CON HERO HEADER ANIMADO EN MEDIANOCHE) -->
+<!-- ========================================== -->
+<section class="w-full bg-surface-container-lowest text-on-surface py-space-section overflow-hidden" id="catalogo">
+<div class="max-w-[1280px] mx-auto px-gutter-sm lg:px-gutter flex flex-col items-center">
+<!-- HERO HEADER ANIMADO CATÁLOGO: Constelaciones geométricas doradas y nodos comerciales pulsantes -->
+<div class="relative w-full rounded-2xl bg-gradient-to-b from-[#121A2A] via-[#0C1321] to-[#070E1B] border border-outline-variant/30 p-space-xl md:p-space-xxl mb-space-xl overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.6)] flex flex-col items-center text-center">
+<!-- Hero 3D de Constelación de Soluciones con cristales y nodos dorados interactivos conectados -->
+<!-- STITCH_THREEJS_START:ANIMATION_22 class="absolute inset-0 w-full h-full pointer-events-none z-0" -->
+<div class="absolute inset-0 w-full h-full pointer-events-none z-0" style="display:block;">
+<script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
+<div id="threejs-container-ANIMATION_22" style="width:100%;height:100%"></div>
+<script>
+(function() {
+  const container = document.getElementById('threejs-container-ANIMATION_22');
+  const devicePixelRatio = window.devicePixelRatio || 1;
+  // Hero #catalogo: Realistic 3D Golden Octahedral Crystals & Dynamic Quantum Node Web
+const container = document.getElementById('threejs-container-ANIMATION_22') || (typeof container !== 'undefined' ? container : document.body);
+const width = container.clientWidth || window.innerWidth;
+const height = container.clientHeight || window.innerHeight;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(52, width / height, 0.1, 1000);
+camera.position.set(0, 0, 24);
+
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(width, height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+container.appendChild(renderer.domElement);
+
+const ambientLight = new THREE.AmbientLight(0x070E1B, 1.4);
+scene.add(ambientLight);
+
+const goldLight = new THREE.PointLight(0xF4B63F, 4.2, 55);
+goldLight.position.set(0, 12, 16);
+scene.add(goldLight);
+
+const group = new THREE.Group();
+scene.add(group);
+
+// 4 Faceted Golden Diamonds with Glass Refraction & Wireframe Outer Shrouds (4 Packages)
+const crystalGeo = new THREE.OctahedronGeometry(2.0, 0);
+const crystalMat = new THREE.MeshPhongMaterial({
+  color: 0xF4B63F,
+  emissive: 0x7A4C08,
+  shininess: 100,
+  specular: 0xFFFFFF,
+  transparent: true,
+  opacity: 0.9
+});
+const wireMat = new THREE.MeshBasicMaterial({ color: 0xFFF2D1, wireframe: true, transparent: true, opacity: 0.65 });
+
+const packages = [];
+const xOffsets = [-15, -5, 5, 15];
+
+for(let i = 0; i < 4; i++) {
+  const pGrp = new THREE.Group();
+  const cMesh = new THREE.Mesh(crystalGeo, crystalMat);
+  const wMesh = new THREE.Mesh(crystalGeo, wireMat);
+  wMesh.scale.set(1.22, 1.22, 1.22);
+  pGrp.add(cMesh);
+  pGrp.add(wMesh);
+  pGrp.position.set(xOffsets[i], 3.5, 2);
+  group.add(pGrp);
+  packages.push(pGrp);
+}
+
+// 45 Orbiting Constellation Nodes
+const nodeCount = 45;
+const nodeGeo = new THREE.SphereGeometry(0.32, 16, 16);
+const nodeMat = new THREE.MeshPhongMaterial({ color: 0xF4B63F, emissive: 0xFFE082, shininess: 100 });
+const nodes = [];
+
+for(let i = 0; i < nodeCount; i++) {
+  const mesh = new THREE.Mesh(nodeGeo, nodeMat);
+  const x = (Math.random() - 0.5) * 38;
+  const y = (Math.random() - 0.5) * 18;
+  const z = (Math.random() - 0.5) * 14;
+  mesh.position.set(x, y, z);
+  group.add(mesh);
+  nodes.push({ mesh, origin: new THREE.Vector3(x, y, z), speed: 0.6 + Math.random() * 0.8 });
+}
+
+// Dynamic connecting lines
+const maxLines = 55;
+const lineMat = new THREE.LineBasicMaterial({ color: 0xF4B63F, transparent: true, opacity: 0.32 });
+const lineGeo = new THREE.BufferGeometry();
+const linePositions = new Float32Array(maxLines * 2 * 3);
+lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+const linesMesh = new THREE.LineSegments(lineGeo, lineMat);
+group.add(linesMesh);
+
+let mouseX = 0, mouseY = 0;
+window.addEventListener('mousemove', (e) => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+window.addEventListener('resize', () => {
+  const w = container.clientWidth || window.innerWidth;
+  const h = container.clientHeight || window.innerHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+});
+
+const animate = () => {
+  requestAnimationFrame(animate);
+  const t = Date.now() * 0.0016;
+
+  packages.forEach((p, idx) => {
+    p.rotation.y += 0.016;
+    p.rotation.x += 0.012;
+    p.position.y = 3.5 + Math.sin(t * 1.5 + idx * 1.3) * 0.85;
+  });
+
+  nodes.forEach((n) => {
+    n.mesh.position.y = n.origin.y + Math.sin(t * n.speed) * 0.7;
+    n.mesh.position.x = n.origin.x + Math.cos(t * n.speed * 0.8) * 0.5;
+  });
+
+  // Calculate dynamic line web
+  let lIdx = 0;
+  const posArr = lineGeo.attributes.position.array;
+  for(let i = 0; i < nodes.length && lIdx < maxLines; i++) {
+    for(let j = i + 1; j < nodes.length && lIdx < maxLines; j++) {
+      const dist = nodes[i].mesh.position.distanceTo(nodes[j].mesh.position);
+      if(dist < 9.5) {
+        posArr[lIdx*6] = nodes[i].mesh.position.x;
+        posArr[lIdx*6+1] = nodes[i].mesh.position.y;
+        posArr[lIdx*6+2] = nodes[i].mesh.position.z;
+        posArr[lIdx*6+3] = nodes[j].mesh.position.x;
+        posArr[lIdx*6+4] = nodes[j].mesh.position.y;
+        posArr[lIdx*6+5] = nodes[j].mesh.position.z;
+        lIdx++;
+      }
+    }
+  }
+  lineGeo.attributes.position.needsUpdate = true;
+
+  group.rotation.y += (mouseX * 0.32 - group.rotation.y) * 0.05;
+  group.rotation.x += (-mouseY * 0.2 - group.rotation.x) * 0.05;
+
+  renderer.render(scene, camera);
+};
+animate();
+})();
+</script>
+</div>
+<!-- STITCH_THREEJS_END:ANIMATION_22 -->
+<!-- Fondo animado con red de constelaciones geométricas -->
+<div class="absolute inset-0 pointer-events-none opacity-40">
+<svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+<!-- Líneas de conexión de nodos -->
+<line class="opacity-30" stroke="#F4B63F" stroke-dasharray="4,4" stroke-width="1" x1="15%" x2="35%" y1="20%" y2="40%"></line>
+<line class="opacity-40" stroke="#F4B63F" stroke-width="1" x1="35%" x2="50%" y1="40%" y2="25%"></line>
+<line class="opacity-30" stroke="#F4B63F" stroke-dasharray="4,4" stroke-width="1" x1="50%" x2="68%" y1="25%" y2="45%"></line>
+<line class="opacity-40" stroke="#F4B63F" stroke-width="1" x1="68%" x2="85%" y1="45%" y2="20%"></line>
+<line class="opacity-20" stroke="#F4B63F" stroke-dasharray="2,6" stroke-width="1" x1="35%" x2="68%" y1="40%" y2="45%"></line>
+</svg>
+<!-- Nodos geométricos parpadeantes -->
+<span class="absolute top-[20%] left-[15%] w-2.5 h-2.5 rounded-full bg-[#F4B63F] shadow-[0_0_12px_#F4B63F] animate-[constellationPulse_4s_infinite]"></span>
+<span class="absolute top-[40%] left-[35%] w-3 h-3 rounded-full bg-white shadow-[0_0_14px_#FFF] animate-[constellationPulse_5s_infinite_1s]"></span>
+<span class="absolute top-[25%] left-[50%] w-2 h-2 rounded-full bg-[#F4B63F] shadow-[0_0_10px_#F4B63F] animate-[constellationPulse_3.5s_infinite_1.5s]"></span>
+<span class="absolute top-[45%] left-[68%] w-3 h-3 rounded-full bg-primary shadow-[0_0_15px_#F4B63F] animate-[constellationPulse_6s_infinite_0.5s]"></span>
+<span class="absolute top-[20%] left-[85%] w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_12px_#FFF] animate-[constellationPulse_4.5s_infinite_2s]"></span>
+</div>
+<!-- Banner luminoso con gradiente en flujo continuo para la promoción -->
+<div class="relative z-10 w-full mb-space-lg p-0.5 rounded-xl bg-gradient-to-r from-[#F4B63F] via-[#CCB5FF] to-[#F4B63F] bg-[length:200%_auto] animate-[borderFlow_6s_linear_infinite] shadow-lg">
+<div class="w-full p-space-md rounded-[11px] bg-gradient-to-r from-surface-container-high via-[#2E1E4C] to-surface-container-high flex flex-col md:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm text-primary">
+<span class="material-symbols-outlined text-[26px] animate-pulse">celebration</span>
+<span class="font-label-md text-label-md tracking-wide text-on-surface font-semibold text-center md:text-left">
+          Precio de lanzamiento: 10 % menos en todos los paquetes hasta el 30 de septiembre de 2026
+        </span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary-container font-bold px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/40">
+          Cupos Limitados
+        </span>
+</div>
+</div>
+</div>
+<div class="relative z-10 max-w-2xl flex flex-col items-center">
+<span class="font-label-sm text-label-sm tracking-widest uppercase text-primary font-semibold bg-primary/10 px-space-md py-1 rounded-full border border-primary/20 mb-space-xs">Inversión Transparente y Garantizada</span>
+<h2 class="font-headline-lg text-headline-lg mt-space-xs text-on-surface tracking-tight">
+      Catálogo de <span class="italic font-headline-lg text-primary drop-shadow-[0_0_20px_rgba(244,182,63,0.35)]">Soluciones Web</span>
+</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs max-w-lg">
+      Selecciona tu configuración ideal y reserva hoy mismo con el 50% de anticipo.
+    </p>
+</div>
+</div>
+<!-- Filtro Buscador y Selector de Orden -->
+<div class="w-full mb-space-xl flex flex-col md:flex-row items-center justify-between gap-space-md p-space-md rounded-xl bg-surface-container shadow-md">
+<!-- Buscador -->
+<div class="relative w-full md:w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface placeholder:text-outline-variant font-body-sm text-body-sm focus:outline-none focus:ring-1 focus:ring-primary-container" id="catalogo-search" oninput="filtrarCatalogo()" placeholder="Buscar paquete..." type="text">
+</div>
+<!-- Selector de Orden -->
+<div class="flex items-center gap-space-sm w-full md:w-auto">
+<label class="font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap" for="catalogo-sort">Ordenar por:</label>
+<select class="px-space-md py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-1 focus:ring-primary-container" id="catalogo-sort" onchange="ordenarCatalogo()">
+<option value="default">Recomendados</option>
+<option value="menor-precio">Menor precio</option>
+<option value="mayor-precio">Mayor precio</option>
+<option value="mas-rapida">Entrega más rápida</option>
+</select>
+</div>
+</div>
+<!-- Grilla de los 4 paquetes como productos -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-lg w-full" id="catalogo-grid">
+<!-- Paquete 1: Landing Page -->
+<div class="catalogo-card flex flex-col justify-between p-space-lg rounded-xl bg-[#12233B] shadow-[0_12px_32px_rgba(7,14,27,0.8)] transition-all duration-300 hover:-translate-y-1" data-days="5" data-name="landing page" data-price="675000">
+<div>
+<div class="relative rounded-lg overflow-hidden mb-space-md aspect-[16/10] bg-surface-container-lowest">
+<img alt="Landing Page Mockup" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1USZYi_aWb_yIDW9m6vb3kFMz8ZAPLc6V1Ex9qF_-9oK_jkoGhw7SpmMmWHpZlWppgibhNpmrYSVMIOV2X2P_MXL_UDrXH42e5h9D2cZpQJ4envte59OJ9JpiBaOQf0NVnJ2Y1Vd5KCsBwKdl-meBUfvX0tjhRFX2eeX-V-ecdzNPlaeL26o0y6IvllmyYysInoy9RR8uSqorx6ogsIMns1lYu6zq4WUWGSJvb4AgDiRhoxMjZbEf4Mf5M">
+<span class="absolute top-2 right-2 px-space-sm py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                -10%
+              </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Landing Page</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Presencia comercial rápida y orientada a captar prospectos.</p>
+<div class="my-space-md">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-price-display text-price-display text-primary">$675.000</span>
+<span class="font-body-sm text-body-sm text-outline line-through">$750.000 COP</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span> Entrega: 5 días hábiles
+              </span>
+</div>
+<ul class="flex flex-col gap-2 font-body-sm text-body-sm text-on-surface-variant mb-space-lg">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> 4 bloques modulares</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> 2 banners de conversión</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> Hasta 15 imágenes</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> WhatsApp y SEO base</li>
+</ul>
+</div>
+<div class="flex flex-col gap-space-xs">
+<button class="group relative w-full py-space-sm px-space-md rounded-lg font-label-md text-label-md uppercase tracking-wider text-surface-container-lowest font-bold bg-gradient-to-b from-[#F9CF7A] via-[#F4B63F] to-[#C98818] shadow-md hover:shadow-lg active:translate-y-0.5 text-center transition-all" onclick="agregarAlCarrito('Landing Page', 675000, '5 días', 'https://lh3.googleusercontent.com/aida/AEtjO1USZYi_aWb_yIDW9m6vb3kFMz8ZAPLc6V1Ex9qF_-9oK_jkoGhw7SpmMmWHpZlWppgibhNpmrYSVMIOV2X2P_MXL_UDrXH42e5h9D2cZpQJ4envte59OJ9JpiBaOQf0NVnJ2Y1Vd5KCsBwKdl-meBUfvX0tjhRFX2eeX-V-ecdzNPlaeL26o0y6IvllmyYysInoy9RR8uSqorx6ogsIMns1lYu6zq4WUWGSJvb4AgDiRhoxMjZbEf4Mf5M')">
+<span class="absolute inset-x-0 top-0 h-[1px] rounded-t-lg bg-white/60"></span>
+<span class="absolute inset-x-0 bottom-0 h-[3px] rounded-b-lg bg-[#8A6212]"></span>
+<span class="relative z-10 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+                Agregar al carrito
+              </span>
+</button>
+<a class="py-space-xs text-center font-label-sm text-label-sm text-secondary hover:text-primary transition-colors flex items-center justify-center gap-1" href="https://wa.me/573202784199?text=Hola%20Nocturne%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20paquete%20Landing%20Page%20con%20descuento" target="_blank">
+<span class="material-symbols-outlined text-[16px]">chat</span> Consultar por WhatsApp
+            </a>
+</div>
+</div>
+<!-- Paquete 2: Página PYME -->
+<div class="catalogo-card flex flex-col justify-between p-space-lg rounded-xl bg-[#12233B] shadow-[0_12px_32px_rgba(7,14,27,0.8)] transition-all duration-300 hover:-translate-y-1" data-days="8" data-name="pagina pyme" data-price="1080000">
+<div>
+<div class="relative rounded-lg overflow-hidden mb-space-md aspect-[16/10] bg-surface-container-lowest">
+<img alt="Página PYME Mockup" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1Xt0JLcAvE7l7LkSgJUAVsVfcjtTF0YfKtKvpb_qk0L398Rc1k_2rAVC2jU-bOTgnZEXpg1kVRWYk60pAjBC5yP6nkCuP5kax6pANZklP2dNV10TGkM3KqbIoxIptYfkXCMMBvqLGhM2lZQEvMACQxQ_VciNKFiDVHDcwNXgId5p20AWtRs6I9Y0t-2ODvdLWlWcT8fiNNf-9ddQqwKnkGyzpA6JurAHxQGrZLl-w-QS7o7wvymlFRf-g">
+<span class="absolute top-2 right-2 px-space-sm py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                -10%
+              </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Página PYME</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Sitio autogestionable ideal para firmas que crecen continuamente.</p>
+<div class="my-space-md">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-price-display text-price-display text-primary">$1.080.000</span>
+<span class="font-body-sm text-body-sm text-outline line-through">$1.200.000 COP</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span> Entrega: 8 días hábiles
+              </span>
+</div>
+<ul class="flex flex-col gap-2 font-body-sm text-body-sm text-on-surface-variant mb-space-lg">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> 8 bloques interactivos</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> CMS para editar textos</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> 3 banners cinemáticos</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> Hasta 20 imágenes y blog</li>
+</ul>
+</div>
+<div class="flex flex-col gap-space-xs">
+<button class="group relative w-full py-space-sm px-space-md rounded-lg font-label-md text-label-md uppercase tracking-wider text-surface-container-lowest font-bold bg-gradient-to-b from-[#F9CF7A] via-[#F4B63F] to-[#C98818] shadow-md hover:shadow-lg active:translate-y-0.5 text-center transition-all" onclick="agregarAlCarrito('Página PYME', 1080000, '8 días', 'https://lh3.googleusercontent.com/aida/AEtjO1Xt0JLcAvE7l7LkSgJUAVsVfcjtTF0YfKtKvpb_qk0L398Rc1k_2rAVC2jU-bOTgnZEXpg1kVRWYk60pAjBC5yP6nkCuP5kax6pANZklP2dNV10TGkM3KqbIoxIptYfkXCMMBvqLGhM2lZQEvMACQxQ_VciNKFiDVHDcwNXgId5p20AWtRs6I9Y0t-2ODvdLWlWcT8fiNNf-9ddQqwKnkGyzpA6JurAHxQGrZLl-w-QS7o7wvymlFRf-g')">
+<span class="absolute inset-x-0 top-0 h-[1px] rounded-t-lg bg-white/60"></span>
+<span class="absolute inset-x-0 bottom-0 h-[3px] rounded-b-lg bg-[#8A6212]"></span>
+<span class="relative z-10 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+                Agregar al carrito
+              </span>
+</button>
+<a class="py-space-xs text-center font-label-sm text-label-sm text-secondary hover:text-primary transition-colors flex items-center justify-center gap-1" href="https://wa.me/573202784199?text=Hola%20Nocturne%2C%20quiero%20informaci%C3%B3n%20sobre%20la%20P%C3%A1gina%20PYME%20con%20descuento" target="_blank">
+<span class="material-symbols-outlined text-[16px]">chat</span> Consultar por WhatsApp
+            </a>
+</div>
+</div>
+<!-- Paquete 3: Página Empresarial -->
+<div class="catalogo-card flex flex-col justify-between p-space-lg rounded-xl bg-[#12233B] shadow-[0_12px_32px_rgba(7,14,27,0.8)] transition-all duration-300 hover:-translate-y-1" data-days="12" data-name="pagina empresarial" data-price="1620000">
+<div>
+<div class="relative rounded-lg overflow-hidden mb-space-md aspect-[16/10] bg-surface-container-lowest">
+<img alt="Página Empresarial Mockup" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1WwNY9HVYNgMQJKQYWMlC2N3KJXsURqtkSjZw42ESzrRwNZZl5RrFm19JQShOclODfNU_m2i0BVZjftpad4Mzht3ZVhie4lvZOiy4-uXqHvUNFbj14aDDKtp9Jyx-YwVeGwQiQ_1_MUcrOZxxNAQIvfTg6dgRBVy7SJNXVcC_3RrFVAjIHjU33g2877UQFU-DHJyfzjoWxuhf87fuRHAqkuUt7m37AdUlCI95_wpLTgLPWi6v6ZT_alsr4">
+<span class="absolute top-2 right-2 px-space-sm py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                -10%
+              </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Página Empresarial</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Catálogo exhaustivo para empresas con amplio inventario o servicios.</p>
+<div class="my-space-md">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-price-display text-price-display text-primary">$1.620.000</span>
+<span class="font-body-sm text-body-sm text-outline line-through">$1.800.000 COP</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span> Entrega: 12 días hábiles
+              </span>
+</div>
+<ul class="flex flex-col gap-2 font-body-sm text-body-sm text-on-surface-variant mb-space-lg">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> 14 secciones completas</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> 5 banners animados</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> Hasta 50 productos catalogados</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> Formulario con lógica condicional</li>
+</ul>
+</div>
+<div class="flex flex-col gap-space-xs">
+<button class="group relative w-full py-space-sm px-space-md rounded-lg font-label-md text-label-md uppercase tracking-wider text-surface-container-lowest font-bold bg-gradient-to-b from-[#F9CF7A] via-[#F4B63F] to-[#C98818] shadow-md hover:shadow-lg active:translate-y-0.5 text-center transition-all" onclick="agregarAlCarrito('Página Empresarial', 1620000, '12 días', 'https://lh3.googleusercontent.com/aida/AEtjO1WwNY9HVYNgMQJKQYWMlC2N3KJXsURqtkSjZw42ESzrRwNZZl5RrFm19JQShOclODfNU_m2i0BVZjftpad4Mzht3ZVhie4lvZOiy4-uXqHvUNFbj14aDDKtp9Jyx-YwVeGwQiQ_1_MUcrOZxxNAQIvfTg6dgRBVy7SJNXVcC_3RrFVAjIHjU33g2877UQFU-DHJyfzjoWxuhf87fuRHAqkuUt7m37AdUlCI95_wpLTgLPWi6v6ZT_alsr4')">
+<span class="absolute inset-x-0 top-0 h-[1px] rounded-t-lg bg-white/60"></span>
+<span class="absolute inset-x-0 bottom-0 h-[3px] rounded-b-lg bg-[#8A6212]"></span>
+<span class="relative z-10 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+                Agregar al carrito
+              </span>
+</button>
+<a class="py-space-xs text-center font-label-sm text-label-sm text-secondary hover:text-primary transition-colors flex items-center justify-center gap-1" href="https://wa.me/573202784199?text=Hola%20Nocturne%2C%20quiero%20informaci%C3%B3n%20sobre%20la%20P%C3%A1gina%20Empresarial%20con%20descuento" target="_blank">
+<span class="material-symbols-outlined text-[16px]">chat</span> Consultar por WhatsApp
+            </a>
+</div>
+</div>
+<!-- Paquete 4: Tienda Online -->
+<div class="catalogo-card flex flex-col justify-between p-space-lg rounded-xl bg-[#12233B] shadow-[0_12px_32px_rgba(7,14,27,0.8)] transition-all duration-300 hover:-translate-y-1" data-days="15" data-name="tienda online" data-price="2160000">
+<div>
+<div class="relative rounded-lg overflow-hidden mb-space-md aspect-[16/10] bg-surface-container-lowest">
+<img alt="Tienda Online Mockup" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1WVzjgNQF6UhmRauz08ZRyLstsZwX4CAHHRQQHgobaaTbFtkR0yTvsZr00UbTFggTrBWB9INek_C5RkPuQKiHDIG2blerWVIhzkpf4ziYzC2TC_bidcJjRwACUUV99bG0DSgD4dWovxr4mmLh4Lpq5TblR68ZNNDxs-X1uBAvYkjnAaUbFEgbPcprRB9-4rpc9_gxCUBXC1K_ETFe8CN8jv3bsPCrFrdxXgLib_sEl6oH3GEgL-kDglcNM">
+<span class="absolute top-2 right-2 px-space-sm py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                -10%
+              </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Tienda Online</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Solución de comercio integral para vender productos físicos o digitales.</p>
+<div class="my-space-md">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-price-display text-price-display text-primary">$2.160.000</span>
+<span class="font-body-sm text-body-sm text-outline line-through">$2.400.000 COP</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span> Entrega: 15 días hábiles
+              </span>
+</div>
+<ul class="flex flex-col gap-2 font-body-sm text-body-sm text-on-surface-variant mb-space-lg">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> Carrito y checkout fluido</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> Pasarela de pagos integrada</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> Control automático de stock</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">check</span> Notificaciones al correo</li>
+</ul>
+</div>
+<div class="flex flex-col gap-space-xs">
+<button class="group relative w-full py-space-sm px-space-md rounded-lg font-label-md text-label-md uppercase tracking-wider text-surface-container-lowest font-bold bg-gradient-to-b from-[#F9CF7A] via-[#F4B63F] to-[#C98818] shadow-md hover:shadow-lg active:translate-y-0.5 text-center transition-all" onclick="agregarAlCarrito('Tienda Online', 2160000, '15 días', 'https://lh3.googleusercontent.com/aida/AEtjO1WVzjgNQF6UhmRauz08ZRyLstsZwX4CAHHRQQHgobaaTbFtkR0yTvsZr00UbTFggTrBWB9INek_C5RkPuQKiHDIG2blerWVIhzkpf4ziYzC2TC_bidcJjRwACUUV99bG0DSgD4dWovxr4mmLh4Lpq5TblR68ZNNDxs-X1uBAvYkjnAaUbFEgbPcprRB9-4rpc9_gxCUBXC1K_ETFe8CN8jv3bsPCrFrdxXgLib_sEl6oH3GEgL-kDglcNM')">
+<span class="absolute inset-x-0 top-0 h-[1px] rounded-t-lg bg-white/60"></span>
+<span class="absolute inset-x-0 bottom-0 h-[3px] rounded-b-lg bg-[#8A6212]"></span>
+<span class="relative z-10 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+                Agregar al carrito
+              </span>
+</button>
+<a class="py-space-xs text-center font-label-sm text-label-sm text-secondary hover:text-primary transition-colors flex items-center justify-center gap-1" href="https://wa.me/573202784199?text=Hola%20Nocturne%2C%20quiero%20informaci%C3%B3n%20sobre%20la%20Tienda%20Online%20con%20descuento" target="_blank">
+<span class="material-symbols-outlined text-[16px]">chat</span> Consultar por WhatsApp
+            </a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- SECCIÓN 5: #carrito (CARRITO CON HERO HEADER DE BÓVEDA DIGITAL ANIMADA) -->
+<!-- ========================================== -->
+<section class="w-full bg-[#FAF8F3] text-[#070E1B] py-space-section transition-colors duration-500 overflow-hidden" id="carrito">
+<div class="max-w-[1280px] mx-auto px-gutter-sm lg:px-gutter flex flex-col items-center">
+<!-- HERO HEADER ANIMADO CARRITO: Bóveda digital y halo protector financiero -->
+<div class="relative w-full max-w-3xl rounded-2xl bg-gradient-to-b from-white via-[#FAF6EE] to-[#F2EADB] border border-[#8A6212]/20 p-space-xl md:p-space-xxl mb-space-xl overflow-hidden shadow-[0_12px_32px_rgba(11,29,51,0.06)] flex flex-col items-center text-center">
+<!-- Hero 3D de Bóveda y Escudo Dorado con anillos orbitales concéntricos -->
+<!-- STITCH_THREEJS_START:ANIMATION_23 class="absolute inset-0 w-full h-full pointer-events-none z-0" -->
+<div class="absolute inset-0 w-full h-full pointer-events-none z-0" style="display:block;">
+<script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
+<div id="threejs-container-ANIMATION_23" style="width:100%;height:100%"></div>
+<script>
+(function() {
+  const container = document.getElementById('threejs-container-ANIMATION_23');
+  const devicePixelRatio = window.devicePixelRatio || 1;
+  // Hero #carrito: Realistic 3D Golden Vault Crest with Concentric Orbital Security Rings
+const container = document.getElementById('threejs-container-ANIMATION_23') || (typeof container !== 'undefined' ? container : document.body);
+const width = container.clientWidth || window.innerWidth;
+const height = container.clientHeight || window.innerHeight;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(48, width / height, 0.1, 1000);
+camera.position.set(0, 0, 22);
+
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(width, height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+container.appendChild(renderer.domElement);
+
+const ambientLight = new THREE.AmbientLight(0xFAF8F3, 1.8);
+scene.add(ambientLight);
+
+const goldLight = new THREE.PointLight(0xF4B63F, 4.2, 50);
+goldLight.position.set(8, 12, 14);
+scene.add(goldLight);
+
+const vaultGroup = new THREE.Group();
+scene.add(vaultGroup);
+
+// Realistic Golden Extruded Shield Crest
+const shieldShape = new THREE.Shape();
+shieldShape.moveTo(0, 4.2);
+shieldShape.quadraticCurveTo(3.5, 3.8, 3.5, 1.0);
+shieldShape.quadraticCurveTo(3.5, -2.8, 0, -5.0);
+shieldShape.quadraticCurveTo(-3.5, -2.8, -3.5, 1.0);
+shieldShape.quadraticCurveTo(-3.5, 3.8, 0, 4.2);
+
+const extrudeSettings = { depth: 0.7, bevelEnabled: true, bevelSegments: 4, steps: 1, bevelSize: 0.25, bevelThickness: 0.25 };
+const shieldGeo = new THREE.ExtrudeGeometry(shieldShape, extrudeSettings);
+const shieldMat = new THREE.MeshPhongMaterial({
+  color: 0xF4B63F,
+  emissive: 0x8A6212,
+  shininess: 95,
+  specular: 0xFFFFFF
+});
+const shieldMesh = new THREE.Mesh(shieldGeo, shieldMat);
+shieldMesh.position.z = -0.35;
+vaultGroup.add(shieldMesh);
+
+// Inner Emblem Keyhole / Checkmark
+const coreGeo = new THREE.TorusGeometry(1.4, 0.22, 16, 40);
+const coreMat = new THREE.MeshBasicMaterial({ color: 0x0B1D33 });
+const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+coreMesh.position.set(0, 0.6, 0.45);
+vaultGroup.add(coreMesh);
+
+// Concentric Orbiting Security Rings
+const ringGeo1 = new THREE.TorusGeometry(7.2, 0.14, 16, 80);
+const ringMat1 = new THREE.MeshPhongMaterial({ color: 0x8A6212, transparent: true, opacity: 0.8 });
+const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
+ring1.rotation.x = Math.PI / 2.3;
+vaultGroup.add(ring1);
+
+const ringGeo2 = new THREE.TorusGeometry(9.2, 0.1, 16, 80);
+const ringMat2 = new THREE.MeshPhongMaterial({ color: 0xF4B63F, transparent: true, opacity: 0.7 });
+const ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+ring2.rotation.y = Math.PI / 3.2;
+vaultGroup.add(ring2);
+
+// 20 Orbiting Guarantee Orbs
+const orbCount = 20;
+const orbGeo = new THREE.SphereGeometry(0.35, 16, 16);
+const orbMat = new THREE.MeshPhongMaterial({ color: 0xF4B63F, emissive: 0xFFF1C5, shininess: 100 });
+const orbs = [];
+for(let i = 0; i < orbCount; i++) {
+  const m = new THREE.Mesh(orbGeo, orbMat);
+  vaultGroup.add(m);
+  orbs.push({ mesh: m, angle: (i / orbCount) * Math.PI * 2, radius: 8.2 });
+}
+
+let mouseX = 0, mouseY = 0;
+window.addEventListener('mousemove', (e) => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+window.addEventListener('resize', () => {
+  const w = container.clientWidth || window.innerWidth;
+  const h = container.clientHeight || window.innerHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+});
+
+const animate = () => {
+  requestAnimationFrame(animate);
+  const t = Date.now() * 0.0016;
+
+  shieldMesh.rotation.y = Math.sin(t * 1.2) * 0.28;
+  ring1.rotation.z += 0.008;
+  ring2.rotation.x += 0.009;
+
+  orbs.forEach((orb, i) => {
+    orb.angle += 0.014;
+    orb.mesh.position.x = Math.cos(orb.angle) * orb.radius;
+    orb.mesh.position.y = Math.sin(orb.angle) * (orb.radius * 0.48);
+    orb.mesh.position.z = Math.sin(orb.angle + i) * 3.5;
+  });
+
+  vaultGroup.rotation.y += (mouseX * 0.3 - vaultGroup.rotation.y) * 0.05;
+  vaultGroup.rotation.x += (-mouseY * 0.2 - vaultGroup.rotation.x) * 0.05;
+
+  renderer.render(scene, camera);
+};
+animate();
+})();
+</script>
+</div>
+<!-- STITCH_THREEJS_END:ANIMATION_23 -->
+<!-- Halos de seguridad y anillos orbitales concéntricos -->
+<div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+<div class="w-56 h-56 rounded-full border border-[#F4B63F]/30 animate-[vaultPulseRing_5s_ease-out_infinite]"></div>
+<div class="absolute w-44 h-44 rounded-full border border-dashed border-[#8A6212]/25 animate-[blueprintSpin_30s_linear_infinite]"></div>
+<div class="absolute w-32 h-32 rounded-full border border-[#F4B63F]/40 animate-[blueprintSpinReverse_20s_linear_infinite]"></div>
+</div>
+<!-- Sello heráldico minimalista de confianza -->
+<div class="relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-br from-[#070E1B] to-[#19202D] border border-[#F4B63F]/50 flex items-center justify-center shadow-lg mb-space-sm">
+<span class="material-symbols-outlined text-[32px] text-primary">security</span>
+</div>
+<div class="relative z-10 max-w-xl flex flex-col items-center">
+<div class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-[#8A6212]/10 border border-[#8A6212]/20 mb-space-xs">
+<span class="material-symbols-outlined text-[16px] text-[#8A6212]">verified_user</span>
+<span class="font-label-sm text-label-sm tracking-widest uppercase text-[#8A6212] font-semibold">Bóveda y Reserva Segura</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg mt-space-xs text-[#070E1B] tracking-tight">
+      Tu <span class="italic font-headline-lg text-[#8A6212]">carrito</span>
+</h2>
+<p class="font-body-md text-body-md text-[#4E5968] mt-space-xs max-w-md">
+      Condición de compra clara: 50% de anticipo para iniciar y 50% restante a satisfacción al momento de publicar.
+    </p>
+</div>
+</div>
+<!-- Contenedor del Carrito con Estado Dinámico -->
+<div class="w-full max-w-3xl" id="contenedor-carrito-completo">
+<!-- Estado con Artículos (Default con Tienda Online x1 según especificación) -->
+<div class="flex flex-col gap-space-lg" id="vista-carrito-items">
+<div class="bg-white rounded-xl p-space-lg md:p-space-xl shadow-[0_12px_32px_rgba(11,29,51,0.06)] flex flex-col md:flex-row items-center gap-space-lg">
+<div class="w-32 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-[#070E1B]">
+<img alt="Tienda Online Mockup" class="w-full h-full object-cover" id="cart-item-img" src="https://lh3.googleusercontent.com/aida/AEtjO1WVzjgNQF6UhmRauz08ZRyLstsZwX4CAHHRQQHgobaaTbFtkR0yTvsZr00UbTFggTrBWB9INek_C5RkPuQKiHDIG2blerWVIhzkpf4ziYzC2TC_bidcJjRwACUUV99bG0DSgD4dWovxr4mmLh4Lpq5TblR68ZNNDxs-X1uBAvYkjnAaUbFEgbPcprRB9-4rpc9_gxCUBXC1K_ETFe8CN8jv3bsPCrFrdxXgLib_sEl6oH3GEgL-kDglcNM">
+</div>
+<div class="flex-grow flex flex-col items-start w-full">
+<div class="flex items-center justify-between w-full">
+<h3 class="font-headline-sm text-headline-sm text-[#070E1B]" id="cart-item-title">Tienda Online</h3>
+<button class="text-error hover:text-error-container font-label-sm text-label-sm flex items-center gap-1 transition-colors" onclick="vaciarCarrito()">
+<span class="material-symbols-outlined text-[16px]">delete</span> Quitar
+                </button>
+</div>
+<p class="font-body-sm text-body-sm text-[#4E5968] mt-1" id="cart-item-specs">Plazo de entrega: 15 días hábiles · Incluye pasarela y dominio a tu nombre</p>
+<div class="mt-space-md pt-space-sm w-full flex items-center justify-between">
+<span class="font-label-md text-label-md text-[#8A6212] font-semibold">Valor paquete:</span>
+<span class="font-headline-sm text-headline-sm text-[#070E1B] font-bold" id="cart-item-price">$2.160.000 COP</span>
+</div>
+</div>
+</div>
+<!-- Desglose de Pago -->
+<div class="bg-white rounded-xl p-space-lg md:p-space-xl shadow-[0_12px_32px_rgba(11,29,51,0.06)] flex flex-col gap-space-md">
+<div class="flex items-center justify-between font-body-md text-body-md text-[#2E3543]">
+<span class="">Total del paquete contratado</span>
+<span class="font-bold text-[#070E1B]" id="cart-total-full">$2.160.000 COP</span>
+</div>
+<div class="flex items-center justify-between font-body-md text-body-md text-[#8A6212] bg-[#FAF8F3] p-space-md rounded-lg">
+<span class="flex items-center gap-2 font-semibold">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+                Anticipo hoy (50%):
+              </span>
+<span class="font-headline-sm text-headline-sm font-bold" id="cart-anticipo">$1.080.000 COP</span>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm text-[#4E5968] px-space-md">
+<span class="">Saldo al publicar (50% restante):</span>
+<span class="font-semibold text-[#2E3543]" id="cart-saldo">$1.080.000 COP</span>
+</div>
+<div class="flex flex-col sm:flex-row items-center gap-space-md pt-space-md">
+<button class="group relative w-full sm:w-2/3 py-space-md px-space-xl rounded-xl font-label-lg text-label-lg uppercase tracking-wider text-[#070E1B] font-bold transition-all duration-200 transform hover:-translate-y-1 active:translate-y-1 bg-gradient-to-b from-[#F9CF7A] via-[#F4B63F] to-[#C98818] shadow-[0_12px_24px_rgba(138,98,18,0.25)] text-center" onclick="procederPago()">
+<span class="absolute inset-x-0 top-0 h-[1.5px] rounded-t-xl bg-white/70"></span>
+<span class="absolute inset-x-0 bottom-0 h-[4px] rounded-b-xl bg-[#8A6212]"></span>
+<span class="relative z-10 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+                  Pagar anticipo ($1.080.000)
+                </span>
+</button>
+<a class="w-full sm:w-1/3 py-space-md px-space-md rounded-xl font-label-md text-label-md text-center text-[#2E3543] hover:text-[#070E1B] transition-colors bg-[#FAF8F3] hover:bg-[#ECE6DA] font-semibold" href="#catalogo">
+                Seguir viendo paquetes
+              </a>
+</div>
+</div>
+</div>
+<!-- Estado Vacío (Oculto inicialmente, reactivo por JS) -->
+<div class="hidden flex-col items-center text-center p-space-xxl bg-white rounded-xl shadow-[0_12px_32px_rgba(11,29,51,0.06)]" id="vista-carrito-vacio">
+<div class="w-24 h-24 mb-space-md rounded-full bg-[#070E1B] flex items-center justify-center p-space-sm shadow-md">
+<img alt="Isotipo León Nocturne" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1V-loTcUAUZ6Ux9SNGW4LDJPvQH2FgyoL-XEr41aS9RE8AbgyBo4YFbcpZz_ZDNNAzkh393gIoxKX3T0xEs31gsFVqLHhyqLcJSruxSQPpVvt7LjAG-HkN1PMxhPp6fnmNSrepf8o4HLQQ9GCXhwnJF6zvnVqeIGaF0MDuUUrGydWMuIphtdvtZRCxwQrJsxMA_s2lyLyqr3t4LdHg8Bc_J1ibor4-z2LZy9o9Gp8bQ7dYJ2_IOq0peZMw">
+</div>
+<h3 class="font-headline-sm text-headline-sm text-[#070E1B]">Tu carrito está vacío</h3>
+<p class="font-body-md text-body-md text-[#4E5968] max-w-sm mt-space-xs mb-space-lg">
+            Aún no has seleccionado ninguna propuesta de arquitectura web para tu empresa.
+          </p>
+<a class="group relative inline-flex items-center justify-center gap-space-sm px-space-xl py-space-md rounded-xl font-label-md text-label-md uppercase tracking-wider text-[#070E1B] font-bold bg-gradient-to-b from-[#F9CF7A] via-[#F4B63F] to-[#C98818] shadow-md active:translate-y-0.5" href="#catalogo">
+<span class="absolute inset-x-0 top-0 h-[1px] rounded-t-xl bg-white/60"></span>
+<span class="absolute inset-x-0 bottom-0 h-[3px] rounded-b-lg bg-[#8A6212]"></span>
+<span class="relative z-10 flex items-center gap-1">
+              Explorar Catálogo
+              <span class="material-symbols-outlined text-[18px]">arrow_upward</span>
+</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- JAVASCRIPT: NAVEGACIÓN, FILTRADO Y CARRITO -->
+<!-- ========================================== -->
+<script>
+    // Filtrado de Demos
+    function filtrarDemos(filtro) {
+      const botones = document.querySelectorAll('#filtro-contenedor .filtro-btn');
+      botones.forEach(btn => {
+        if (btn.getAttribute('data-filter') === filtro) {
+          btn.className = "filtro-btn px-space-md py-space-xs rounded-full font-label-md text-label-md font-semibold transition-all bg-[#070E1B] text-[#F4B63F] shadow-sm";
+        } else {
+          btn.className = "filtro-btn px-space-md py-space-xs rounded-full font-label-md text-label-md font-medium text-[#4E5968] hover:text-[#070E1B] transition-all";
+        }
+      });
+
+      const tarjetas = document.querySelectorAll('#grid-demos .demo-card');
+      tarjetas.forEach(card => {
+        const categorias = card.getAttribute('data-category') || '';
+        if (filtro === 'todas' || categorias.includes(filtro)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      const demosSection = document.getElementById('demos');
+      if (demosSection) {
+        demosSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Buscador en Catálogo
+    function filtrarCatalogo() {
+      const input = document.getElementById('catalogo-search');
+      const filter = input.value.toLowerCase();
+      const items = document.querySelectorAll('#catalogo-grid .catalogo-card');
+
+      items.forEach(item => {
+        const name = item.getAttribute('data-name') || '';
+        if (name.includes(filter)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Ordenador en Catálogo
+    function ordenarCatalogo() {
+      const select = document.getElementById('catalogo-sort');
+      const criterio = select.value;
+      const grid = document.getElementById('catalogo-grid');
+      const items = Array.from(grid.querySelectorAll('.catalogo-card'));
+
+      if (criterio === 'menor-precio') {
+        items.sort((a, b) => parseInt(a.getAttribute('data-price')) - parseInt(b.getAttribute('data-price')));
+      } else if (criterio === 'mayor-precio') {
+        items.sort((a, b) => parseInt(b.getAttribute('data-price')) - parseInt(a.getAttribute('data-price')));
+      } else if (criterio === 'mas-rapida') {
+        items.sort((a, b) => parseInt(a.getAttribute('data-days')) - parseInt(b.getAttribute('data-days')));
+      }
+
+      items.forEach(item => grid.appendChild(item));
+    }
+
+    // Manejo del Carrito
+    function agregarAlCarrito(nombre, precio, tiempo, imgSrc) {
+      document.getElementById('cart-item-title').textContent = nombre;
+      document.getElementById('cart-item-specs').textContent = `Plazo de entrega: ${tiempo} hábiles · Incluye SEO base y dominio`;
+      
+      const formateado = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(precio);
+      const anticipoVal = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(precio / 2);
+      
+      document.getElementById('cart-item-price').textContent = formateado;
+      document.getElementById('cart-total-full').textContent = formateado;
+      document.getElementById('cart-anticipo').textContent = anticipoVal;
+      document.getElementById('cart-saldo').textContent = anticipoVal;
+      
+      if (imgSrc) {
+        document.getElementById('cart-item-img').src = imgSrc;
+      }
+
+      document.getElementById('vista-carrito-items').classList.remove('hidden');
+      document.getElementById('vista-carrito-vacio').classList.add('hidden');
+
+      document.getElementById('carrito').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function vaciarCarrito() {
+      document.getElementById('vista-carrito-items').classList.add('hidden');
+      document.getElementById('vista-carrito-vacio').classList.remove('hidden');
+    }
+
+    function procederPago() {
+      const total = document.getElementById('cart-anticipo').textContent;
+      const paquete = document.getElementById('cart-item-title').textContent;
+      const mensaje = `Hola Saul, deseo formalizar el anticipo de ${total} para el paquete ${paquete}.`;
+      window.open(`https://wa.me/573202784199?text=${encodeURIComponent(mensaje)}`, '_blank');
+    }
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest text-on-surface border-t border-outline-variant/20 pt-space-xxl pb-space-xl"><div class="max-w-[1280px] mx-auto px-gutter-sm lg:px-gutter"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-xl pb-space-xxl"><div class="lg:col-span-5 flex flex-col items-start gap-space-md"><div class="flex items-center gap-space-sm"><img alt="Minimalist golden lion profile icon with head held high and brilliant golden eye, noble crown star accent, vector logo mark" class="h-8 w-auto object-contain brightness-0 invert opacity-90" src="https://lh3.googleusercontent.com/aida/AEtjO1V-loTcUAUZ6Ux9SNGW4LDJPvQH2FgyoL-XEr41aS9RE8AbgyBo4YFbcpZz_ZDNNAzkh393gIoxKX3T0xEs31gsFVqLHhyqLcJSruxSQPpVvt7LjAG-HkN1PMxhPp6fnmNSrepf8o4HLQQ9GCXhwnJF6zvnVqeIGaF0MDuUUrGydWMuIphtdvtZRCxwQrJsxMA_s2lyLyqr3t4LdHg8Bc_J1ibor4-z2LZy9o9Gp8bQ7dYJ2_IOq0peZMw"><span class="font-headline-sm text-headline-sm tracking-tight text-inverse-surface font-semibold">NOCTURNE</span></div><p class="font-accent-quote text-accent-quote italic text-primary font-normal">Lidera con brillo propio.</p><p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm">Estudio boutique de arquitectura y diseño digital en Bogotá. Precisión computacional y prestigio editorial.</p></div><div class="lg:col-span-3 flex flex-col gap-space-sm"><span class="font-label-lg text-label-lg text-primary uppercase tracking-widest font-semibold">Explorar</span><nav class="flex flex-col gap-space-xs"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#inicio">Inicio</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#guia">Guía Metodológica</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#demos">Demos Interactivos</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#catalogo">Catálogo de Soluciones</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#carrito">Reserva y Pedidos</a></nav></div><div class="lg:col-span-4 flex flex-col gap-space-sm"><span class="font-label-lg text-label-lg text-primary uppercase tracking-widest font-semibold">Contacto Directo</span><div class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><a class="flex items-center gap-space-xs hover:text-primary transition-colors" href="https://wa.me/573202784199"><span class="material-symbols-outlined text-[18px] text-primary">call</span>+57 320 278 4199</a><a class="flex items-center gap-space-xs hover:text-primary transition-colors" href="mailto:saul.tintinago@outlook.com"><span class="material-symbols-outlined text-[18px] text-primary">mail</span>saul.tintinago@outlook.com</a><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[18px] text-primary">location_on</span>Bogotá, Colombia</div></div><div class="flex items-center gap-space-md pt-space-sm"><a aria-label="Portafolio global" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">public</span></a><a aria-label="Canal de diseño" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">palette</span></a><a aria-label="Código y especificaciones" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">terminal</span></a></div></div></div><div class="pt-space-lg border-t border-outline-variant/10 flex flex-col md:flex-row items-center justify-between gap-space-md font-body-sm text-body-sm text-on-surface-variant/80"><p class="">© 2026 Nocturne Studio. Todos los derechos reservados.</p><div class="flex items-center gap-space-lg"><a class="hover:text-on-surface transition-colors" href="#">Términos de Servicio</a><a class="hover:text-on-surface transition-colors" href="#">Privacidad y Datos</a><a class="hover:text-on-surface transition-colors" href="#">Aviso Legal</a></div></div></div></footer>
+
+</body></html>
