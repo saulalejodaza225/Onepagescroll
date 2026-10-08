@@ -89,14 +89,14 @@
   .moon-layer.moon-back { fill: var(--oro-antiguo); }
   .moon-layer.moon-front { fill: url(#moonGold); filter: drop-shadow(0 2px 4px rgba(7,14,27,.6)); }
   @keyframes moonSpin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-  /* Cada giro (7 s) muestra la luna entre 90° y 270° y el sol el resto:
-     al completar 90° y 270° de cada giro (de canto, así el cambio no se nota). */
-  .moon-layer { animation: lunaFase 7s linear infinite; }
-  .sun-layer { opacity: 0; fill: #A9781A; animation: solFase 7s linear infinite; }
+  /* Cada giro completo (7 s) alterna: un giro la luna y el siguiente el sol.
+     al completar cada giro (0°). */
+  .moon-layer { animation: lunaFase 14s linear infinite; }
+  .sun-layer { opacity: 0; fill: #A9781A; animation: solFase 14s linear infinite; }
   .sun-layer.sun-back { fill: var(--oro-antiguo); }
   .sun-layer.sun-front { fill: url(#moonGold); filter: drop-shadow(0 2px 4px rgba(7,14,27,.6)); }
-  @keyframes lunaFase { 0%, 24.9% { opacity: 0; } 25%, 74.9% { opacity: 1; } 75%, 100% { opacity: 0; } }
-  @keyframes solFase { 0%, 24.9% { opacity: 1; } 25%, 74.9% { opacity: 0; } 75%, 100% { opacity: 1; } }
+  @keyframes lunaFase { 0%, 49.9% { opacity: 1; } 50%, 100% { opacity: 0; } }
+  @keyframes solFase { 0%, 49.9% { opacity: 0; } 50%, 100% { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) { .moon-layer, .sun-layer { animation: none; } .sun-layer { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { .brand-icon-3d { animation: none; } }
   .site-nav { display: none; gap: 2rem; }
