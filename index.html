@@ -529,6 +529,18 @@
     .hero-actions { margin-top: 1.25rem; width: 100%; }
     .hero-actions .btn-gold { width: 100%; font-size: 12px; padding: .9rem 1rem; }
   }
+  /* Texto de la marca con textura líquida verde: el reflejo se desplaza despacio. */
+  .brand-text {
+    background-image: linear-gradient(115deg, #1E8F4C 0%, #2FD27A 16%, #B8FFD4 24%, #FFFFFF 29%, #2FD27A 36%, #0F6B36 48%, #3CE08A 60%, #E9FFF1 66%, #1AA35A 74%, #1E8F4C 100%);
+    background-size: 260% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent; -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    filter: drop-shadow(0 0 6px rgba(60,255,130,.45));
+    animation: liquidoBrillo 6s ease-in-out infinite;
+  }
+  @keyframes liquidoBrillo { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  @media (prefers-reduced-motion: reduce) { .brand-text { animation: none; } }
 </style>
 </head>
 <body>
@@ -549,7 +561,7 @@
         <svg class="moon-layer" style="--i:9" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
         <svg class="moon-layer" style="--i:10" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
         <svg class="moon-layer" style="--i:11" viewBox="0 0 24 24" focusable="false"><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
-        <svg class="moon-layer moon-front" style="--i:12" viewBox="0 0 24 24" focusable="false"><defs><linearGradient id="moonGold" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0" stop-color="#FFE9AE"/><stop offset=".5" stop-color="#F4B63F"/><stop offset="1" stop-color="#D49418"/></linearGradient><linearGradient id="holoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6FFE0"/><stop offset=".3" stop-color="#7CFF6B"/><stop offset=".6" stop-color="#22E05A"/><stop offset=".85" stop-color="#B6FFB0"/><stop offset="1" stop-color="#5CFF7A"/></linearGradient></defs><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
+        <svg class="moon-layer moon-front" style="--i:12" viewBox="0 0 24 24" focusable="false"><defs><linearGradient id="moonGold" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0" stop-color="#FFE9AE"/><stop offset=".5" stop-color="#F4B63F"/><stop offset="1" stop-color="#D49418"/></linearGradient><linearGradient id="holoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#03140A"/><stop offset=".22" stop-color="#0C4A26"/><stop offset=".36" stop-color="#2FD27A"/><stop offset=".46" stop-color="#E9FFF1"/><stop offset=".58" stop-color="#0A3D20"/><stop offset=".78" stop-color="#1AA35A"/><stop offset="1" stop-color="#03140A"/></linearGradient></defs><path d="M10.59 2.60A9.5 9.5 0 1 0 21.12 14.64A8 8 0 0 1 10.59 2.60Z"/></svg>
         <svg class="sun-layer sun-back" style="--i:0" viewBox="0 0 24 24" focusable="false"><path d="M17.6 12A5.6 5.6 0 1 0 6.4 12A5.6 5.6 0 1 0 17.6 12ZM19.60 12.95L23.20 12.00L19.60 11.05ZM16.70 18.05L19.92 19.92L18.05 16.70ZM11.05 19.60L12.00 23.20L12.95 19.60ZM5.95 16.70L4.08 19.92L7.30 18.05ZM4.40 11.05L0.80 12.00L4.40 12.95ZM7.30 5.95L4.08 4.08L5.95 7.30ZM12.95 4.40L12.00 0.80L11.05 4.40ZM18.05 7.30L19.92 4.08L16.70 5.95Z"/></svg>
         <svg class="sun-layer" style="--i:1" viewBox="0 0 24 24" focusable="false"><path d="M17.6 12A5.6 5.6 0 1 0 6.4 12A5.6 5.6 0 1 0 17.6 12ZM19.60 12.95L23.20 12.00L19.60 11.05ZM16.70 18.05L19.92 19.92L18.05 16.70ZM11.05 19.60L12.00 23.20L12.95 19.60ZM5.95 16.70L4.08 19.92L7.30 18.05ZM4.40 11.05L0.80 12.00L4.40 12.95ZM7.30 5.95L4.08 4.08L5.95 7.30ZM12.95 4.40L12.00 0.80L11.05 4.40ZM18.05 7.30L19.92 4.08L16.70 5.95Z"/></svg>
         <svg class="sun-layer" style="--i:2" viewBox="0 0 24 24" focusable="false"><path d="M17.6 12A5.6 5.6 0 1 0 6.4 12A5.6 5.6 0 1 0 17.6 12ZM19.60 12.95L23.20 12.00L19.60 11.05ZM16.70 18.05L19.92 19.92L18.05 16.70ZM11.05 19.60L12.00 23.20L12.95 19.60ZM5.95 16.70L4.08 19.92L7.30 18.05ZM4.40 11.05L0.80 12.00L4.40 12.95ZM7.30 5.95L4.08 4.08L5.95 7.30ZM12.95 4.40L12.00 0.80L11.05 4.40ZM18.05 7.30L19.92 4.08L16.70 5.95Z"/></svg>
