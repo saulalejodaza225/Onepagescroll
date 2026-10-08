@@ -514,7 +514,7 @@
       <a href="#servicios">Servicios</a>
       <a href="#contacto">Contacto</a>
     </nav>
-    <a class="btn-ghost" href="#contacto">Hablemos</a>
+    <a class="btn-ghost" href="#contacto" data-scroll-lento>Hablemos</a>
   </div>
 </header>
 
@@ -732,6 +732,8 @@
     var root = document.documentElement;
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var PX_PER_SEC = 750, MIN_MS = 1800, MAX_MS = 6000;
+    // Scroll más lento para el botón "Hablemos" (data-scroll-lento): se aprecia el fondo.
+    var PX_PER_SEC_LENTO = 420, MIN_MS_LENTO = 3200, MAX_MS_LENTO = 9000;
     var SEQ_FPS = 110, SEQ_MIN_MS = 2200, SEQ_MAX_MS = 10000;
     var active = null;
 
@@ -796,7 +798,7 @@
     // arranque y frenado suaves), así la animación de fondo se ve completa
     // y fluida de principio a fin aunque unas secciones midan mucho más
     // que otras, o tengan muchos más frames por pixel (como el inicio).
-    function go(target, hash, centered, push, seq) {
+    function go(target, hash, centered, push, seq, lento) {
       cancel();
       var api = seq && !reduceMotion && window.nocturneSeq ? window.nocturneSeq : null;
       var startY = window.scrollY;
@@ -819,7 +821,9 @@
       var f0 = api ? api.frameAtY(startY) : 0;
       var duration = api
         ? Math.min(SEQ_MAX_MS, Math.max(SEQ_MIN_MS, (Math.abs(api.frameAtY(firstEnd) - f0) / SEQ_FPS) * 1000))
-        : Math.min(MAX_MS, Math.max(MIN_MS, (Math.abs(distance) / PX_PER_SEC) * 1000));
+        : lento
+          ? Math.min(MAX_MS_LENTO, Math.max(MIN_MS_LENTO, (Math.abs(distance) / PX_PER_SEC_LENTO) * 1000))
+          : Math.min(MAX_MS, Math.max(MIN_MS, (Math.abs(distance) / PX_PER_SEC) * 1000));
       active = token;
       root.style.scrollBehavior = 'auto';
       var startTime = null;
@@ -863,7 +867,7 @@
       try { target = document.querySelector(hash); } catch (err) { return; }
       if (!target) return;
       e.preventDefault();
-      go(target, hash, hash === '#servicios', true, a.hasAttribute('data-seq-scroll'));
+      go(target, hash, hash === '#servicios', true, a.hasAttribute('data-seq-scroll'), a.hasAttribute('data-scroll-lento'));
     });
 
     // Atrás/adelante del navegador o un hash escrito a mano: mismo ritmo.
