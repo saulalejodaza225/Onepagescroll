@@ -351,7 +351,15 @@
   tbody tr:hover { background: none; }
   th, td { border-top: 0; }
   /* Legibilidad sin cajas: sombra suave en el texto */
-  body, .page { text-shadow: 0 0 3px rgba(7,14,27,.95), 0 1px 14px rgba(7,14,27,.95), 0 0 24px rgba(7,14,27,.7); }
+  /* Contorno negro fino alrededor de cada letra: legibilidad sin oscurecer
+     el fondo. Antes la sombra difusa de 24px tapaba el efecto del scroll
+     alrededor del texto; ahora el halo es corto y el contorno marca la letra. */
+  body, .page {
+    -webkit-text-stroke: 1px #000;
+    paint-order: stroke fill;
+    text-shadow: 0 0 2px rgba(0,0,0,.9), 0 1px 3px rgba(0,0,0,.7);
+  }
+  .btn-gold, .btn-ghost, .glow-sweep::after { -webkit-text-stroke: 0; }
   /* El pie de página quedó sin ningún fondo al quitar las cajas, y ahí la
      letra se lee mal: es el texto más chico de la página, justo al final
      del scroll. Un degradado (no una caja sólida) le da un piso oscuro sin
