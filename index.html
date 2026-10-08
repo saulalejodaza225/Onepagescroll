@@ -511,6 +511,32 @@
   /* Botón del encabezado: profundidad 3D y reacción al mouse (inclinación y
      elevación), sin destello, aro ni onda para no robar atención. */
   .btn-ghost.btn-simple::before { display: none; }
+  /* Menú lateral (móvil y tablet): botón de tres líneas y panel deslizable.
+     Solo letras y líneas; el panel cubre la página con un velo oscuro. */
+  .menu-btn { display: none; position: relative; width: 44px; height: 44px; margin-left: .25rem; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .menu-btn span { position: absolute; left: 10px; right: 10px; height: 2px; border-radius: 2px; background: var(--oro-real); transition: transform .35s cubic-bezier(.16,1,.3,1), opacity .2s; }
+  .menu-btn span:nth-child(1) { top: 14px; }
+  .menu-btn span:nth-child(2) { top: 21px; }
+  .menu-btn span:nth-child(3) { top: 28px; }
+  .menu-btn[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-btn[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .menu-btn[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .menu-btn:focus-visible, .menu-cerrar:focus-visible, .menu-lista a:focus-visible { outline: 2px solid var(--oro-real); outline-offset: 3px; }
+  .menu-velo { position: fixed; inset: 0; z-index: 60; background: rgba(7,14,27,.6); opacity: 0; pointer-events: none; transition: opacity .35s ease; }
+  .menu-velo.is-open { opacity: 1; pointer-events: auto; }
+  .menu-lateral { position: fixed; top: 0; right: 0; bottom: 0; z-index: 70; width: min(82vw, 330px); display: flex; flex-direction: column; padding: 1.25rem 1.5rem 2rem; background: rgba(11,29,51,.97); border-left: 1px solid rgba(244,182,63,.25); box-shadow: -20px 0 40px rgba(0,0,0,.5); transform: translateX(100%); visibility: hidden; transition: transform .4s cubic-bezier(.16,1,.3,1), visibility .4s; overflow-y: auto; }
+  .menu-lateral.is-open { transform: none; visibility: visible; }
+  .menu-superior { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  .menu-marca { font-size: 20px; cursor: default; }
+  .menu-cerrar { width: 44px; height: 44px; background: none; border: 0; color: var(--oro-real); font-size: 34px; line-height: 1; cursor: pointer; }
+  .menu-lista { list-style: none; margin: 1.5rem 0 0; padding: 0; }
+  .menu-lista li { border-bottom: 1px solid rgba(244,182,63,.15); }
+  .menu-lista a { display: block; padding: 1rem 0; font-family: Poppins, sans-serif; font-size: 14px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--marfil); transition: color .2s; }
+  .menu-lista a small { display: block; margin-top: .25rem; font-family: Inter, sans-serif; font-size: 13px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--niebla); }
+  .menu-lista a:active, .menu-lista a:focus-visible { color: var(--oro-real); }
+  .menu-pie { margin-top: auto; padding-top: 2rem; font-size: 13px; color: var(--niebla); }
+  body.menu-abierto { overflow: hidden; }
+  @media (max-width: 1023px) { .menu-btn { display: block; } }
 </style>
 </head>
 <body>
@@ -553,8 +579,26 @@
       <a href="#contacto">Contacto</a>
     </nav>
     <a class="btn-ghost btn-simple" href="#contacto" data-scroll-lento>Hablemos</a>
+    <button type="button" class="menu-btn" aria-controls="menu-lateral" aria-expanded="false" aria-label="Abrir menú"><span></span><span></span><span></span></button>
   </div>
 </header>
+
+<!-- MENÚ LATERAL (móvil y tablet) -->
+<div class="menu-velo" aria-hidden="true"></div>
+<nav class="menu-lateral" id="menu-lateral" aria-label="Menú de navegación">
+  <div class="menu-superior">
+    <span class="brand menu-marca">NOCTURNE</span>
+    <button type="button" class="menu-cerrar" aria-label="Cerrar menú">&times;</button>
+  </div>
+  <ul class="menu-lista">
+    <li><a href="#inicio">Inicio<small>Presentación y video</small></a></li>
+    <li><a href="#quiz">¿En qué etapa estás?<small>Diagnóstico de 5 preguntas</small></a></li>
+    <li><a href="#guia">Paquetes<small>Landing, PYME, Empresarial y Tienda</small></a></li>
+    <li><a href="#servicios">Matriz comparativa<small>Qué incluye cada página</small></a></li>
+    <li><a href="#contacto">Hablemos<small>Cuéntanos tu negocio</small></a></li>
+  </ul>
+  <p class="menu-pie">Bogotá, Colombia · Lunes a viernes</p>
+</nav>
 
 <!-- FONDO FIJO: secuencia de imágenes ligada al scroll de toda la página -->
 <canvas class="bg-seq" data-secuencia-fondo data-frames="assets/video/frame_%03d.jpg" data-frames-portrait="assets/video-m/frame_%03d.jpg" data-total="953" aria-hidden="true"></canvas>
@@ -1137,6 +1181,44 @@
     });
 
     mostrarPaso();
+  })();
+</script>
+<script>
+  // Menú lateral: se abre y cierra con el botón, el velo o la tecla Esc.
+  // Los enlaces cierran el menú y el scroll controlado lleva a la sección.
+  (function () {
+    var btn = document.querySelector('.menu-btn');
+    var panel = document.getElementById('menu-lateral');
+    var velo = document.querySelector('.menu-velo');
+    var cerrar = panel.querySelector('.menu-cerrar');
+    if (!btn) return;
+    function abrir() {
+      panel.classList.add('is-open'); velo.classList.add('is-open');
+      btn.setAttribute('aria-expanded', 'true'); btn.setAttribute('aria-label', 'Cerrar menú');
+      document.body.classList.add('menu-abierto');
+      cerrar.focus({ preventScroll: true });
+    }
+    function cerrarMenu(devolverFoco) {
+      panel.classList.remove('is-open'); velo.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', 'Abrir menú');
+      document.body.classList.remove('menu-abierto');
+      if (devolverFoco) btn.focus({ preventScroll: true });
+    }
+    btn.addEventListener('click', function () { panel.classList.contains('is-open') ? cerrarMenu(true) : abrir(); });
+    cerrar.addEventListener('click', function () { cerrarMenu(true); });
+    velo.addEventListener('click', function () { cerrarMenu(false); });
+    panel.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { cerrarMenu(false); }); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && panel.classList.contains('is-open')) cerrarMenu(true);
+    });
+    // El foco no sale del menú mientras está abierto.
+    panel.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      var f = panel.querySelectorAll('button, a');
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
   })();
 </script>
 </body>
