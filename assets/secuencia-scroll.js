@@ -354,9 +354,13 @@
   // le tocarían solo por altura, así que el mismo scroll se siente más
   // movido (más cambios de frame por píxel) en esa sección.
   function makeZones(els, total, weights) {
+    // Inicio de la zona = borde superior de la sección. El margen que la
+    // separa de la anterior queda del lado de la zona de arriba, así cada
+    // corte cae exactamente entre dos secciones y no dentro de una.
     function docTop(el) {
       var r = el.getBoundingClientRect();
-      return r.top + window.scrollY;
+      var mt = parseFloat(getComputedStyle(el).marginTop) || 0;
+      return r.top + window.scrollY - mt;
     }
 
     return function compute() {
@@ -412,7 +416,9 @@
     for (var k = 0; k < n - 1; k++) {
       var hA = Math.max(1, zones[k].end - zones[k].start);
       var hB = Math.max(1, zones[k + 1].end - zones[k + 1].start);
-      bands.push({ at: zones[k].end, w: Math.max(1, Math.min(140, 0.25 * Math.min(hA, hB))) });
+      // Franja corta: el cambio de velocidad ocurre justo en el corte, así
+      // cada sección queda bien delimitada en vez de mezclarse con la vecina.
+      bands.push({ at: zones[k].end, w: Math.max(1, Math.min(24, 0.1 * Math.min(hA, hB))) });
     }
 
     function speedAt(y) {
@@ -445,7 +451,9 @@
   function initFondo(canvas) {
     var total = parseInt(canvas.getAttribute('data-total'), 10) || 1;
 
-    var zoneEls = ['#inicio', '#guia .guia-head', '#guia .matrix', '#contacto']
+    // Cuatro secciones, una por zona: inicio, guía (¿Cuál es tu página?),
+    // servicios (matriz comparativa) y contacto (Hablemos).
+    var zoneEls = ['#inicio', '#guia', '#servicios', '#contacto']
       .map(function (sel) { return document.querySelector(sel); })
       .filter(Boolean);
     // El inicio recorre varias veces los frames que le tocarían solo por
