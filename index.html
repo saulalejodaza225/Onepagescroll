@@ -582,7 +582,7 @@
     <h1 style="margin-top:.75rem">Precisión arquitectónica y <em>presencia digital</em> inconfundible.</h1>
     <p class="hero-quote">Diseñamos sitios web que transmiten la confianza de un negocio serio, desde la primera pantalla.</p>
     <div class="hero-actions">
-      <a class="btn-gold btn-arrow btn-vibra" href="#quiz" data-scroll-lento>¿No sabes qué página comprar? <span class="material-symbols-outlined" aria-hidden="true">south</span></a>
+      <a class="btn-gold btn-arrow btn-vibra" href="#quiz-preguntas" data-scroll-cuestionario>¿No sabes qué página comprar? <span class="material-symbols-outlined" aria-hidden="true">south</span></a>
     </div>
   </div>
 </section>
@@ -627,7 +627,7 @@
       <h2 id="quiz-titulo">¿En qué etapa está <em>tu negocio?</em></h2>
       <p>Responde cinco preguntas y te diremos qué modelo de página encaja mejor contigo, con una demo real para que la veas antes de decidir.</p>
     </div>
-    <div class="quiz-box" data-quiz>
+    <div class="quiz-box" id="quiz-preguntas" data-quiz>
       <div class="quiz-progreso" aria-hidden="true"><span></span></div>
       <p class="quiz-contador" aria-live="polite"></p>
       <h3 class="quiz-pregunta" tabindex="-1"></h3>
@@ -810,6 +810,8 @@
     var PX_PER_SEC = 750, MIN_MS = 1800, MAX_MS = 6000;
     // Scroll más lento para el botón "Hablemos" (data-scroll-lento): se aprecia el fondo.
     var PX_PER_SEC_LENTO = 420, MIN_MS_LENTO = 3200, MAX_MS_LENTO = 9000;
+    // Botón del inicio hacia el cuestionario: más lento para apreciar el fondo.
+    var PX_PER_SEC_CUESTIONARIO = 240, MIN_MS_CUESTIONARIO = 5000, MAX_MS_CUESTIONARIO = 13000;
     var SEQ_FPS = 110, SEQ_MIN_MS = 2200, SEQ_MAX_MS = 10000;
     var active = null;
 
@@ -829,7 +831,7 @@
       var vh = window.innerHeight;
       var th = target.getBoundingClientRect().height;
       var floor = headerHeight() + 12;
-      if (th < vh - floor) return Math.max(floor, Math.min(vh * 0.22, (vh - th) / 2));
+      if (th < vh - floor) return Math.max(floor, (vh - th) / 2);
       return floor;
     }
 
@@ -898,7 +900,9 @@
       var duration = api
         ? Math.min(SEQ_MAX_MS, Math.max(SEQ_MIN_MS, (Math.abs(api.frameAtY(firstEnd) - f0) / SEQ_FPS) * 1000))
         : lento
-          ? Math.min(MAX_MS_LENTO, Math.max(MIN_MS_LENTO, (Math.abs(distance) / PX_PER_SEC_LENTO) * 1000))
+          ? (lento === 'cuestionario'
+            ? Math.min(MAX_MS_CUESTIONARIO, Math.max(MIN_MS_CUESTIONARIO, (Math.abs(distance) / PX_PER_SEC_CUESTIONARIO) * 1000))
+            : Math.min(MAX_MS_LENTO, Math.max(MIN_MS_LENTO, (Math.abs(distance) / PX_PER_SEC_LENTO) * 1000)))
           : Math.min(MAX_MS, Math.max(MIN_MS, (Math.abs(distance) / PX_PER_SEC) * 1000));
       active = token;
       root.style.scrollBehavior = 'auto';
@@ -943,7 +947,7 @@
       try { target = document.querySelector(hash); } catch (err) { return; }
       if (!target) return;
       e.preventDefault();
-      go(target, hash, hash === '#servicios' || hash === '#paquetes', true, a.hasAttribute('data-seq-scroll'), a.hasAttribute('data-scroll-lento'));
+      go(target, hash, hash === '#servicios' || hash === '#paquetes' || hash === '#quiz-preguntas', true, a.hasAttribute('data-seq-scroll'), (a.hasAttribute('data-scroll-cuestionario') ? 'cuestionario' : a.hasAttribute('data-scroll-lento')));
     });
 
     // Atrás/adelante del navegador o un hash escrito a mano: mismo ritmo.
@@ -953,7 +957,7 @@
       if (hash) { try { target = document.querySelector(hash); } catch (err) { return; } }
       if (hash && !target) return;
       if (!hash) { window.scrollTo(0, 0); return; }
-      go(target, hash, hash === '#servicios' || hash === '#paquetes', false);
+      go(target, hash, hash === '#servicios' || hash === '#paquetes' || hash === '#quiz-preguntas', false);
     });
   })();
 </script>
