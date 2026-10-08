@@ -444,7 +444,6 @@
   /* Video de fondo del inicio en bucle, en todos los dispositivos. */
   .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none; }
   .hero-content { z-index: 1; }
-  @media (prefers-reduced-motion: reduce) { .hero-video { display: none; } }
   /* Cuestionario orientativo (sección 2). Solo letras y botones 3D, sin cajas. */
   .quiz { position: relative; padding: var(--section) 0; text-align: center; }
   .quiz-head { max-width: 640px; margin: 0 auto 2.5rem; }
@@ -599,7 +598,10 @@
 
 <!-- HERO -->
 <section class="hero" id="inicio" aria-label="Presentación">
-  <video class="hero-video" src="assets/prototipo/hero-hailuo-loop-1080p-main.mp4" poster="assets/video/frame_001.jpg" autoplay muted loop playsinline webkit-playsinline x5-playsinline preload="auto" aria-hidden="true"></video>
+  <video class="hero-video" poster="assets/video/frame_001.jpg" autoplay muted loop playsinline webkit-playsinline x5-playsinline preload="auto" aria-hidden="true">
+    <source src="assets/prototipo/hero-hailuo-loop-720p.mp4" type="video/mp4" media="(max-width: 1023px)">
+    <source src="assets/prototipo/hero-hailuo-loop-1080p-main.mp4" type="video/mp4">
+  </video>
 
   <div class="hero-content">
     <span class="eyebrow">Boutique Digital · Bogotá</span>
