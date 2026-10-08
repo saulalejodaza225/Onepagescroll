@@ -518,11 +518,16 @@
   .quiz-opciones .btn-ghost { background: rgba(18,35,59,.45); }
   .site-footer { background: linear-gradient(to bottom, rgba(7,14,27,.15), rgba(7,14,27,.62) 45%, rgba(7,14,27,.7)) !important; }
 
-  /* Móvil: el video ocupa la parte superior y el texto va debajo, sobre un fondo
-     oscuro que no se mueve, para que se pueda leer sin el movimiento del video. */
+  /* Móvil: todo el inicio cabe en una pantalla. El video queda más suave y el texto
+     se compacta, con un fondo oscuro que sube desde abajo para leer sin esfuerzo. */
   @media (max-width: 767px) {
-    .hero-video { top: 0; bottom: auto; height: 46svh; -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%); mask-image: linear-gradient(to bottom, #000 70%, transparent 100%); }
-    .hero-content { justify-content: flex-start; padding-top: 46svh; padding-bottom: 5vh; background: linear-gradient(to bottom, rgba(7,14,27,0) 42%, rgba(7,14,27,.88) 52%, rgba(7,14,27,.92)); }
+    .hero-video { opacity: .55; }
+    .hero-content { padding-bottom: 7vh; background: linear-gradient(to bottom, rgba(7,14,27,.15) 0%, rgba(7,14,27,.5) 35%, rgba(7,14,27,.85) 68%, rgba(7,14,27,.92)); }
+    .hero-content h1 { font-size: 2.1rem; line-height: 1.12; }
+    .hero-content .eyebrow { font-size: 11px; }
+    .hero-quote { font-size: 16px; line-height: 24px; margin-top: .75rem; }
+    .hero-actions { margin-top: 1.25rem; width: 100%; }
+    .hero-actions .btn-gold { width: 100%; font-size: 12px; padding: .9rem 1rem; }
   }
 </style>
 </head>
