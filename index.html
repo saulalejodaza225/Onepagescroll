@@ -9,9 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&family=Poppins:wght@500;600;700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
-<link rel="preload" as="image" href="assets/video/frame_001.jpg" type="image/jpeg">
-<link rel="preload" as="image" href="assets/video/frame_117.jpg" type="image/jpeg" fetchpriority="low">
-<style>
+<link rel="preload" as="image" href="assets/video/frame_001.jpg" type="image/jpeg"><style>
   /* Tokens de DESIGN.md (Bogotá Nocturne) */
   :root {
     --medianoche: #070E1B;
@@ -376,17 +374,22 @@
     .site-footer a:hover { color: inherit; }
   }
 
-  /* Brillo radiante: una luz recorre cada frase de inicio a fin, en bucle.
-     El texto en sí queda intacto (mismo color, mismo grosor de letra, sin
-     perder nitidez): una capa aparte, del mismo tamaño y con el mismo
-     texto, se superpone y se mezcla por encima en modo "screen" (aditivo),
-     así que fuera del barrido no aporta nada y solo se ve un brillo blanco
-     pasando. JS marca los elementos con la clase .glow-sweep y copia su
-     texto a data-glow-text (ver assets/secuencia-scroll.js). Excluye los
-     botones dorados (su letra oscura necesita quedarse sólida para
-     contraste contra el propio fondo brillante del botón).
+  /* Brillo radiante: una luz de color cambiante recorre cada título de
+     inicio a fin, una vez cada ~11 s (el resto del ciclo queda quieto, así
+     el barrido se espera y se disfruta). El texto en sí queda intacto (mismo
+     color, mismo grosor de letra, sin perder nitidez): una capa aparte, del
+     mismo tamaño y con el mismo texto, se superpone; fuera del barrido no
+     aporta nada. El color cambia de dos maneras: dentro de cada pasada la
+     luz recorre ~150° de matiz (--glow-h, propiedad registrada para poder
+     animarla), y en cada pasada nueva JS le suma un salto al matiz base
+     (--glow-base), así nunca se repite el mismo color. JS marca los
+     elementos con la clase .glow-sweep y copia su texto a data-glow-text
+     (ver el script del final). Excluye los botones dorados (su letra oscura
+     necesita quedarse sólida para contraste contra el propio fondo
+     brillante del botón).
   */
-  .glow-sweep { position: relative; }
+  @property --glow-h { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+  .glow-sweep { position: relative; --glow-base: 40deg; }
   .glow-sweep::after {
     content: attr(data-glow-text);
     position: absolute; inset: 0;
@@ -396,22 +399,29 @@
     pointer-events: none;
     text-shadow: none;
     background-image: linear-gradient(100deg,
-      transparent 0%, transparent 45%,
-      rgba(8,10,20,.45) 48%,
-      rgba(255,255,255,.95) 50%,
-      rgba(8,10,20,.45) 52%,
-      transparent 55%, transparent 100%);
+      transparent 0%, transparent 43%,
+      hsl(calc(var(--glow-base) + var(--glow-h, 0deg) - 45deg) 100% 60% / .55) 47%,
+      hsl(calc(var(--glow-base) + var(--glow-h, 0deg)) 100% 68%) 50%,
+      hsl(calc(var(--glow-base) + var(--glow-h, 0deg) + 45deg) 100% 60% / .55) 53%,
+      transparent 57%, transparent 100%);
     background-size: 260% 100%;
     background-repeat: no-repeat;
-    background-position: 130% 0;
+    background-position: 100% 0;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    animation: textGlowSweep 3.8s ease-in-out infinite;
+    animation: textGlowSweep 11s ease-in-out infinite;
+    animation-delay: var(--glow-delay, 0s);
   }
+  .glow-sweep.glow-restart::after { animation: none; }
+  /* La pasada ocupa el primer ~24% del ciclo (~2.6 s); el resto queda en
+     reposo. Con la imagen al 260% del ancho, la posición 100% deja la luz
+     justo fuera del texto por la izquierda y la 0% justo fuera por la
+     derecha: todo el recorrido se ve (sin tiempo muerto fuera del texto). */
   @keyframes textGlowSweep {
-    0% { background-position: 130% 0; }
-    100% { background-position: -130% 0; }
+    0% { background-position: 100% 0; --glow-h: 0deg; }
+    24% { background-position: 0% 0; --glow-h: 150deg; }
+    100% { background-position: 0% 0; --glow-h: 150deg; }
   }
   @media (prefers-reduced-motion: reduce) {
     .glow-sweep::after { display: none; }
@@ -838,6 +848,9 @@
   // etc.): con tantos elementos animados a la vez la página se sentía
   // lenta, sobre todo en celulares. Se deja fuera la letra de los botones
   // dorados (necesita quedarse sólida y oscura por contraste) y los íconos.
+  // El barrido es poco frecuente (una pasada cada ~11 s) y de color
+  // cambiante: cada título arranca con un matiz distinto y, en cada pasada
+  // nueva, el matiz salta unos grados más.
   (function () {
     var selector = [
       '.hero-content h1',
@@ -845,23 +858,48 @@
       '.closing h2'
     ].join(',');
 
-    // El barrido solo corre mientras el título está en pantalla.
+    // El barrido solo corre mientras el título está en pantalla. La primera
+    // vez que aparece, su ciclo se reinicia para que la luz pase poco
+    // después de verlo (y no hasta ~10 s más tarde, según en qué punto del
+    // ciclo hubiera caído).
     var gate = 'IntersectionObserver' in window
       ? new IntersectionObserver(function (entries) {
           entries.forEach(function (en) {
-            if (en.isIntersecting) en.target.removeAttribute('data-off');
-            else en.target.setAttribute('data-off', '');
+            var el = en.target;
+            if (en.isIntersecting) {
+              el.removeAttribute('data-off');
+              if (!el.hasAttribute('data-seen')) {
+                el.setAttribute('data-seen', '');
+                el.style.setProperty('--glow-delay', '.5s');
+                el.classList.add('glow-restart');
+                void el.offsetWidth;
+                el.classList.remove('glow-restart');
+              }
+            } else {
+              el.setAttribute('data-off', '');
+            }
           });
-        }, { rootMargin: '80px' })
+        }, { rootMargin: '0px', threshold: 0.3 })
       : null;
 
+    var n = 0;
     document.querySelectorAll(selector).forEach(function (el) {
       if (el.closest('.btn-gold') || el.closest('.brand-icon')) return;
       var text = el.textContent.replace(/\s+/g, ' ').trim();
       if (!text) return;
       el.classList.add('glow-sweep');
       el.setAttribute('data-glow-text', text);
+      el.style.setProperty('--glow-base', ((n * 57 + 20) % 360) + 'deg');
+      n++;
       if (gate) gate.observe(el);
+    });
+
+    // Al empezar cada pasada nueva (la luz aún está fuera del texto) el
+    // matiz base salta, así el color nunca se repite igual.
+    document.addEventListener('animationiteration', function (e) {
+      if (e.animationName !== 'textGlowSweep' || !e.target.classList || !e.target.classList.contains('glow-sweep')) return;
+      var h = parseFloat(e.target.style.getPropertyValue('--glow-base')) || 0;
+      e.target.style.setProperty('--glow-base', ((h + 83) % 360).toFixed(0) + 'deg');
     });
   })();
 </script>
