@@ -499,6 +499,13 @@
     96% { translate: 1px 0; }
   }
   @media (prefers-reduced-motion: reduce) { .btn-vibra { animation: none; } }
+  /* Botón plano del encabezado: sin destello, aro, inclinación ni brillo,
+     para no robar atención al contenido. Conserva color y borde. */
+  .btn-ghost.btn-simple, .btn-ghost.btn-simple:hover, .btn-ghost.btn-simple:active {
+    transform: none; filter: none; border-color: rgba(244,182,63,.3);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 1px 0 rgba(7,14,27,.7), 0 6px 14px rgba(7,14,27,.4);
+  }
+  .btn-ghost.btn-simple::before { display: none; }
 </style>
 </head>
 <body>
@@ -527,7 +534,7 @@
       <a href="#servicios">Servicios</a>
       <a href="#contacto">Contacto</a>
     </nav>
-    <a class="btn-ghost" href="#contacto" data-scroll-lento>Hablemos</a>
+    <a class="btn-ghost btn-simple" href="#contacto" data-scroll-lento>Hablemos</a>
   </div>
 </header>
 
@@ -952,6 +959,8 @@
     }
 
     document.querySelectorAll('.btn-gold, .btn-ghost').forEach(function (btn, i) {
+      // Botón plano (sin destello, aro, inclinación ni onda): no se le añade nada.
+      if (btn.classList.contains('btn-simple')) return;
       var fx = document.createElement('span');
       fx.className = 'btn-fx';
       fx.setAttribute('aria-hidden', 'true');
