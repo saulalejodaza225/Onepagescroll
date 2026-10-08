@@ -486,6 +486,19 @@
     .quiz-head p { font-size: 16px; line-height: 24px; }
     .quiz-acciones .btn-gold, .quiz-acciones .btn-ghost { width: 100%; }
   }
+  /* Botón del inicio: vibra cada ~3 s para invitar al clic. Usa la propiedad
+     translate (no transform), así no pisa la inclinación 3D del botón. */
+  .btn-vibra { animation: btnVibra 3.2s ease-in-out infinite; }
+  @keyframes btnVibra {
+    0%, 84%, 100% { translate: 0 0; }
+    86% { translate: -3px 0; }
+    88% { translate: 3px 0; }
+    90% { translate: -2px 0; }
+    92% { translate: 2px 0; }
+    94% { translate: -1px 0; }
+    96% { translate: 1px 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .btn-vibra { animation: none; } }
 </style>
 </head>
 <body>
@@ -534,7 +547,7 @@
     <h1 style="margin-top:.75rem">Precisión arquitectónica y <em>presencia digital</em> inconfundible.</h1>
     <p class="hero-quote">Diseñamos sitios web que transmiten la confianza de un negocio serio, desde la primera pantalla.</p>
     <div class="hero-actions">
-      <a class="btn-gold btn-arrow" href="#quiz">¿No sabes qué página comprar? <span class="material-symbols-outlined" aria-hidden="true">south</span></a>
+      <a class="btn-gold btn-arrow btn-vibra" href="#quiz">¿No sabes qué página comprar? <span class="material-symbols-outlined" aria-hidden="true">south</span></a>
     </div>
   </div>
 </section>
