@@ -451,9 +451,9 @@
   function initFondo(canvas) {
     var total = parseInt(canvas.getAttribute('data-total'), 10) || 1;
 
-    // Cuatro secciones, una por zona: inicio, guía (¿Cuál es tu página?),
-    // servicios (matriz comparativa) y contacto (Hablemos).
-    var zoneEls = ['#inicio', '#guia', '#quiz', '#servicios', '#contacto']
+    // Cinco secciones, una por zona: inicio, guía de marca, diagnóstico
+    // (quiz), paquetes (incluye la matriz comparativa) y contacto (Hablemos).
+    var zoneEls = ['#inicio', '#guia', '#quiz', '#paquetes', '#contacto']
       .map(function (sel) { return document.querySelector(sel); })
       .filter(Boolean);
     // La sección 1 (inicio) la cubre el video del hero, así que no recibe
