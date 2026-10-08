@@ -81,7 +81,7 @@
      profundidad. */
   .brand-icon { position: relative; display: inline-grid; place-items: center; width: 30px; height: 30px; perspective: 220px; flex: none; }
   .brand-icon-3d { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: moonSpin 7s linear infinite; }
-  .moon-layer {
+  .moon-layer, .sun-layer {
     position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible;
     transform: translateZ(calc((var(--i) - 6) * .7px));
     fill: #A9781A;
@@ -89,10 +89,10 @@
   .moon-layer.moon-back { fill: var(--oro-antiguo); }
   .moon-layer.moon-front { fill: url(#moonGold); filter: drop-shadow(0 2px 4px rgba(7,14,27,.6)); }
   @keyframes moonSpin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-  /* Cada giro completo (7 s) alterna luna y sol: el ciclo de 14 s cambia de una a otra
-     cuando la pieza vuelve a 0°, así el cambio no se nota como un salto. */
-  .moon-layer { animation: lunaFase 14s linear infinite; }
-  .sun-layer { opacity: 0; fill: #A9781A; animation: solFase 14s linear infinite; }
+  /* Cada giro (7 s) muestra la luna en la primera mitad y el sol en la segunda:
+     a mitad de cada giro (180°), como las dos caras de una misma medalla. */
+  .moon-layer { animation: lunaFase 7s linear infinite; }
+  .sun-layer { opacity: 0; fill: #A9781A; animation: solFase 7s linear infinite; }
   .sun-layer.sun-back { fill: var(--oro-antiguo); }
   .sun-layer.sun-front { fill: url(#moonGold); filter: drop-shadow(0 2px 4px rgba(7,14,27,.6)); }
   @keyframes lunaFase { 0%, 49.9% { opacity: 1; } 50%, 100% { opacity: 0; } }
