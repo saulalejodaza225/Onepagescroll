@@ -562,7 +562,7 @@
         <p class="quiz-res-entrega"></p>
         <p class="quiz-res-texto"></p>
         <div class="quiz-acciones">
-          <a class="btn-gold" href="#contacto">Quiero esta</a>
+          <a class="btn-gold quiz-demo" href="#" target="_blank" rel="noopener">Ver demo</a>
           <button type="button" class="btn-ghost quiz-reiniciar">Volver a empezar</button>
         </div>
       </div>
@@ -1016,13 +1016,13 @@
 
     // Mismos precios y plazos que la guía de paquetes de la página.
     var MODELOS = {
-      L: { nombre: 'Landing Page', precio: '$675.000', entrega: 'Entrega: 5 días',
+      L: { nombre: 'Landing Page', precio: '$675.000', entrega: 'Entrega: 5 días', demo: 'https://landing-page-demo-ruby.vercel.app/',
            texto: 'Ideal para un negocio que hoy no tiene nada en línea y quiere empezar a recibir clientes.' },
-      P: { nombre: 'Página PYME', precio: '$1.080.000', entrega: 'Entrega: 8 días',
+      P: { nombre: 'Página PYME', precio: '$1.080.000', entrega: 'Entrega: 8 días', demo: 'https://modelo-pyme-demo.vercel.app/',
            texto: 'Ideal para un negocio que quiere poder actualizar su propia web sin depender de terceros.' },
-      E: { nombre: 'Página Empresarial', precio: '$1.620.000', entrega: 'Entrega: 12 días',
+      E: { nombre: 'Página Empresarial', precio: '$1.620.000', entrega: 'Entrega: 12 días', demo: 'https://dise-o-empresarial-demo.vercel.app/',
            texto: 'Ideal para un negocio que necesita mostrar un catálogo amplio de productos o servicios con prestancia.' },
-      T: { nombre: 'Tienda Online', precio: '$2.160.000', entrega: 'Entrega: 15 días',
+      T: { nombre: 'Tienda Online', precio: '$2.160.000', entrega: 'Entrega: 15 días', demo: 'https://e-store-demo1.vercel.app/',
            texto: 'Ideal para un negocio que quiere vender y cobrar en línea directamente con pasarela de pagos.' }
     };
     var ORDEN = ['L', 'P', 'E', 'T'];
@@ -1037,6 +1037,7 @@
     var resEntrega = root.querySelector('.quiz-res-entrega');
     var resTexto = root.querySelector('.quiz-res-texto');
     var reiniciar = root.querySelector('.quiz-reiniciar');
+    var demo = root.querySelector('.quiz-demo');
 
     var paso = 0;
     var puntos = { L: 0, P: 0, E: 0, T: 0 };
@@ -1079,6 +1080,7 @@
       resPrecio.textContent = m.precio;
       resEntrega.textContent = m.entrega;
       resTexto.textContent = m.texto;
+      demo.href = m.demo;
       resultado.hidden = false;
       resTitulo.focus({ preventScroll: true });
     }
