@@ -20,7 +20,7 @@
     --oro-antiguo: #8A6212;
     --marfil: #FAF8F3;
     --lino: #ECE6DA;
-    --niebla: #B4BECC;
+    --niebla: #DDE3EC;
     --pizarra: #4E5968;
     --violeta: #5E3AA8;
     --gutter: 1.5rem;
@@ -249,7 +249,7 @@
     font-family: Lora, serif; font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.1; letter-spacing: -.02em; max-width: 14ch;
   }
   .hero-content h1 em { color: var(--oro-real); font-weight: 400; }
-  .hero-quote { margin-top: 1rem; font-family: Lora, serif; font-style: italic; font-size: 22px; line-height: 32px; color: rgba(220,226,245,.9); max-width: 36ch; }
+  .hero-quote { margin-top: 1rem; font-family: Lora, serif; font-style: italic; font-size: 22px; line-height: 32px; color: #F1F4FA; max-width: 36ch; }
   .hero-actions { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
   @media (max-width: 767px) {
     .hero-content { padding: 0 var(--gutter) 10vh; }
@@ -336,7 +336,7 @@
   .copy { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(80,69,53,.3); font-size: 12px; color: var(--pizarra); }
 
   /* Modo solo tipografía y botones: la animación queda visible detrás */
-  .bg-scrim { background: linear-gradient(to top, rgba(7,14,27,.55) 0%, rgba(7,14,27,0) 28%); }
+  .bg-scrim { background: linear-gradient(rgba(7,14,27,.3), rgba(7,14,27,.3)), linear-gradient(to top, rgba(7,14,27,.6) 0%, rgba(7,14,27,0) 30%); }
   body, .page, .guia, .closing, .site-footer, .site-header, .card, .card.featured,
   .matrix, .matrix-foot, table, thead th, tbody tr, th, td, .delivery {
     background: none !important;
@@ -364,9 +364,7 @@
      el fondo. Antes la sombra difusa de 24px tapaba el efecto del scroll
      alrededor del texto; ahora el halo es corto y el contorno marca la letra. */
   body, .page {
-    -webkit-text-stroke: 1px #000;
-    paint-order: stroke fill;
-    text-shadow: 0 0 2px rgba(0,0,0,.9), 0 1px 3px rgba(0,0,0,.7);
+    text-shadow: 0 0 1px rgba(0,0,0,.9), 0 1px 2px rgba(0,0,0,.9), 0 0 6px rgba(0,0,0,.85), 0 0 14px rgba(0,0,0,.55);
   }
   .btn-gold, .btn-ghost { -webkit-text-stroke: 0; }
   /* El pie de página quedó sin ningún fondo al quitar las cajas, y ahí la
@@ -511,32 +509,26 @@
   /* Botón del encabezado: profundidad 3D y reacción al mouse (inclinación y
      elevación), sin destello, aro ni onda para no robar atención. */
   .btn-ghost.btn-simple::before { display: none; }
-  /* Menú lateral (móvil y tablet): botón de tres líneas y panel deslizable.
-     Solo letras y líneas; el panel cubre la página con un velo oscuro. */
-  .menu-btn { display: none; position: relative; width: 44px; height: 44px; margin-left: .25rem; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .menu-btn span { position: absolute; left: 10px; right: 10px; height: 2px; border-radius: 2px; background: var(--oro-real); transition: transform .35s cubic-bezier(.16,1,.3,1), opacity .2s; }
-  .menu-btn span:nth-child(1) { top: 14px; }
-  .menu-btn span:nth-child(2) { top: 21px; }
-  .menu-btn span:nth-child(3) { top: 28px; }
-  .menu-btn[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .menu-btn[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
-  .menu-btn[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-  .menu-btn:focus-visible, .menu-cerrar:focus-visible, .menu-lista a:focus-visible { outline: 2px solid var(--oro-real); outline-offset: 3px; }
-  .menu-velo { position: fixed; inset: 0; z-index: 60; background: rgba(7,14,27,.6); opacity: 0; pointer-events: none; transition: opacity .35s ease; }
-  .menu-velo.is-open { opacity: 1; pointer-events: auto; }
-  .menu-lateral { position: fixed; top: 0; right: 0; bottom: 0; z-index: 70; width: min(82vw, 330px); display: flex; flex-direction: column; padding: 1.25rem 1.5rem 2rem; background: rgba(11,29,51,.97); border-left: 1px solid rgba(244,182,63,.25); box-shadow: -20px 0 40px rgba(0,0,0,.5); transform: translateX(100%); visibility: hidden; transition: transform .4s cubic-bezier(.16,1,.3,1), visibility .4s; overflow-y: auto; }
-  .menu-lateral.is-open { transform: none; visibility: visible; }
-  .menu-superior { display: flex; align-items: center; justify-content: space-between; height: 56px; }
-  .menu-marca { font-size: 20px; cursor: default; }
-  .menu-cerrar { width: 44px; height: 44px; background: none; border: 0; color: var(--oro-real); font-size: 34px; line-height: 1; cursor: pointer; }
-  .menu-lista { list-style: none; margin: 1.5rem 0 0; padding: 0; }
-  .menu-lista li { border-bottom: 1px solid rgba(244,182,63,.15); }
-  .menu-lista a { display: block; padding: 1rem 0; font-family: Poppins, sans-serif; font-size: 14px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--marfil); transition: color .2s; }
-  .menu-lista a small { display: block; margin-top: .25rem; font-family: Inter, sans-serif; font-size: 13px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--niebla); }
-  .menu-lista a:active, .menu-lista a:focus-visible { color: var(--oro-real); }
-  .menu-pie { margin-top: auto; padding-top: 2rem; font-size: 13px; color: var(--niebla); }
-  body.menu-abierto { overflow: hidden; }
-  @media (max-width: 1023px) { .menu-btn { display: block; } }
+  /* Selector de idioma ES / EN: visible en todos los dispositivos. */
+  .idioma { display: flex; gap: 2px; margin-right: .5rem; padding: 2px; border: 1px solid rgba(244,182,63,.35); border-radius: 8px; flex: none; }
+  .idioma-btn { font-family: Poppins, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .08em; padding: 5px 7px; border: 0; border-radius: 6px; background: transparent; color: var(--niebla); cursor: pointer; }
+  .idioma-btn.is-on { background: var(--oro-real); color: var(--medianoche); }
+  .idioma-btn:focus-visible { outline: 2px solid var(--oro-real); outline-offset: 2px; }
+  /* Menú de puntos: solo móvil y tablet (menos de 1024 px). */
+  .dot-nav { display: none; position: fixed; right: 8px; top: 50%; transform: translateY(-50%); z-index: 55; padding: 12px 7px; border-radius: 999px; background: rgba(7,14,27,.45); border: 1px solid rgba(244,182,63,.18); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .dot-lista { list-style: none; margin: 0; padding: 0; position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .dot-lista::before { content: ''; position: absolute; top: 7px; bottom: 7px; left: 50%; width: 2px; transform: translateX(-50%); background: rgba(244,182,63,.3); }
+  .dot { position: relative; display: block; width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(244,182,63,.9); background: var(--medianoche); transition: background .3s, box-shadow .3s, transform .3s; }
+  .dot:hover, .dot:focus-visible { transform: scale(1.15); }
+  .dot.is-active { background: var(--oro-real); box-shadow: 0 0 10px rgba(244,182,63,.7); }
+  .dot:focus-visible { outline: 2px solid var(--oro-real); outline-offset: 3px; }
+  .dot::after { content: attr(data-label); position: absolute; right: 26px; top: 50%; transform: translateY(-50%); white-space: nowrap; font-family: Poppins, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--marfil); background: rgba(7,14,27,.88); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(244,182,63,.25); opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .dot:hover::after, .dot:focus-visible::after { opacity: 1; }
+  @media (max-width: 1023px) {
+    .dot-nav { display: block; }
+    .wrap, .hero-content { padding-right: calc(var(--gutter) + 34px); }
+    .site-header .wrap { padding-right: var(--gutter); }
+  }
 </style>
 </head>
 <body>
@@ -578,26 +570,23 @@
       <a href="#servicios">Servicios</a>
       <a href="#contacto">Contacto</a>
     </nav>
+    <div class="idioma" role="group" aria-label="Idioma">
+      <button type="button" class="idioma-btn is-on" data-lang="es" aria-pressed="true">ES</button>
+      <button type="button" class="idioma-btn" data-lang="en" aria-pressed="false">EN</button>
+    </div>
     <a class="btn-ghost btn-simple" href="#contacto" data-scroll-lento>Hablemos</a>
-    <button type="button" class="menu-btn" aria-controls="menu-lateral" aria-expanded="false" aria-label="Abrir menú"><span></span><span></span><span></span></button>
   </div>
 </header>
 
-<!-- MENÚ LATERAL (móvil y tablet) -->
-<div class="menu-velo" aria-hidden="true"></div>
-<nav class="menu-lateral" id="menu-lateral" aria-label="Menú de navegación">
-  <div class="menu-superior">
-    <span class="brand menu-marca">NOCTURNE</span>
-    <button type="button" class="menu-cerrar" aria-label="Cerrar menú">&times;</button>
-  </div>
-  <ul class="menu-lista">
-    <li><a href="#inicio">Inicio<small>Presentación y video</small></a></li>
-    <li><a href="#quiz">¿En qué etapa estás?<small>Diagnóstico de 5 preguntas</small></a></li>
-    <li><a href="#guia">Paquetes<small>Landing, PYME, Empresarial y Tienda</small></a></li>
-    <li><a href="#servicios">Matriz comparativa<small>Qué incluye cada página</small></a></li>
-    <li><a href="#contacto">Hablemos<small>Cuéntanos tu negocio</small></a></li>
+<!-- MENÚ DE PUNTOS (solo móvil y tablet) -->
+<nav class="dot-nav" aria-label="Secciones de la página">
+  <ul class="dot-lista">
+    <li><a class="dot" href="#inicio" data-label="Inicio" aria-label="Inicio"></a></li>
+    <li><a class="dot" href="#quiz" data-label="¿En qué etapa estás?" aria-label="¿En qué etapa estás?"></a></li>
+    <li><a class="dot" href="#guia" data-label="Paquetes" aria-label="Paquetes"></a></li>
+    <li><a class="dot" href="#servicios" data-label="Matriz comparativa" aria-label="Matriz comparativa"></a></li>
+    <li><a class="dot" href="#contacto" data-label="Hablemos" aria-label="Hablemos"></a></li>
   </ul>
-  <p class="menu-pie">Bogotá, Colombia · Lunes a viernes</p>
 </nav>
 
 <!-- FONDO FIJO: secuencia de imágenes ligada al scroll de toda la página -->
@@ -1065,12 +1054,257 @@
   })();
 </script>
 <script>
+  // Idioma (ES / EN) y navegación por puntos. La página está escrita en español;
+  // el inglés se aplica sobre cada texto con el diccionario EN de abajo, así que
+  // el marcado no se duplica. Se recuerda la elección en este navegador.
+  (function () {
+    var EN = {
+      "NOCTURNE": "NOCTURNE",
+      "Guía": "Guide",
+      "Servicios": "Services",
+      "Contacto": "Contact",
+      "Hablemos": "Let's talk",
+      "Inicio": "Home",
+      "¿En qué etapa estás?": "Which stage are you in?",
+      "Paquetes": "Packages",
+      "Matriz comparativa": "Comparison matrix",
+      "Bogotá, Colombia · Lunes a viernes": "Bogotá, Colombia · Monday to Friday",
+      "Bogotá, Colombia": "Bogotá, Colombia",
+      "Lunes a viernes": "Monday to Friday",
+      "Boutique Digital · Bogotá": "Digital Boutique · Bogotá",
+      "Precisión arquitectónica y": "Architectural precision and",
+      "presencia digital": "digital presence",
+      "inconfundible.": "unmistakable.",
+      "Diseñamos sitios web que transmiten la confianza de un negocio serio, desde la primera pantalla.": "We design websites that convey the trust of a serious business from the very first screen.",
+      "¿No sabes qué página comprar?": "Not sure which page to buy?",
+      "02 · Guía": "02 · Guide",
+      "03 · Guía de estilo": "03 · Style guide",
+      "04 · Servicios": "04 · Services",
+      "05 · Hablemos": "05 · Let's talk",
+      "Orientación clara y estructurada": "Clear, structured guidance",
+      "¿Cuál es": "Which is",
+      "tu página?": "your page?",
+      "Cada negocio necesita algo distinto. Elige el tuyo y revisa qué incluye cada opción.": "Every business needs something different. Choose yours and check what each option includes.",
+      "Presencia inmediata": "Immediate presence",
+      "Landing Page": "Landing Page",
+      "Entrega: 5 días": "Delivery: 5 days",
+      "Ideal para un negocio que hoy no tiene nada en línea y quiere empezar a recibir clientes.": "Ideal for a business with nothing online yet that wants to start attracting customers.",
+      "4 bloques modulares": "4 modular blocks",
+      "2 banners de conversión": "2 conversion banners",
+      "Hasta 15 imágenes curadas": "Up to 15 curated images",
+      "Quiero esta": "I want this one",
+      "Autogestionable": "Self-managed",
+      "Página PYME": "SME Page",
+      "Entrega: 8 días": "Delivery: 8 days",
+      "Ideal para un negocio que quiere poder actualizar su propia web sin depender de terceros.": "Ideal for a business that wants to update its own website without depending on third parties.",
+      "8 bloques estructurados": "8 structured blocks",
+      "3 banners cinemáticos": "3 cinematic banners",
+      "Hasta 20 fotos + CMS y blog": "Up to 20 photos + CMS and blog",
+      "Recomendada": "Recommended",
+      "Máximo despliegue": "Maximum scope",
+      "Página Empresarial": "Enterprise Page",
+      "Entrega: 12 días": "Delivery: 12 days",
+      "Ideal para un negocio que necesita mostrar un catálogo amplio de productos o servicios con prestancia.": "Ideal for a business that needs to showcase a broad catalogue of products or services with distinction.",
+      "14 secciones completas": "14 full sections",
+      "5 banners animados": "5 animated banners",
+      "Hasta 50 productos catalogados": "Up to 50 catalogued products",
+      "Comercio 24/7": "24/7 Commerce",
+      "Tienda Online": "Online Store",
+      "Tienda": "Store",
+      "Entrega: 15 días": "Delivery: 15 days",
+      "Ideal para un negocio que quiere vender y cobrar en línea directamente con pasarela de pagos.": "Ideal for a business that wants to sell and collect payments online through a payment gateway.",
+      "Carrito y pasarela Wompi / PayU": "Cart and Wompi / PayU payment gateway",
+      "Control de inventario": "Inventory control",
+      "Checkout optimizado": "Optimized checkout",
+      "Diagnóstico rápido · 5 preguntas": "Quick diagnosis · 5 questions",
+      "¿En qué etapa está": "Which stage is",
+      "tu negocio?": "your business in?",
+      "Responde cinco preguntas y te diremos qué modelo de página encaja mejor contigo.": "Answer five questions and we'll tell you which page model fits you best.",
+      "Te recomendamos": "We recommend",
+      "Ver demo": "View demo",
+      "Volver a empezar": "Start over",
+      "Pregunta": "Question",
+      "de": "of",
+      "Tu resultado": "Your result",
+      "Matriz comparativa de capacidades": "Comparison of capabilities",
+      "Característica": "Feature",
+      "Landing": "Landing",
+      "PYME": "SME",
+      "Empresarial": "Enterprise",
+      "Bloques / secciones": "Blocks / sections",
+      "4 bloques": "4 blocks",
+      "8 bloques": "8 blocks",
+      "14 secciones": "14 sections",
+      "Ilimitadas (e-comm)": "Unlimited (e-commerce)",
+      "Panel autogestionable (CMS)": "Self-managed panel (CMS)",
+      "Punto estático": "Static page",
+      "✓ Incluido": "✓ Included",
+      "✓ Avanzado": "✓ Advanced",
+      "✓ Completo": "✓ Complete",
+      "Pasarela de pagos en línea": "Online payment gateway",
+      "✓ Wompi / PayU / PSE": "✓ Wompi / PayU / PSE",
+      "Fotografías y recursos": "Photos and resources",
+      "Hasta 15 fotos": "Up to 15 photos",
+      "Hasta 20 fotos": "Up to 20 photos",
+      "Hasta 50 elementos": "Up to 50 items",
+      "Catálogo ampliado": "Expanded catalogue",
+      "Plazo de entrega": "Delivery time",
+      "5 días hábiles": "5 business days",
+      "8 días hábiles": "8 business days",
+      "12 días hábiles": "12 business days",
+      "15 días hábiles": "15 business days",
+      "Formulario, WhatsApp, redes, SEO básico y Analytics vienen en las cuatro.": "Contact form, WhatsApp, social media, basic SEO and Analytics come in all four.",
+      "50% inicio / 50% entrega": "50% upfront / 50% on delivery",
+      "2 rondas de ajustes": "2 rounds of revisions",
+      "Dominio y hosting a nombre del cliente": "Domain and hosting in the client's name",
+      "Tu negocio merece una presencia": "Your business deserves a presence",
+      "a su altura.": "worthy of it.",
+      "Cuéntanos qué vendes y para quién. Te recomendamos la opción que mejor encaja con tu etapa.": "Tell us what you sell and to whom. We'll recommend the option that best fits your stage.",
+      "Ver opciones": "See options",
+      "Arquitectura digital y diseño web de alta gama para negocios en Bogotá.": "High-end digital architecture and web design for businesses in Bogotá.",
+      "Explorar": "Explore",
+      "© 2026 Nocturne Studio. Todos los derechos reservados.": "© 2026 Nocturne Studio. All rights reserved.",
+      "Cuéntanos tu negocio": "Tell us about your business",
+      "Qué incluye cada página": "What each page includes",
+      "Landing, PYME, Empresarial y Tienda": "Landing, SME, Enterprise and Store",
+      "Diagnóstico de 5 preguntas": "5-question diagnosis",
+      "Presentación": "Introduction",
+      "Principal": "Main",
+      "Secciones": "Sections",
+      "Idioma": "Language",
+      "Secciones de la página": "Page sections",
+      "Nocturne Studio, inicio": "Nocturne Studio, home",
+      "Bogotá": "Bogotá",
+      "Ver demo de": "View demo of",
+      "¿Qué tiene hoy tu negocio en línea?": "What does your business have online today?",
+      "Nada todavía": "Nothing yet",
+      "Redes sociales o una página básica": "Social media or a basic page",
+      "Un catálogo amplio de productos o servicios": "A broad catalogue of products or services",
+      "Quiero vender y cobrar en línea": "I want to sell and get paid online",
+      "¿Quién actualizará el contenido?": "Who will update the content?",
+      "Yo, sin depender de nadie": "Me, without depending on anyone",
+      "Un equipo con varias personas": "A team of several people",
+      "Casi nunca cambiará, quiero una presencia fija": "It will rarely change; I want a fixed presence",
+      "Inventario y pedidos al día": "Inventory and orders up to date",
+      "¿Cuántos productos o servicios quieres mostrar?": "How many products or services do you want to show?",
+      "Uno o pocos (hasta 4 bloques)": "One or a few (up to 4 blocks)",
+      "Entre 5 y 20": "Between 5 and 20",
+      "Más de 20": "More than 20",
+      "¿Necesitas cobrar en línea con pasarela de pago?": "Do you need to take online payments through a payment gateway?",
+      "No": "No",
+      "Sí, con Wompi, PayU o PSE": "Yes, with Wompi, PayU or PSE",
+      "Por ahora no, pero lo planeo": "Not for now, but I plan to",
+      "¿Para cuándo necesitas tu página lista?": "When do you need your page ready?",
+      "Lo antes posible (menos de una semana)": "As soon as possible (less than a week)",
+      "En un par de semanas": "In a couple of weeks",
+      "Tengo tiempo para un proyecto completo": "I have time for a full project"
+    };
+    var TITULO_ES = document.title;
+    var TITULO_EN = "Nocturne Studio · Digital Architecture in Bogotá";
+    var META = document.querySelector('meta[name="description"]');
+    var META_ES = META ? META.getAttribute('content') : '';
+    var META_EN = "Nocturne Studio: high-end web design for businesses in Bogotá. Landing page, SME, enterprise and online store.";
+    var ATRIBUTOS = ['aria-label', 'title', 'alt', 'data-label'];
+
+    var lang = 'es';
+    try { lang = localStorage.getItem('nocturne-lang') || 'es'; } catch (e) {}
+    if (/[?&]lang=en\b/.test(location.search)) lang = 'en';
+
+    function tr(s) { return lang === 'en' && EN.hasOwnProperty(s) ? EN[s] : s; }
+    window.nocturneTr = tr;
+
+    // Texto de cada nodo: se guarda el original en español y se traduce desde ahí.
+    function aplicarTextos() {
+      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (n) {
+          var p = n.parentNode;
+          if (!p || p.closest('[data-quiz], script, style')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var n;
+      while ((n = walker.nextNode())) {
+        if (n.__es === undefined) n.__es = n.nodeValue;
+        var base = n.__es;
+        var t = base.replace(/\s+/g, ' ').trim();
+        if (!t) continue;
+        var out = tr(t);
+        if (out === t) { n.nodeValue = base; continue; }
+        var lead = base.match(/^\s*/)[0];
+        var trail = base.match(/\s*$/)[0];
+        n.nodeValue = lead + out + trail;
+      }
+    }
+
+    function aplicarAtributos() {
+      document.querySelectorAll('[aria-label],[title],[alt],[data-label]').forEach(function (el) {
+        if (!el.__esAttr) el.__esAttr = {};
+        ATRIBUTOS.forEach(function (a) {
+          if (!el.hasAttribute(a)) return;
+          if (!(a in el.__esAttr)) el.__esAttr[a] = el.getAttribute(a);
+          var orig = el.__esAttr[a];
+          el.setAttribute(a, tr(orig));
+        });
+      });
+    }
+
+    function aplicar(l) {
+      lang = l === 'en' ? 'en' : 'es';
+      try { localStorage.setItem('nocturne-lang', lang); } catch (e) {}
+      document.documentElement.lang = lang;
+      aplicarTextos();
+      aplicarAtributos();
+      document.title = lang === 'en' ? TITULO_EN : TITULO_ES;
+      if (META) META.setAttribute('content', lang === 'en' ? META_EN : META_ES);
+      document.querySelectorAll('.idioma-btn').forEach(function (b) {
+        var on = b.getAttribute('data-lang') === lang;
+        b.classList.toggle('is-on', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      window.dispatchEvent(new CustomEvent('nocturne:idioma', { detail: lang }));
+    }
+    window.nocturneLang = function () { return lang; };
+
+    document.querySelectorAll('.idioma-btn').forEach(function (b) {
+      b.addEventListener('click', function () { aplicar(b.getAttribute('data-lang')); });
+    });
+    aplicar(lang);
+
+    // Punto activo según la sección que está en pantalla.
+    var puntos = Array.prototype.slice.call(document.querySelectorAll('.dot-lista .dot'));
+    var ticking = false;
+    function marcarActivo() {
+      ticking = false;
+      var y = window.innerHeight * 0.45;
+      var idx = 0;
+      puntos.forEach(function (a, i) {
+        var el = document.querySelector(a.getAttribute('href'));
+        if (el && el.getBoundingClientRect().top <= y) idx = i;
+      });
+      puntos.forEach(function (a, i) {
+        var on = i === idx;
+        a.classList.toggle('is-active', on);
+        if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+      });
+    }
+    function pedirActivo() {
+      if (!ticking) { ticking = true; requestAnimationFrame(marcarActivo); }
+    }
+    window.addEventListener('scroll', pedirActivo, { passive: true });
+    window.addEventListener('resize', pedirActivo);
+    window.addEventListener('load', pedirActivo);
+    marcarActivo();
+  })();
+</script>
+<script>
   // Cuestionario orientativo: 5 preguntas, cada respuesta suma puntos a los
   // cuatro modelos de página (L = Landing, P = PYME, E = Empresarial,
   // T = Tienda). Gana el de más puntos; en empate gana el primero de la lista.
+  // Los textos se escriben en español y se muestran con tr() según el idioma.
   (function () {
     var root = document.querySelector('[data-quiz]');
     if (!root) return;
+    var tr = function (s) { return window.nocturneTr ? window.nocturneTr(s) : s; };
 
     var PREGUNTAS = [
       { q: '¿Qué tiene hoy tu negocio en línea?', o: [
@@ -1120,6 +1354,7 @@
     var pregunta = root.querySelector('.quiz-pregunta');
     var opciones = root.querySelector('.quiz-opciones');
     var resultado = root.querySelector('.quiz-resultado');
+    var resEtiqueta = root.querySelector('.quiz-res-etiqueta');
     var resTitulo = root.querySelector('.quiz-res-titulo');
     var resPrecio = root.querySelector('.quiz-res-precio');
     var resEntrega = root.querySelector('.quiz-res-entrega');
@@ -1129,23 +1364,27 @@
 
     var paso = 0;
     var puntos = { L: 0, P: 0, E: 0, T: 0 };
+    var modelo = null;
 
     function mostrarPaso() {
       var p = PREGUNTAS[paso];
-      contador.textContent = 'Pregunta ' + (paso + 1) + ' de ' + PREGUNTAS.length;
+      contador.textContent = tr('Pregunta') + ' ' + (paso + 1) + ' ' + tr('de') + ' ' + PREGUNTAS.length;
       progreso.style.width = (paso / PREGUNTAS.length * 100) + '%';
-      pregunta.textContent = p.q;
+      pregunta.textContent = tr(p.q);
       opciones.innerHTML = '';
       p.o.forEach(function (op) {
         var b = document.createElement('button');
         b.type = 'button';
         b.className = 'btn-ghost';
-        b.textContent = op.t;
+        b.textContent = tr(op.t);
         b.addEventListener('click', function () { responder(op.p); });
         opciones.appendChild(b);
       });
       opciones.hidden = false;
-      pregunta.focus({ preventScroll: true });
+      resultado.hidden = true;
+      if (document.activeElement && document.activeElement.closest && document.activeElement.closest('[data-quiz]')) {
+        pregunta.focus({ preventScroll: true });
+      }
     }
 
     function responder(suma) {
@@ -1158,67 +1397,43 @@
     function mostrarResultado() {
       var mejor = ORDEN[0];
       ORDEN.forEach(function (k) { if (puntos[k] > puntos[mejor]) mejor = k; });
-      var m = MODELOS[mejor];
-      contador.textContent = 'Tu resultado';
+      modelo = mejor;
+      pintarResultado();
+      resultado.hidden = false;
+      resTitulo.focus({ preventScroll: true });
+    }
+
+    function pintarResultado() {
+      var m = MODELOS[modelo];
+      contador.textContent = tr('Tu resultado');
       progreso.style.width = '100%';
       pregunta.textContent = '';
       opciones.hidden = true;
       opciones.innerHTML = '';
-      resTitulo.textContent = m.nombre;
+      resEtiqueta.textContent = tr('Te recomendamos');
+      resTitulo.textContent = tr(m.nombre);
       resPrecio.textContent = m.precio;
-      resEntrega.textContent = m.entrega;
-      resTexto.textContent = m.texto;
+      resEntrega.textContent = tr(m.entrega);
+      resTexto.textContent = tr(m.texto);
       demo.href = m.demo;
-      resultado.hidden = false;
-      resTitulo.focus({ preventScroll: true });
+      demo.textContent = tr('Ver demo');
+      reiniciar.textContent = tr('Volver a empezar');
     }
 
     reiniciar.addEventListener('click', function () {
       paso = 0;
       puntos = { L: 0, P: 0, E: 0, T: 0 };
-      resultado.hidden = true;
+      modelo = null;
       mostrarPaso();
     });
 
+    // Al cambiar de idioma se vuelve a pintar lo que se ve, sin perder el avance.
+    window.addEventListener('nocturne:idioma', function () {
+      if (modelo) pintarResultado();
+      else mostrarPaso();
+    });
+
     mostrarPaso();
-  })();
-</script>
-<script>
-  // Menú lateral: se abre y cierra con el botón, el velo o la tecla Esc.
-  // Los enlaces cierran el menú y el scroll controlado lleva a la sección.
-  (function () {
-    var btn = document.querySelector('.menu-btn');
-    var panel = document.getElementById('menu-lateral');
-    var velo = document.querySelector('.menu-velo');
-    var cerrar = panel.querySelector('.menu-cerrar');
-    if (!btn) return;
-    function abrir() {
-      panel.classList.add('is-open'); velo.classList.add('is-open');
-      btn.setAttribute('aria-expanded', 'true'); btn.setAttribute('aria-label', 'Cerrar menú');
-      document.body.classList.add('menu-abierto');
-      cerrar.focus({ preventScroll: true });
-    }
-    function cerrarMenu(devolverFoco) {
-      panel.classList.remove('is-open'); velo.classList.remove('is-open');
-      btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', 'Abrir menú');
-      document.body.classList.remove('menu-abierto');
-      if (devolverFoco) btn.focus({ preventScroll: true });
-    }
-    btn.addEventListener('click', function () { panel.classList.contains('is-open') ? cerrarMenu(true) : abrir(); });
-    cerrar.addEventListener('click', function () { cerrarMenu(true); });
-    velo.addEventListener('click', function () { cerrarMenu(false); });
-    panel.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { cerrarMenu(false); }); });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && panel.classList.contains('is-open')) cerrarMenu(true);
-    });
-    // El foco no sale del menú mientras está abierto.
-    panel.addEventListener('keydown', function (e) {
-      if (e.key !== 'Tab') return;
-      var f = panel.querySelectorAll('button, a');
-      var first = f[0], last = f[f.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-    });
   })();
 </script>
 </body>
