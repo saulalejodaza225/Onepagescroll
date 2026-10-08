@@ -400,21 +400,50 @@
     }
     refreshZones();
 
-    // Frame que corresponde al scroll actual, como fracción 0..1 de la
-    // secuencia (si no hay 4 secciones detectadas, recorre toda la
+    // Frame (0..total-1, fraccionario) que corresponde a una posición de
+    // scroll `y` (si no hay 4 secciones detectadas, recorre toda la
     // secuencia con el scroll de la página, como antes).
-    function progress() {
-      var y = window.scrollY;
+    function frameAtY(y) {
       if (!lut) {
         var max = document.documentElement.scrollHeight - window.innerHeight;
-        return max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+        return (max > 0 ? Math.min(1, Math.max(0, y / max)) : 0) * (total - 1);
       }
       var top = lut.length - 2;
       y = y < 0 ? 0 : (y > top ? top : y);
       var i = y | 0;
       var f = y - i;
-      return (lut[i] + (lut[i + 1] - lut[i]) * f) / Math.max(1, total - 1);
+      return lut[i] + (lut[i + 1] - lut[i]) * f;
     }
+
+    // Lo inverso: la posición de scroll `y` en la que se ve el frame `f`
+    // (búsqueda binaria en la tabla, que siempre crece). Sirve para recorrer
+    // la secuencia a ritmo parejo de frames, sin importar cuánto texto o
+    // cuántos pixeles ocupe cada sección.
+    function yAtFrame(f) {
+      if (!lut) {
+        var max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        return Math.min(1, Math.max(0, f / Math.max(1, total - 1))) * max;
+      }
+      var lo = 0;
+      var hi = lut.length - 2;
+      if (f <= lut[0]) return 0;
+      if (f >= lut[hi]) return hi;
+      while (hi - lo > 1) {
+        var mid = (lo + hi) >> 1;
+        if (lut[mid] <= f) lo = mid; else hi = mid;
+      }
+      var span = lut[hi] - lut[lo];
+      return lo + (span > 0 ? (f - lut[lo]) / span : 0);
+    }
+
+    // Frame que corresponde al scroll actual, como fracción 0..1 de la
+    // secuencia.
+    function progress() {
+      return frameAtY(window.scrollY) / Math.max(1, total - 1);
+    }
+
+    // API para otros scripts de la página (el scroll controlado del logo).
+    window.nocturneSeq = { frameAtY: frameAtY, yAtFrame: yAtFrame, total: total };
 
     // Ajusta el bitmap del canvas. En celulares la barra de direcciones
     // aparece y desaparece al hacer scroll y cambia el alto de la ventana
