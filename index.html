@@ -443,6 +443,68 @@
   @media (prefers-reduced-motion: reduce) {
     .glow-sweep::after { display: none; }
   }
+  /* ===== Adaptación tablet y smartphone =====
+     Según la referencia de "stitch_one_page_studio_bogot (1)" (DESIGN.md):
+     - Tablet (768–1023px): márgenes de 2.5rem y paquetes en 2 columnas.
+     - Móvil (<768px): márgenes de 1.25rem, títulos de 40/26px, paquetes en
+       carrusel deslizable (como el "carrusel horizontal swipeable" de la
+       referencia) y la matriz comparativa desplazable en horizontal.
+     Va al final para ganar sobre las reglas de escritorio de arriba. */
+  @media (max-width: 1023px) {
+    :root { --gutter: 2.5rem; }
+    .site-header { height: 80px; }
+    .cards { gap: 1.25rem; }
+    .matrix { margin-top: 6rem; }
+  }
+  @media (max-width: 767px) {
+    :root { --gutter: 1.25rem; }
+    .site-header { height: 72px; }
+    .brand { font-size: 20px; }
+    .btn-ghost { padding: .6rem 1rem; font-size: 13px; }
+    .hero-actions { width: 100%; }
+    .hero-actions .btn-gold { width: 100%; padding: 1rem 1.25rem; font-size: 13px; }
+    .hero-quote { font-size: 18px; line-height: 28px; }
+    .guia, .closing { padding: 4rem 0; }
+    .guia-head { margin-bottom: 2rem; }
+    .guia-head h2, .closing h2 { font-size: 2rem; line-height: 1.2; }
+    .guia-head p, .closing p { font-size: 16px; line-height: 24px; }
+    /* Paquetes: carrusel horizontal que se desliza con el dedo. */
+    .cards {
+      display: flex; overflow-x: auto; gap: 1rem;
+      margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter) 1rem;
+      scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter);
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .cards::-webkit-scrollbar { display: none; }
+    .card { flex: 0 0 78%; min-width: 0; scroll-snap-align: start; }
+    .card h3 { font-size: 22px; line-height: 28px; }
+    .price strong { font-size: 32px; }
+    .checks { font-size: 13px; }
+    .card .btn-gold { font-size: 12px; }
+    /* Comparativa: la tabla se desliza en horizontal dentro de su bloque. */
+    .matrix { margin-top: 3.5rem; }
+    .matrix h4 { font-size: 22px; }
+    table { font-size: 12px; }
+    th, td { padding: .6rem .45rem; }
+    .matrix-foot { flex-direction: column; align-items: flex-start; }
+    .site-footer { padding: 2.5rem 0 1.5rem; }
+    .footer-grid { gap: 1.5rem; }
+  }
+  /* Cortes visibles entre secciones: un filo dorado fino en el borde exacto
+     donde empieza cada sección del fondo, con su número. Alto cero: no
+     mueve nada del diseño. */
+  .zona-corte { position: relative; height: 0; pointer-events: none; }
+  .zona-corte::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(244,182,63,.7) 20%, rgba(244,182,63,.7) 80%, transparent);
+    box-shadow: 0 0 10px rgba(244,182,63,.35);
+  }
+  .zona-corte span {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%); white-space: nowrap;
+    font-family: Poppins, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--oro-real); -webkit-text-stroke: 0; text-shadow: 0 1px 6px rgba(7,14,27,.9);
+  }
+  @media (max-width: 767px) { .zona-corte span { font-size: 10px; } }
 </style>
 </head>
 <body>
@@ -497,6 +559,7 @@
 <div class="divider" role="presentation"><div class="star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z"/></svg></div></div>
 
 <!-- GUÍA -->
+<div class="zona-corte" aria-hidden="true"><span>02 · Guía</span></div>
 <section class="guia" id="guia" aria-labelledby="guia-titulo">
   <div class="wrap">
     <div class="guia-head">
@@ -572,6 +635,7 @@
       </article>
     </div>
 
+    <div class="zona-corte" aria-hidden="true"><span>03 · Servicios</span></div>
     <div class="matrix" id="servicios">
       <h4>Matriz comparativa de capacidades</h4>
       <div class="table-wrap">
@@ -601,6 +665,7 @@
 </section>
 
 <!-- CIERRE -->
+<div class="zona-corte" aria-hidden="true"><span>04 · Hablemos</span></div>
 <section class="closing" id="contacto" aria-labelledby="cierre-titulo">
   <div class="wrap">
     <span class="eyebrow">Hablemos</span>
