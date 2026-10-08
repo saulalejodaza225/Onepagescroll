@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&family=Poppins:wght@500;600;700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
-<link rel="preload" as="image" href="assets/video/frame_001.jpg" type="image/jpeg" media="(min-aspect-ratio: 39/50)">
-<link rel="preload" as="image" href="assets/video-m/frame_001.jpg" type="image/jpeg" media="(max-aspect-ratio: 39/50)"><style>
+<link rel="preload" as="image" href="assets/secuencia-nueva/frame_001.jpg" type="image/jpeg" media="(min-aspect-ratio: 39/50)">
+<link rel="preload" as="image" href="assets/secuencia-nueva-m/frame_001.jpg" type="image/jpeg" media="(max-aspect-ratio: 39/50)"><style>
   /* Tokens de DESIGN.md (Bogotá Nocturne) */
   :root {
     --medianoche: #070E1B;
@@ -574,7 +574,7 @@
 </nav>
 
 <!-- FONDO FIJO: secuencia de imágenes ligada al scroll de toda la página -->
-<canvas class="bg-seq" data-secuencia-fondo data-frames="assets/video/frame_%03d.jpg" data-frames-portrait="assets/video-m/frame_%03d.jpg" data-total="953" aria-hidden="true"></canvas>
+<canvas class="bg-seq" data-secuencia-fondo data-frames="assets/secuencia-nueva/frame_%03d.jpg" data-frames-portrait="assets/secuencia-nueva-m/frame_%03d.jpg" data-total="953" aria-hidden="true"></canvas>
 <div class="bg-scrim" aria-hidden="true"></div>
 
 <div class="page">
@@ -582,7 +582,7 @@
 
 <!-- HERO -->
 <section class="hero" id="inicio" aria-label="Presentación">
-  <video class="hero-video" src="assets/prototipo/hero-hailuo-loop-1080p.mp4" poster="assets/video/frame_001.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+  <video class="hero-video" src="assets/prototipo/hero-hailuo-loop-1080p-main.mp4" poster="assets/video/frame_001.jpg" autoplay muted loop playsinline webkit-playsinline x5-playsinline preload="auto" aria-hidden="true"></video>
 
   <div class="hero-content">
     <span class="eyebrow">Boutique Digital · Bogotá</span>
@@ -1060,16 +1060,25 @@
 </script>
 
 <script>
-  // Bucle indefinido del video del inicio: si el navegador lo detiene al terminar
-  // o se pausa (ahorro de energía, cambio de pestaña), vuelve al inicio y sigue.
+  // Video del inicio: se repite sin fin. Si el navegador bloquea la reproducción
+  // automática (o la detiene al ahorrar energía o al cambiar de pestaña), arranca
+  // con el primer toque, scroll o al volver a la pestaña; si se atasca, recarga.
   (function () {
     var v = document.querySelector('.hero-video');
     if (!v) return;
-    v.loop = true;
-    function again() { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function () {}); }
-    v.addEventListener('ended', again);
-    v.addEventListener('pause', function () { if (document.visibilityState === 'visible' && !v.ended) v.play().catch(function () {}); });
-    document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') v.play().catch(function () {}); });
+    v.muted = true; v.loop = true;
+    function reproducir() { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    function alTerminar() { v.currentTime = 0; reproducir(); }
+    v.addEventListener('ended', alTerminar);
+    v.addEventListener('pause', function () { if (document.visibilityState === 'visible' && !v.ended) reproducir(); });
+    v.addEventListener('loadeddata', reproducir);
+    v.addEventListener('canplay', reproducir);
+    v.addEventListener('stalled', function () { var t = v.currentTime; v.load(); v.currentTime = t; reproducir(); });
+    v.addEventListener('error', function () { setTimeout(function () { v.load(); reproducir(); }, 1500); });
+    document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') reproducir(); });
+    var una = function () { if (v.paused) reproducir(); };
+    ['touchstart', 'pointerdown', 'scroll', 'keydown'].forEach(function (ev) { window.addEventListener(ev, una, { passive: true, once: true }); });
+    reproducir();
   })();
 </script>
 <script>
