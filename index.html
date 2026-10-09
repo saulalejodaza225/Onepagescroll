@@ -562,6 +562,14 @@
     .site-nav a:hover { color: #FFFFFF; filter: brightness(1.15); transform: translateY(-1px); }
     .site-nav a::after { display: none; }
   }
+  /* Móvil y tablet: barra de navegación inferior (referencia de la carpeta móvil). */
+  .tab-nav { display: none; }
+  @media (max-width: 1023px) {
+    .tab-nav { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 65; justify-content: space-around; padding: .4rem .5rem calc(.4rem + env(safe-area-inset-bottom)); background: rgba(7,14,27,.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid rgba(221,227,236,.1); }
+    .tab-nav a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 56px; min-height: 44px; color: #DDE3EC; font-family: Poppins, sans-serif; font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; text-shadow: 0 1px 2px rgba(0,0,0,.9); }
+    .tab-nav .material-symbols-outlined { font-size: 22px; color: #46E88A; text-shadow: 0 0 8px rgba(70,232,138,.5); }
+    body { padding-bottom: 72px; }
+  }
 </style>
 </head>
 <body>
@@ -624,6 +632,13 @@
 </nav>
 
 <!-- FONDO FIJO: secuencia de imágenes ligada al scroll de toda la página -->
+<nav class="tab-nav" aria-label="Navegación principal">
+  <a href="#inicio"><span class="material-symbols-outlined" aria-hidden="true">home</span><span>Inicio</span></a>
+  <a href="#guia"><span class="material-symbols-outlined" aria-hidden="true">verified</span><span>Marca</span></a>
+  <a href="#quiz"><span class="material-symbols-outlined" aria-hidden="true">analytics</span><span>Diagnóstico</span></a>
+  <a href="#paquetes"><span class="material-symbols-outlined" aria-hidden="true">sell</span><span>Paquetes</span></a>
+  <a href="#contacto"><span class="material-symbols-outlined" aria-hidden="true">chat</span><span>Contacto</span></a>
+</nav>
 <canvas class="bg-seq" data-secuencia-fondo data-frames="assets/secuencia-realista/frame_%03d.jpg" data-frames-portrait="assets/secuencia-realista-m/frame_%03d.jpg" data-total="953" aria-hidden="true"></canvas>
 <div class="bg-scrim" aria-hidden="true"></div>
 
@@ -633,7 +648,7 @@
 <!-- HERO -->
 <section class="hero" id="inicio" aria-label="Presentación">
   <video class="hero-video" poster="assets/video/frame_001.jpg" autoplay muted loop playsinline webkit-playsinline x5-playsinline preload="auto" aria-hidden="true">
-    <source src="assets/prototipo/hero-hailuo-loop-1080p-main.mp4" type="video/mp4">
+    <source src="assets/prototipo/hero-fondo-espacial-loop-720p.mp4" type="video/mp4">
   </video>
 
   <div class="hero-content">
