@@ -707,7 +707,7 @@
       <p>Cada negocio necesita algo distinto. Elige el tuyo y revisa qué incluye cada opción.</p>
     </div>
 
-    <div class="cards">
+    <div class="cards" id="paquetes-tarjetas">
       <article class="card">
         <div>
           <span class="label" style="color:var(--oro-real)">Presencia inmediata</span>
@@ -809,7 +809,7 @@
   <div class="wrap">
     <h2 id="cierre-titulo">Tu negocio merece una presencia <em>a su altura.</em></h2>
     <p>Cuéntanos qué vendes y para quién. Te recomendamos la opción que mejor encaja con tu etapa.</p>
-    <a class="btn-gold btn-arrow btn-arrow-up" href="#paquetes">Ver paquetes <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span></a>
+    <a class="btn-gold btn-arrow btn-arrow-up" href="#paquetes-tarjetas" data-scroll-lento>Ver paquetes <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span></a>
   </div>
 </section>
 
@@ -999,7 +999,7 @@
       try { target = document.querySelector(hash); } catch (err) { return; }
       if (!target) return;
       e.preventDefault();
-      go(target, hash, hash === '#servicios' || hash === '#paquetes' || hash === '#quiz-preguntas', true, a.hasAttribute('data-seq-scroll'), (a.hasAttribute('data-scroll-cuestionario') ? 'cuestionario' : a.hasAttribute('data-scroll-lento')));
+      go(target, hash, hash === '#servicios' || hash === '#paquetes' || hash === '#quiz-preguntas' || hash === '#paquetes-tarjetas', true, a.hasAttribute('data-seq-scroll'), (a.hasAttribute('data-scroll-cuestionario') ? 'cuestionario' : a.hasAttribute('data-scroll-lento')));
     });
 
     // Atrás/adelante del navegador o un hash escrito a mano: mismo ritmo.
@@ -1009,7 +1009,7 @@
       if (hash) { try { target = document.querySelector(hash); } catch (err) { return; } }
       if (hash && !target) return;
       if (!hash) { window.scrollTo(0, 0); return; }
-      go(target, hash, hash === '#servicios' || hash === '#paquetes' || hash === '#quiz-preguntas', false);
+      go(target, hash, hash === '#servicios' || hash === '#paquetes' || hash === '#quiz-preguntas' || hash === '#paquetes-tarjetas', false);
     });
   })();
 </script>
